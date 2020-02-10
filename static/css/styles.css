@@ -1,0 +1,18 @@
+@import "reset.css";
+@import "header.css";
+@import "main.css";
+@import "section.css";
+
+html,
+body {
+  height: 100%;
+  width: 100%;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  padding: 0px 50px;
+}
