@@ -1,14 +1,3 @@
 @import "./assets_add.css";
 @import "./assets_main.css";
 @import "./assets_rent.css";
-@import "./assets_test.css";
-
-.divier__none .dropdown-menu .inner .inner li:first-child {
-  display: none;
-}
-
-@media (min-width: 1200px) {
-  .container {
-    max-width: 80% !important;
-  }
-}

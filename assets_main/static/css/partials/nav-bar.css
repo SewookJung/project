@@ -25,3 +25,7 @@
   font-size: 14px !important;
   padding: 3px 10px !important;
 }
+
+.divier__none .dropdown-menu .inner .inner li:first-child {
+  display: none;
+}

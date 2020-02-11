@@ -50,7 +50,14 @@ $.datepicker.setDefaults({
   yearSuffix: "년"
 });
 $("#datepicker1").datepicker({
-  minDate: 0,
+  changeMonth: true,
+  changeYear: true,
+  showButtonPanel: true,
+  currentText: "오늘 날짜",
+  closeText: "닫기",
+  dateFormat: "yymmdd",
+  dateFormat: "yy-mm-dd",
+
   /* to use in wix */
   onSelect: function(selected, event) {
     console.log(selected);
@@ -62,7 +69,33 @@ $("#datepicker1").datepicker({
   }
 });
 $("#datepicker2").datepicker({
-  minDate: 0,
+  changeMonth: true,
+  changeYear: true,
+  showButtonPanel: true,
+  currentText: "오늘 날짜",
+  closeText: "닫기",
+  dateFormat: "yymmdd",
+  dateFormat: "yy-mm-dd",
+
+  /* to use in wix */
+  onSelect: function(selected, event) {
+    console.log(selected);
+    /*
+     * wix-send-messages from html component
+     * https://support.wix.com/en/article/working-with-the-html-component-in-wix-code
+     */
+    window.parent.postMessage(selected, "*");
+  }
+});
+
+$("#datepicker3").datepicker({
+  changeMonth: true,
+  changeYear: true,
+  showButtonPanel: true,
+  currentText: "오늘 날짜",
+  closeText: "닫기",
+  dateFormat: "yymmdd",
+  dateFormat: "yy-mm-dd",
   /* to use in wix */
   onSelect: function(selected, event) {
     console.log(selected);
