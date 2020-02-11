@@ -1,6 +1,6 @@
 {% extends 'base.html' %} {% block content %} {% load staticfiles %}
 
-<div class="container rental">
+<div class="container ">
   <div class="card assets">
     <div class="card-header assets-header">
       <i class="fa fa-pencil-square-o"></i>
@@ -95,21 +95,10 @@
             </div>
 
             <div class="form-group">
-              <label>대여 날짜</label>
+              <label>구매 날짜</label>
               <input
                 type="text"
                 id="datepicker1"
-                class="form-control calendar__start"
-                placeholder="&#xf271;"
-                autocomplete="off"
-              />
-            </div>
-
-            <div class="form-group">
-              <label>반납 예정일</label>
-              <input
-                type="text"
-                id="datepicker2"
                 class="form-control calendar__start"
                 placeholder="&#xf271;"
                 autocomplete="off"
