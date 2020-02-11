@@ -8,9 +8,13 @@
       content="width=device-width, initial-scale=1, shrink-to-fit=no"
     />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <title>{% block title%}{% endblock %}</title>
+    <title>{% block title %}{% endblock %}</title>
     <link rel="stylesheet" href="{% static 'css/assets.css' %}" />
-    <link rel="stylesheet" href="{% static 'css/project.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/document.css' %}" />
+    <link
+      rel="stylesheet"
+      href="{% static 'css/fine-uploader/fine-uploader-new.css' %}"
+    />
     <link
       rel="stylesheet"
       href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
@@ -70,11 +74,6 @@
               <a class="dropdown-item" href="{% url 'assets_main' %}">
                 자산 현황
               </a>
-
-              <a class="dropdown-item" href="{% url 'assets_rent' %}">
-                자산 대여 신청
-              </a>
-
               <a class="dropdown-item" href="{% url 'assets_status' %}">
                 자산 대여 현황
               </a>
@@ -98,12 +97,15 @@
               문서관리
             </a>
             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-              <a class="dropdown-item" href="{% url 'project_main' %}"
-                >문서관리 현황</a
+              <a class="dropdown-item" href="{% url 'document_main' %}"
+                >문서 현황</a
               >
-              <a class="dropdown-item" href="#">Another action</a>
-              <div class="dropdown-divider"></div>
-              <a class="dropdown-item" href="#">Something else here</a>
+              <a class="dropdown-item" href="{% url 'document_search' %}"
+                >문서 검색</a
+              >
+              <a class="dropdown-item" href="{% url 'document_add' %}"
+                >문서 등록</a
+              >
             </div>
           </li>
           <li class="nav-item dropdown">
@@ -168,5 +170,6 @@
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
     <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.11.1/jquery-ui.min.js"></script>
     <script src="{% static 'js/datepicker.js' %}"></script>
+    {% block js %} {% endblock %}
   </body>
 </html>
