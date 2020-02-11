@@ -8,10 +8,6 @@ def assets_main(request):
     return render(request, 'assets_main/assets_main.html', {})
 
 
-def assets_rent(request):
-    return render(request, 'assets_main/assets_rent.html', {})
-
-
 def assets_add(request):
     return render(request, 'assets_main/assets_add.html', {})
 
