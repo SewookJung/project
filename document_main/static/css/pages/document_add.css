@@ -19,3 +19,17 @@
 .file-form input {
   display: none;
 }
+
+.document__add.form-group table th:first-child {
+  width: 10px;
+  text-align: left;
+}
+
+.document__add.form-group table th:nth-child(2) {
+  width: 50%;
+  text-align: left;
+}
+
+.document__add.form-group table th:last-child {
+  text-align: right;
+}
