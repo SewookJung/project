@@ -11,10 +11,7 @@
     <title>{% block title %}{% endblock %}</title>
     <link rel="stylesheet" href="{% static 'css/assets.css' %}" />
     <link rel="stylesheet" href="{% static 'css/document.css' %}" />
-    <link
-      rel="stylesheet"
-      href="{% static 'css/fine-uploader/fine-uploader-new.css' %}"
-    />
+    {% block css %} {% endblock %}
     <link
       rel="stylesheet"
       href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
@@ -144,7 +141,7 @@
       </div>
     </nav>
 
-    {% block content %} {% endblock %}
+    {% block content %} {% endblock %} {% block login%} {% endblock %}
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
     <script
