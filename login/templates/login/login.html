@@ -1,0 +1,39 @@
+{% extends 'base.html' %} {% block login %} {% load staticfiles %}
+
+<form class="login__content container login-size">
+  <div class="login__form">
+    <div class="login__top">
+      <!-- <img src="{% static 'img/login.jpg'%}" alt="" class="login__photo" /> -->
+    </div>
+    <div class="login__bottom">
+      <div class="login__contents">
+        <div class="login__header">
+          <h1>USER LOGIN</h1>
+          <span>Welcome back</span>
+        </div>
+        <div class="login__main">
+          <div class="login__id">
+            <input type="text" placeholder="&#xf007; " />
+          </div>
+          <div class="login__pw">
+            <input type="text" placeholder="&#xf023; " />
+          </div>
+          <div class="login__lost-pw">
+            <span>Forgot password?</span>
+          </div>
+          <button class="btn btn-primary">login</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>
+
+{% endblock %} {% block title %} 로그인 {% endblock %} {% block js%}
+<script></script>
+{% endblock %} {% block css %}
+<link rel="stylesheet" href="{% static 'css/login.css' %}" />{% endblock%}
+
+<!-- <img
+        src="http://office.gwsystem.co.kr:8000/static/img/logo.jpg"
+        alt="gw_logo.jpg"
+      /> -->
