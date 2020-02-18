@@ -1,4 +1,4 @@
-{% extends 'base.html' %} {% block login %} {% load staticfiles %}
+{% extends 'base.html' %} {% block login %} {% load static %}
 
 <form class="login__content container login-size">
   <div class="login__form">
@@ -13,10 +13,14 @@
         </div>
         <div class="login__main">
           <div class="login__id">
-            <input type="text" placeholder="&#xf007; " />
+            <div class="login__icon">
+              <i class="fa fa-user"></i>
+            </div>
+            <input type="text" />
           </div>
           <div class="login__pw">
-            <input type="text" placeholder="&#xf023; " />
+            <i class="fa fa-lock"></i>
+            <input type="password" />
           </div>
           <div class="login__lost-pw">
             <span>Forgot password?</span>
