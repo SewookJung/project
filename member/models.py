@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from django.db import models
 
 # Create your models here.
@@ -5,7 +6,7 @@ from django.db import models
 
 class Member(models.Model):
     # Chief #
-    CEO = '대표이사',
+    CEO = "대표이사"
 
     # Executives #
     MANAGING_DIRECTOR = "상무"
@@ -46,20 +47,20 @@ class Member(models.Model):
         (PASSIVE, "Passive")
     )
 
-    member_id = models.CharField(max_length=20)
-    member_pw = models.CharField(max_length=20)
-    member_name = models.CharField(null=True, max_length=10)
-    member_dept = models.CharField(null=True, max_length=10)
-    member_status = models.CharField(
+    member_id = models.CharField(max_length=20, null=True)
+    pw = models.CharField(max_length=20, null=True)
+    name = models.CharField(max_length=10, null=True)
+    dept = models.CharField(max_length=10, null=True)
+    status = models.CharField(
         max_length=10,
         choices=status,
         default=ACTIVE
     )
-    member_rank = models.CharField(
+    rank = models.CharField(
         max_length=20,
         choices=position,
         default=CEO
     )
 
     def __str__(self):
-        return self.member_id
+        return self.name
