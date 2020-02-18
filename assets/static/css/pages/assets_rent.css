@@ -1,0 +1,37 @@
+.rental__content .rental__header {
+  margin-bottom: 30px;
+}
+
+.rental__header .rental__header-title {
+  font-weight: 700;
+}
+
+.container label {
+  font-weight: 700;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.calendar__start {
+  font-family: FontAwesome;
+  cursor: pointer;
+}
+
+.rent-table {
+  height: 100%;
+  margin-bottom: 0px !important;
+  width: 98% !important;
+}
+
+.rent-table td:hover {
+  cursor: pointer;
+}
+
+@media (min-width: 1200px) {
+  .container.rental {
+    max-width: 80% !important;
+  }
+}
