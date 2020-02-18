@@ -38,3 +38,14 @@ th {
 th {
   font-weight: 700;
 }
+
+.card-body .assets-pagination {
+  height: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.assets-pagination ul {
+  margin-bottom: 0px;
+}
