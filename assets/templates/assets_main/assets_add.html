@@ -1,97 +1,63 @@
 {% extends 'base.html' %} {% block content %} {% load static %}
 
-<div class="container ">
+<div class="container assets-container">
   <div class="card assets">
     <div class="card-header assets-header">
       <i class="fa fa-pencil-square-o"></i>
       <h5 class="card-title assets-header__title">자산 등록</h5>
     </div>
     <div class="card-body">
-      <form class="rental__form">
+      <form class="rental__form" method="POST">{% csrf_token %}
         <div class="rental__content form-row">
-          <div class="form-group col-md-7">
+          <div class="form-group col-md-12">
             <div class="form-group">
-              <label>대여자</label>
-              <select class="selectpicker divier__none" title="대여자 선택">
-                <optgroup label="연구소">
-                  <option>주만석 소장</option>
-                  <option>윤지수 책임</option>
-                  <option>정세욱 전임</option>
-                </optgroup>
-                <optgroup label="기술본부">
-                  <option>임덕명 차장</option>
-                  <option>장경원 차장</option>
-                </optgroup>
-              </select>
+              <label>소유자</label>
+              {{ form.member_id }}
             </div>
             <div class="form-group">
               <label>제조사</label>
-              <select class="selectpicker" title="제조사 선택">
-                <option>LG</option>
-                <option>ASUS</option>
-                <option>HP</option>
-                <option>Apple</option>
-              </select>
+              {{ form.mnfacture }}
             </div>
 
-            <div class="form-group">
+            <div class="form-group ">
+              <label>자산 상태</label>
+              {{ form.is_state }}
+            </div>
+            <div class="form-group ">
               <label>CPU</label>
-              <input class="form-control" type="text" placeholder="intel(R) Core(TM) i5-8250U CPU @ 1.6Ghz 1.80GHz" />
+              {{ form.cpu }}
             </div>
-
-            <div class="form-row">
-              <div class="form-group col-md-6">
-                <label>메모리</label>
-                <input class="form-control" type="text" placeholder="16G" />
-              </div>
-              <div class="form-group col-md-6">
-                <label>디스크</label>
-                <input class="form-control" type="text" placeholder="256GB" />
-              </div>
+            <div class="form-group">
+              <label>메모리</label>
+              {{ form.memory }}
             </div>
-
-            <div class="form-row">
-              <div class="form-group col-md-6">
-                <label>모델명</label>
-                <input class="form-control" type="text" placeholder="ZenBook-UX362FA_UX362FA
-                  " />
-              </div>
-              <div class="form-group col-md-6">
-                <label>운영체제</label>
-                <input class="form-control" type="text" placeholder="Windows 10" />
-              </div>
+            <div class="form-group ">
+              <label>디스크</label>
+              {{ form.harddisk }}
             </div>
-          </div>
-
-          <div class="form-group col-md-5">
+            <div class="form-group">
+              <label>모델명</label>
+              {{ form.model }}
+            </div>
             <div class="form-group">
               <label>사용장소</label>
-              <input type="text" class="form-control" placeholder="ex) 남부팀, 본사, 원주(인터넷망), 원주(업무망)" />
+              {{ form.is_where }}
             </div>
-
-            <div class="form-group">
-              <label>사용목적</label>
-              <input type="text" class="form-control" placeholder="ex) 정책 테스트로 인한 노트북 불출" />
-            </div>
-
             <div class="form-group">
               <label>구매 날짜</label>
-              <input type="text" id="datepicker1" class="form-control calendar__start" placeholder="&#xf271;"
-                autocomplete="off" />
+              {{ form.purchase_date }}
             </div>
-
             <div class="form-group">
               <label>기 타</label>
-              <textarea class="form-control col-sm-12" rows="5"></textarea>
+              {{ form.comments }}
             </div>
           </div>
         </div>
-
         <div class="text-right submit-box">
           <button type="button" class="btn btn-outline-danger">
             취소
           </button>
-          <button type="submit" class="btn btn-outline-secondary btn-submit">
+          <button type="submit" class="btn btn-outline-secondary btn-submit" onclick="check()">
             신청하기
           </button>
         </div>
@@ -100,3 +66,6 @@
   </div>
 </div>
 {% endblock %} {% block title %} 자산관리 대여 {% endblock %}
+{% block js %}
+
+<script src="{% static '/js/alert.js' %}"></script>{% endblock%}
