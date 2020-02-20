@@ -1,37 +1,12 @@
-.rental__content .rental__header {
-  margin-bottom: 30px;
-}
-
-.rental__header .rental__header-title {
-  font-weight: 700;
-}
-
-.container label {
-  font-weight: 700;
-}
-
-.form-group {
-  display: flex;
-  flex-direction: column;
-}
-
-.calendar__start {
-  font-family: FontAwesome;
-  cursor: pointer;
-}
-
-.rent-table {
+#overlay {
+  position: fixed;
+  display: none;
+  width: 100%;
   height: 100%;
-  margin-bottom: 0px !important;
-  width: 98% !important;
-}
-
-.rent-table td:hover {
-  cursor: pointer;
-}
-
-@media (min-width: 1200px) {
-  .container.rental {
-    max-width: 80% !important;
-  }
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 2;
 }
