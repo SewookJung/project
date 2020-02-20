@@ -3,9 +3,10 @@ from .models import Asset, Assetrent
 
 
 class AssetAdmin(admin.ModelAdmin):
-    list_display = ['id', 'member_name',
+    list_display = ['id', 'member_id',
                     'mnfacture', 'model', 'cpu', 'memory', 'harddisk', 'closed', 'comments']
-    list_display_links = ['id', 'member_name']
+    list_display_links = ['id', 'member_id']
+
 
 class AssetrentAdmin(admin.ModelAdmin):
     list_display = ['id', 'asset',
