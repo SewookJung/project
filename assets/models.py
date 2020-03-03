@@ -8,13 +8,15 @@ class Asset(models.Model):
 
     # 'glowellsystem' - 테스트용, 폐기의 경우 변경된다.
     member_name = models.ForeignKey(
-        Member, null=True, blank=True, on_delete=models.SET_NULL)
+        Member, null=True, on_delete=models.SET_NULL)
 
     mnfacture = models.CharField(max_length=30, default='')  # 제조사명
 
     model = models.CharField(max_length=40, default='')  # 모델명
 
-    cpu = models.CharField(max_length=30, default='')  # CPU
+    serial = models.CharField(max_length=40, default='')  # Serial
+
+    cpu = models.CharField(max_length=100, default='')  # CPU
 
     memory = models.CharField(max_length=30, default='')  # MEMORY
 
@@ -31,7 +33,11 @@ class Asset(models.Model):
 
     closed = models.DateField(null=True, blank=True)  # 폐기일
 
-    comments = models.CharField(max_length=200, default='')  # 기타 comment
+    comments = models.CharField(
+        max_length=200, default='', null=True, blank=True)  # 기타 comment
+
+    def __str__(self):
+        return self.model
 
 
 class Assetrent(models.Model):
@@ -40,11 +46,11 @@ class Assetrent(models.Model):
 
     created = models.DateTimeField(auto_now_add=True, editable=False)  # 생성일
 
-    stdate = models.DateField()  # 대여일
+    stdate = models.DateField(null=True)  # 대여일
 
-    eddate = models.DateField()  # 반납예정일
+    eddate = models.DateField(null=True)  # 반납예정일
 
-    member_id = models.CharField(max_length=20, default='')  # 빌린 member id
+    member_name = models.CharField(max_length=20, default='')  # 빌린 member name
 
     return_date = models.DateField(null=True, blank=True)  # 반납일
 
