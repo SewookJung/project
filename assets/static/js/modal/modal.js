@@ -47,7 +47,7 @@ function asset_rent_apply() {
     return null;
   }
 
-  const url = "/assets/rent/apply/";
+  const url = "/assets/status/apply/";
   const csrfToken = document.getElementsByName("csrfmiddlewaretoken")[0].value;
 
   $.ajax({
@@ -57,10 +57,10 @@ function asset_rent_apply() {
     data: param,
     success: function() {
       alert("자산신청이 완료되었습니다.");
-      window.location.href = "/assets/rent/status";
+      window.location.href = "/assets/status";
     },
     error: function(request, status, error) {
-      alert("에러");
+      alert("자산신청에 실패하였습니다.");
     }
   });
 }

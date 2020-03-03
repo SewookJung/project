@@ -5,7 +5,7 @@ function asset_return(asset_id) {
     return false;
   }
 
-  const url = "/assets/rent/return/";
+  const url = "/assets/status/return/";
   const csrfToken = document.getElementsByName("csrfmiddlewaretoken")[0].value;
 
   param = {};
@@ -18,7 +18,7 @@ function asset_return(asset_id) {
     data: param,
     success: function() {
       alert("자산이 반납 되었습니다.");
-      window.location.href = "/assets/rent/status";
+      window.location.href = "/assets/status";
     },
     error: function(request, status, error) {
       alert("자산 반납에 실패하였습니다.");
