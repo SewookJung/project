@@ -5,65 +5,64 @@
       <i class="fa fa-desktop"></i>
       <h5 class="card-title assets-header__title">자산 대여 현황</h5>
     </div>
-    <form class="card-body">
+    <div class="card-body">
       <p class="card-text">
-        <table class="table striped table-bordered" id="myTable">
+        <table class="table table-striped table-bordered table-hover assets_table" id="myTable">
           <thead>
             <tr>
               <th>대여자</th>
-              <th>모델명</th>
-              <th>대여 날짜</th>
-              <th>반납 예정 날짜</th>
+              <th>제조사 및 모델명</th>
               <th>상태</th>
               <th>기타</th>
               <th>반납처리</th>
             </tr>
           </thead>
-
           {% for asset_keep in assets_keep %}
           <tr>
-            <td>{{ asset_keep.member_id }}</td>
-            <td>{{ asset_keep.model }}</td>
-            <td> - </td>
-            <td> - </td>
+            <td>{{ asset_keep.member_name }}</td>
+            <td>{{ asset_keep.mnfacture }} ({{ asset_keep.model }})</td>
             {% if asset_keep.is_state == 5 %}
             <td>보관중</td>
             {% endif %}
+            {% if asset_keep.comments is None %}
+            <td></td>
+            {% else %}
             <td>{{ asset_keep.comments }}</td>
+            {% endif %}
             <td>
-              <button type="button" class="btn btn-success btn-return" id="{{ asset_keep.id }}" data-toggle="modal"
-                data-target="#exampleModal">대여하기</button>
-              <span class="test" style="display: none;">{{ asset_keep.id }}</span>
+              <button type="button" class="btn btn-success" id="rent-btn{{asset_keep.id}}"
+                onclick="asset_rent('{{asset_keep.id}}', '{{asset_keep.mnfacture}}', '{{asset_keep.model}}')">대여하기</button>
             </td>
           </tr>
           {% endfor %}
 
           {% for asset_rent in assets_rent %}
           <tr>
-            <td>{{ asset_rent.member_id }}</td>
-            <td>{{ asset_rent.model }}</td>
-            <td></td>
-            <td></td>
+            <td>{{ asset_rent.member_name }}</td>
+            <td>{{ asset_rent.mnfacture }} ({{ asset_rent.model }})</td>
             {% if asset_rent.is_state == 3 %}
             <td>대여중</td>
             {% endif %}
             <td>{{ asset_rent.comments }}</td>
             <td>
-              <button type="submit" class="btn btn-primary btn-return">반납하기</button>
+              <button type="button" class="btn btn-primary" id="rent-btn{{asset_rent.id}}"
+                onclick="asset_return('{{asset_rent.id}}')">반납하기</button>
             </td>
           </tr>
           {% endfor %}
         </table>
       </p>
-    </form>
+    </div>
   </div>
 </div>
+
 
 
 <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
   aria-hidden="true">
   <div class="modal-dialog" role="document">
-    <form class="modal-content" method="POST">{% csrf_token %}
+    <div class="modal-content">
+      {% csrf_token %}
       <div class="modal-header">
         <h5 class="modal-title" id="exampleModalLabel">대여신청</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -72,47 +71,57 @@
       </div>
       <div class="modal-body">
         <div class="modal-body__asset">
-          <span>자산 선택</span>
-          {{ rent_form.asset }}
+          <span>자산 정보</span>
+          <span id="asset_mnfacture"></span>
+          <input type="hidden" id="asset_id" value="">
+          <div class="modal-body__stdate">
+            <span>대여 날짜</span>
+            <input type="text" name="purchase_date" id="datepicker1" class="form-control calendar__start hasDatepicker"
+              autocomplete="off">
+          </div>
+          <div class="modal-body__eddate">
+            <span>반납 날짜</span>
+            <input type="text" name="purchase_date" id="datepicker2" class="form-control calendar__start hasDatepicker"
+              autocomplete="off">
+          </div>
+          <div class="modal-body__id">
+            <span>대여자</span>
+            {{ rent_form.member_name }}
+          </div>
+          <div class="modal-body__comments">
+            <span>기타 </span>
+            <textarea class="form-control col-sm-12" rows="5" id="asset_comments"></textarea>
+          </div>
         </div>
-        <div class="modal-body__stdate">
-          <span>대여 날짜</span>
-          {{ rent_form.stdate }}
-        </div>
-        <div class="modal-body__eddate">
-          <span>반납 날짜</span>
-          {{ rent_form.eddate }}
-        </div>
-        <div class="modal-body__id">
-          <span>대여자 id</span>
-          {{ rent_form.member_id }}
-        </div>
-        <div class="modal-body__comments">
-          <span>기타 </span>
-          {{ rent_form.comments }}
-        </div>
-
-
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
-        <button type="submit" class="btn btn-primary">신청</button>
+        <button type="button" class="btn btn-secondary" onclick="asset_rent_cancel()">닫기</button>
+        <button type="button" class="btn btn-secondary" onclick="asset_rent_apply()">신청</button>
       </div>
-    </form>
+    </div>
   </div>
 </div>
 
-
-
-
 {% endblock content %} {% block title %} 자산 대여 현황 {% endblock %}
-{% block js %}
-<script src="https://code.jquery.com/jquery-3.3.1.js"></script>
-<script src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
-<script src="https://cdn.datatables.net/1.10.20/js/dataTables.bootstrap4.min.js"></script>
-<script src="{% static '/js/dataTable.js' %}"></script>
-{% endblock%}
 
 {% block css %}
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/css/bootstrap.css">
-<link rel="stylesheet" href="https://cdn.datatables.net/1.10.20/css/dataTables.bootstrap4.min.css">{% endblock %}
+<link rel="stylesheet" href="{% static 'css/selectpicker/bootstrap-select.css' %}">
+<link rel="stylesheet" href="https://cdn.datatables.net/1.10.20/css/dataTables.bootstrap4.min.css">
+<link rel="stylesheet" href="{% static 'css/datepicker/datepicker3.css' %}">
+
+{% endblock %}
+
+{% block js %}
+<script src="{% static 'js/datatable/dataTable.js' %}"></script>
+<script type="text/javascript"
+  src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/js/bootstrap-datepicker.min.js"></script>
+<script src="{% static 'js/datepicker/bootstrap-datepicker.js' %}"></script>
+<script src="{% static 'js/datepicker/bootstrap-datepicker.kr.js' %}"></script>
+<script src="{% static 'js/datepicker/datepicker.js' %}"></script>
+<script src="{% static 'js/modal/modal.js' %}"></script>
+<script src="{% static 'js/assets/return.js' %}"></script>
+<script src="{% static 'js/selectpicker/bootstrap-select.js' %}"></script>
+<script src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.20/js/dataTables.bootstrap4.min.js"></script>
+
+{% endblock %}
