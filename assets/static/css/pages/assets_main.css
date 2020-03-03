@@ -25,24 +25,6 @@
   margin-bottom: 0px !important;
 }
 
-th {
-  background-color: #2c3a47;
-  color: white;
-}
-
-td,
-th {
-  border: 1px solid black !important;
-}
-
-th {
-  font-weight: 700;
-}
-
-.assets_table tr:hover {
-  background-color: #ffeaa7 !important;
-}
-
 .card-body .assets-pagination {
   height: 100px;
   display: flex;
