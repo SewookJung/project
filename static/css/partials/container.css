@@ -1,5 +1,35 @@
 @media (min-width: 1200px) {
   .container {
-    max-width: 95% !important;
+    max-width: 90% !important;
   }
+}
+
+.document .document__header,
+.assets .assets-header {
+  display: flex;
+  align-items: center;
+}
+
+.document__header i,
+.assets-header i {
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.document__header .document__title,
+.assets-header .assets-header__title {
+  color: black;
+  margin-bottom: 0px !important;
+  font-weight: 700;
+  padding: 10px 0px;
+  margin-right: 10px;
+  font-size: 18px;
+}
+
+.card-body {
+  overflow: auto;
+}
+
+.table {
+  margin-bottom: 0px !important;
 }
