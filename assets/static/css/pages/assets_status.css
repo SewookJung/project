@@ -10,3 +10,8 @@
   background-color: rgba(0, 0, 0, 0.5);
   z-index: 2;
 }
+
+#datepicker1,
+#datepicker2 {
+  font-family: FontAwesome;
+}
