@@ -6,7 +6,8 @@ from datetime import datetime
 
 
 def assets_main(request):
-    assets = Asset.objects.exclude(is_state=4)
+    assets = Asset.objects.exclude(
+        is_state=4) & Asset.objects.exclude(is_state=5)
     return render(request, 'assets_main/assets_main.html', {'assets': assets})
 
 
@@ -16,10 +17,12 @@ def assets_add(request):
 
 
 def assets_status(request):
-    assets_rent = Asset.objects.filter(is_state=3)
-    assets_keep = Asset.objects.filter(is_state=5)
+    assets = Asset.objects.filter(
+        Q(is_state=3) |
+        Q(is_state=5)
+    )
     rent_form = AssetForm()
-    return render(request, 'assets_main/assets_status.html', {'assets_rent': assets_rent, 'rent_form': rent_form, 'assets_keep': assets_keep})
+    return render(request, 'assets_main/assets_status.html', {'assets': assets, 'rent_form': rent_form, })
 
 
 def assets_rent(request):
