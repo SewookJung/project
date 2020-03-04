@@ -40,7 +40,9 @@ INSTALLED_APPS = [
     'assets',
     'document',
     'login',
-    'member'
+    'member',
+    'common',
+    'sites',
 ]
 
 MIDDLEWARE = [
