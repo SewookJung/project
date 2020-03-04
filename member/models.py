@@ -20,6 +20,11 @@ class Member(models.Model):
     SENIOR_STAFF = "주임"
     CLERK = "사원"
 
+    # Research Institute #
+    CTO = "연구소장"
+    SENIOR_RESEARCH_ENGINEER = "책임연구원"
+    ASSOCIATE_RESEARCH_ENGINEER = "전임연구원"
+
     ACTIVE = "Active"
     PASSIVE = "Passive"
 
@@ -38,6 +43,13 @@ class Member(models.Model):
                 (ASSISTANT_MANAGER, "대리"),
                 (SENIOR_STAFF, "주임"),
                 (CLERK, "사원"),
+            )
+        ),
+        (
+            '연구소', (
+                (CTO, "연구소장"),
+                (SENIOR_RESEARCH_ENGINEER, "책임 연구원"),
+                (ASSOCIATE_RESEARCH_ENGINEER, "전임 연구원"),                
             )
         ),
     )
