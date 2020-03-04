@@ -3,8 +3,8 @@ from .models import Member
 
 
 class MemberAdmin(admin.ModelAdmin):
-    list_display = ['member_id', 'name', 'dept',  'status']
-    list_display_links = ['member_id', 'name']
+    list_display = ['id', 'member_id', 'name',  'rank', 'dept',  'status']
+    list_display_links = ['id', 'member_id']
 
 
 admin.site.register(Member, MemberAdmin)
