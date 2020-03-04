@@ -36,12 +36,6 @@ function asset_rent_apply() {
     return null;
   }
 
-  if (param.edDate == "") {
-    $("#datepicker2").val("");
-    alert("반납 날짜를 선택하세요");
-    return null;
-  }
-
   if (selectValue == "---------") {
     alert("대여자를 선택하시오!");
     return null;
