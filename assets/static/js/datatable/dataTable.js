@@ -3,8 +3,21 @@ $(document).ready(function() {
     order: [
       [3, "asc"],
       [0, "asc"]
-    ]
+    ],
+    language: {
+      paginate: {
+        previous: "‹",
+        next: "›"
+      }
+    }
   });
-  $("#myTable1").DataTable({});
-  $("#myTable2").DataTable({});
+
+  $("#myTable1, #myTable2").DataTable({
+    language: {
+      paginate: {
+        previous: "‹",
+        next: "›"
+      }
+    }
+  });
 });
