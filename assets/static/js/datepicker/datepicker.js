@@ -1,5 +1,7 @@
 $(function() {
-  $("#datepicker1").datepicker({
+  $(
+    "#datepicker1, #datepicker2, #mnStDate, #mnEdDate, #pjStDate, #pjEdDate"
+  ).datepicker({
     format: "yyyy-mm-dd", //데이터 포맷 형식(yyyy : 년 mm : 월 dd : 일 )
     autoclose: true, //사용자가 날짜를 클릭하면 자동 캘린더가 닫히는 옵션
     datesDisabled: ["2019-06-24", "2019-06-26"], //선택 불가능한 일 설정 하는 배열 위에 있는 format 과 형식이 같아야함.
@@ -10,24 +12,6 @@ $(function() {
     }, //다음달 이전달로 넘어가는 화살표 모양 커스텀 마이징
     showWeekDays: true, // 위에 요일 보여주는 옵션 기본값 : true
     todayHighlight: true, //오늘 날짜에 하이라이팅 기능 기본값 :false
-    language: "ko", //달력의 언어 선택, 그에 맞는 js로 교체해줘야한다.
-    todayBtn: "linked",
-    showMonthAfterYear: true
-  }); //datepicker end
-  $("#datepicker2").datepicker({
-    format: "yyyy-mm-dd", //데이터 포맷 형식(yyyy : 년 mm : 월 dd : 일 )
-    autoclose: true, //사용자가 날짜를 클릭하면 자동 캘린더가 닫히는 옵션
-    datesDisabled: ["2019-06-24", "2019-06-26"], //선택 불가능한 일 설정 하는 배열 위에 있는 format 과 형식이 같아야함.
-    daysOfWeekHighlighted: [3], //강조 되어야 하는 요일 설정
-    immediateUpdates: true, //사용자가 보는 화면으로 바로바로 날짜를 변경할지 여부 기본값 :false
-    multidateSeparator: ",", //여러 날짜를 선택했을 때 사이에 나타나는 글짜 2019-05-01,2019-06-01
-    templates: {
-      leftArrow: "&laquo;",
-      rightArrow: "&raquo;"
-    }, //다음달 이전달로 넘어가는 화살표 모양 커스텀 마이징
-    showWeekDays: true, // 위에 요일 보여주는 옵션 기본값 : true
-    todayHighlight: true, //오늘 날짜에 하이라이팅 기능 기본값 :false
-    weekStart: 0, //달력 시작 요일 선택하는 것 기본값은 0인 일요일
     language: "ko", //달력의 언어 선택, 그에 맞는 js로 교체해줘야한다.
     todayBtn: "linked",
     showMonthAfterYear: true
