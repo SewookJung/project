@@ -30,24 +30,18 @@
             <td>{{ asset.harddisk }}</td>
             <td>{{ asset.cpu }}</td>
             <td>{{ asset.is_where }}</td>
-
             {% if asset.is_state == 1 %}
             <td>개인사용</td>
             {% elif asset.is_state == 2 %}
             <td>테스트</td>
             {% elif asset.is_state == 3 %}
             <td>대여중</td>
-            {% elif asset.is_state == 4 %}
-            <td>폐기</td>
-            {% elif asset.is_state == 5 %}
-            <td>보관중</td>
             {% endif %}
             {% if asset.comments is None %}
             <td></td>
             {% else %}
             <td>{{ asset.comments }}</td>
             {% endif %}
-
           </tr>
           {% endfor %}
         </table>
@@ -57,48 +51,6 @@
 </div>
 
 
-<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-  aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">자산 정보</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <div class="modal-body__asset">
-          <span>자산 정보</span>
-          <span id="asset_mnfacture"></span>
-          <input type="hidden" id="asset_id" value="">
-          <div class="modal-body__stdate">
-            <span></span>
-            <input type="text" name="purchase_date" id="datepicker1" class="form-control calendar__start hasDatepicker"
-              autocomplete="off" placeholder="&#xf073;">
-          </div>
-          <div class="modal-body__eddate">
-            <span>반납 날짜</span>
-            <input type="text" name="purchase_date" id="datepicker2" class="form-control calendar__start hasDatepicker"
-              autocomplete="off" placeholder="&#xf073;">
-          </div>
-          <div class="modal-body__id">
-            <span>대여자</span>
-            {{ rent_form.member_name }}
-          </div>
-          <div class="modal-body__comments">
-            <span>기타 </span>
-            <textarea class="form-control col-sm-12" rows="5" id="asset_comments"></textarea>
-          </div>
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
-      </div>
-    </div>
-  </div>
-</div>
 
 {% endblock content %} {% block title %} 자산 현황 {% endblock %}
 
