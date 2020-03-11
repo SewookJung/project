@@ -1,4 +1,4 @@
-function asset_return(asset_id) {
+function asset_return(asset_id, assetrent_id) {
   if (confirm("자산을 반납하시겠습니까?") == true) {
     const url = "/assets/status/return/";
     const csrfToken = document.getElementsByName("csrfmiddlewaretoken")[0]
@@ -6,6 +6,7 @@ function asset_return(asset_id) {
 
     param = {};
     param.assetId = asset_id;
+    param.assetrentId = assetrent_id;
 
     $.ajax({
       type: "POST",
@@ -14,7 +15,7 @@ function asset_return(asset_id) {
       data: param,
       success: function() {
         alert("자산이 반납 되었습니다.");
-        window.location.href = "/assets/status";
+        window.location.href = "/assets/status/rent";
       },
       error: function(request, status, error) {
         alert("자산 반납에 실패하였습니다.");
