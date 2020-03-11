@@ -8,7 +8,7 @@
   <meta http-equiv="X-UA-Compatible" content="ie=edge" />
   <title>{% block title %}{% endblock %}</title>
   <link rel="stylesheet" href="{% static 'css/assets.css' %}" />
-  <link rel="stylesheet" href="{% static 'css/document.css' %}" />
+  <link rel="stylesheet" href="{% static 'css/sites.css' %}" />
   <link rel="stylesheet" href="{% static 'css/bootstrap/bootstrap.css' %}" />
   <link rel="stylesheet" href="{% static 'css/fontAwesome/font-awesome.css' %}">
   {% block css %} {% endblock %}
@@ -52,9 +52,8 @@
             문서관리
           </a>
           <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-            <a class="dropdown-item" href="{% url 'document_main' %}">문서 현황</a>
-            <a class="dropdown-item" href="{% url 'document_search' %}">문서 검색</a>
-            <a class="dropdown-item" href="{% url 'document_add' %}">문서 등록</a>
+            <a class="dropdown-item" href="{% url 'sites_main' %}">문서 현황</a>
+            <a class="dropdown-item" href="{% url 'sites_add' %}">문서 등록</a>
           </div>
         </li>
         <li class="nav-item dropdown">
