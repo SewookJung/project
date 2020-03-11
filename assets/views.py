@@ -7,7 +7,7 @@ from datetime import datetime
 
 def assets_main(request):
     assets = Asset.objects.exclude(
-        is_state=4) & Asset.objects.exclude(is_state=5)
+        is_state=4) & Asset.objects.exclude(is_state=5) & Asset.objects.exclude(is_state=3)
     return render(request, 'assets_main/assets_main.html', {'assets': assets})
 
 
@@ -28,8 +28,6 @@ def assets_status(request):
 def assets_rent(request):
     if request.method == "POST":
         asset = Asset.objects.get(pk=request.POST['assetId'])
-        asset.member_name_id = request.POST['memberId']
-        asset.comments = request.POST['comments']
         asset.is_state = 3
         asset.save()
         asset_rent = Assetrent(stdate=request.POST['stDate'], eddate=request.POST['edDate'],
@@ -43,14 +41,12 @@ def assets_rent(request):
 def assets_return(request):
     if request.method == "POST":
         asset_rent = Assetrent.objects.get(
-            asset_id=request.POST['assetId'], return_date=None)
+            id=request.POST['assetrentId'])
         asset_rent.return_date = datetime.now()
         asset_rent.save()
         asset = Asset.objects.get(pk=request.POST['assetId'])
         asset.is_state = 5
-        asset.comments = ''
         asset.is_where = "본사"
-        asset.member_name_id = 8
         asset.save()
         return redirect('assets_status')
     else:
