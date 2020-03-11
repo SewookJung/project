@@ -9,13 +9,17 @@ class Project(models.Model):
         ('C', 'CLOSED'),
         ('P', 'PROGRESSING')
     )
-    title = models.CharField(max_length=30)
-    client_id = models.ForeignKey(
+    title = models.CharField(max_length=100)
+    client = models.ForeignKey(
         to='common.Client', null=True, blank=True, verbose_name='the related client', on_delete=models.SET_NULL)
-    product_id = models.ForeignKey(
+    product = models.ForeignKey(
         to='common.Product', null=True, blank=True, verbose_name='the related product', on_delete=models.SET_NULL)
-    sales = models.ForeignKey(to=Member, null=True,
-                              blank=True, on_delete=models.SET_NULL)
+    model = models.ForeignKey(
+        to='common.ProductModel', null=True, blank=True, verbose_name='the related model', on_delete=models.SET_NULL
+    )
+
+    info = JSONField(default=dict, blank=True,
+                     null=True, editable=False)
     status = models.CharField(
         max_length=1, choices=PROJECT_STATUS_CHOICE, default='C', help_text='선택해주세요')
     created_at = models.DateTimeField(auto_now_add=True, editable=False)
@@ -23,7 +27,7 @@ class Project(models.Model):
     comments = models.TextField()
 
     class Meta:
-        unique_together = (('title', 'product_id'),)
+        unique_together = (('title', 'product'),)
 
     PRE = "PRE"
     PRO = "PRO"
@@ -36,39 +40,28 @@ class Project(models.Model):
         (PRE, "Presales"),
         (PRO, "Project Progressing"),
         (EXA, "Examination"),
-        (MAN, "Maintenace"),
+        (MAN, "Maintenance"),
         (ETC, "ETC")
     )
 
-    WORK_STEP_CHOICE = (
-        (PRE,
-            ("PRD", "제품소개서"),
-         ),
-        (PRO, "Project Progressing"),
-        (EXA, "Examination"),
-        (MAN, "Maintenace"),
-        (ETC, "ETC")
-    )
+    def __str__(self):
+        return self.title
 
 
 class Document(models.Model):
-    title = models.CharField(max_length=40)
     project_id = models.ForeignKey(
         Project, on_delete=models.SET_NULL, null=True)
     member_id = models.ForeignKey(
         to=Member, null=True, blank=True, on_delete=models.SET_NULL)
+    auth = JSONField(default=dict, blank=True,
+                     null=True, editable=False)
     kind = models.CharField(
-        max_length=1, choices=Project.PROJECT_STATUS_CHOICE, default=Project.ETC)
+        max_length=3, choices=Project.WORK_STEP_CHOICE, default=Project.ETC)
     comments = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True, editable=False)
 
-
-class DocumentAuth(models.Model):
-    document = models.ForeignKey(
-        Document, on_delete=models.SET_NULL, null=True)
-    members = JSONField(default=dict, blank=True,
-                        null=True, editable=False)
-    created_at = models.DateTimeField(auto_now_add=True, editable=False)
+    def __str__(self):
+        return self.project_id.title
 
 
 def _documentattatchment_upload_path(instance, filename):
@@ -79,8 +72,10 @@ def _documentattatchment_upload_path(instance, filename):
 class DocumentAttachment(models.Model):
     document = models.ForeignKey(
         Document, on_delete=models.SET_NULL, null=True)
-    attach = models.FileField(
-        upload_to=_documentattatchment_upload_path)
+    attach_name = models.CharField(max_length=50, default="")
+    upload_name = models.CharField(max_length=50, default="")
+    upload_dir = models.CharField(max_length=100, default="")
+    created_at = models.DateTimeField(auto_now_add=True, editable=False)
 
 
 @receiver(models.signals.pre_save, sender=DocumentAttachment)
