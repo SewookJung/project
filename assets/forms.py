@@ -41,7 +41,6 @@ class AssetrentForm(forms.ModelForm):
 
         widgets = {
             'asset': forms.TextInput(attrs={'type': 'text', 'class': 'form-control asset-name', 'readonly': 'readonly'}),
-            # . 'asset': forms.HiddenInput(attrs={})
             'comments': forms.Textarea(attrs={'class': 'form-control col-sm-12', 'rows': '5'}),
             'stdate': forms.TextInput(attrs={'type': 'text', 'id': 'datepicker1', 'class': 'form-control calendar__start', 'autocomplete': 'off'}),
             'eddate': forms.TextInput(attrs={'type': 'text', 'id': 'datepicker2', 'class': 'form-control calendar__start', 'autocomplete': 'off'}),
