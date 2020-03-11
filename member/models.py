@@ -5,6 +5,7 @@ from django.db import models
 
 
 class Member(models.Model):
+
     # Chief #
     CEO = "대표이사"
 
@@ -49,7 +50,7 @@ class Member(models.Model):
             '연구소', (
                 (CTO, "연구소장"),
                 (SENIOR_RESEARCH_ENGINEER, "책임 연구원"),
-                (ASSOCIATE_RESEARCH_ENGINEER, "전임 연구원"),                
+                (ASSOCIATE_RESEARCH_ENGINEER, "전임 연구원"),
             )
         ),
     )
@@ -76,3 +77,6 @@ class Member(models.Model):
 
     def __str__(self):
         return self.name
+
+    class Meta:
+        ordering = ['name']
