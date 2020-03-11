@@ -1,0 +1,115 @@
+{% extends 'base.html' %} {% block content %} {% load static %}
+
+<div class="container">
+    <div class="card document">
+        <div class="card-header document__header">
+            <i class="fa fa-external-link"></i>
+            <h5 class="card-title document__title">문서 등록</h5>
+        </div>
+        <div class="card-body">
+            <form class="rental__form" method="POST">{% csrf_token %}
+                <div class="rental__content form-row">
+                    <div class="form-group col-md-12">
+                        <div class="form-group">
+                            <label>프로젝트 명</label>
+                            <input type="text" class="form-control" placeholder="ex) 한국철도 연성망 구축" autocomplete="off"
+                                id="project_name">
+                        </div>
+                        <div class="form-group">
+                            <label>고객사</label>
+                            {{ project_form.client }}
+                        </div>
+                        <div class="form-group">
+                            <label>제조사</label>
+                            {{ project_form.product }}
+                        </div>
+                        <div class="form-group">
+                            <label>모델명</label>
+                            {{ project_form.model }}
+                            <select class="selectpicker" title="수량 선택" id="count">
+                                <option value="1">1EA</option>
+                                <option value="2">2EA</option>
+                                <option value="3">3EA</option>
+                                <option value="4">4EA</option>
+                                <option value="5">5EA</option>
+                                <option value="6">6EA</option>
+                                <option value="7">7EA</option>
+                                <option value="8">8EA</option>
+                                <option value="9">9EA</option>
+                                <option value="10">10EA</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>진행 상태</label>
+                            <select class="selectpicker" title="진행 상태 여부" id="status">
+                                <option value="P">진행 중</option>
+                                <option value="C">진행 완료</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>담당 영업</label>
+                            {{ asset_form.member_name }}
+                        </div>
+                        <div class="form-group">
+                            <label>담당 엔지니어</label>
+                            {{ asset_form.member_name }}
+                        </div>
+                        <div class="form-group ">
+                            <label>시작일</label>
+                            <input type="text" name="purchase_date" id="pjStDate"
+                                class="form-control calendar__start hasDatepicker" autocomplete="off"
+                                id="asset_purchase-date" data-provide="datepicker" placeholder="&#xf073;">
+                        </div>
+                        <div class="form-group ">
+                            <label>종료 예정일</label>
+                            <input type="text" name="purchase_date" id="pjEdDate"
+                                class="form-control calendar__start hasDatepicker" autocomplete="off"
+                                id="asset_purchase-date" data-provide="datepicker" placeholder="&#xf073;">
+                        </div>
+
+                        <div class="form-group ">
+                            <label>유지보수 시작일</label>
+                            <input type="text" name="purchase_date" id="mnStDate"
+                                class="form-control calendar__start hasDatepicker" autocomplete="off"
+                                id="asset_purchase-date" data-provide="datepicker" placeholder="&#xf073;">
+                        </div>
+                        <div class="form-group ">
+                            <label>유지보수 종료일</label>
+                            <input type="text" name="purchase_date" id="mnEdDate"
+                                class="form-control calendar__start hasDatepicker" autocomplete="off"
+                                id="asset_purchase-date" data-provide="datepicker" placeholder="&#xf073;">
+                        </div>
+                        <div class="form-group">
+                        </div>
+                        <div class="form-group">
+                            <label>기 타 </label>
+                            <textarea class="form-control col-sm-12" rows="5" id="sites_comments"></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="text-right submit-box">
+                    <button type="button" class="btn btn-outline-danger" onclick="site_add_cancel()">
+                        취소
+                    </button>
+                    <button type="button" class="btn btn-outline-secondary" onclick="site_add_apply()">
+                        등록
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock %} {% block title %} 문서 등록 {% endblock %}
+{% block css %}
+<link rel="stylesheet" href="{% static 'css/selectpicker/bootstrap-select.css' %}">
+<link rel="stylesheet" href="{% static 'css/datepicker/datepicker3.css' %}">
+{% endblock %}
+
+{% block js %}
+<script src="{% static 'js/add.js' %}"></script>
+<script src="{% static 'js/selectpicker/bootstrap-select.js' %}"></script>
+<script src="{% static 'js/datepicker/bootstrap-datepicker.js' %}"></script>
+<script src="{% static 'js/datepicker/bootstrap-datepicker.kr.js' %}"></script>
+<script src="{% static 'js/datepicker/datepicker.js' %}"></script>
+{% endblock %}
