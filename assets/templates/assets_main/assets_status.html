@@ -20,31 +20,27 @@
           </thead>
           {% for asset in assets %}
           <tr>
+            {% if asset.is_state == 3 %}
+            <td>{{ asset.renter }}</td>
+            <td>{{ asset.mnfacture }} ({{ asset.model }})</td>
+            <td>{{ asset.serial }} </td>
+            <td>대여중</td>
+            <td>{{ asset.rent_comment }}</td>
+            <td>
+              <button type="button" class="btn btn-primary" id="rent-btn{{asset.rent_id}}"
+                onclick="asset_return('{{asset.id}}', '{{asset.rent_id}}')">반납하기</button>
+            </td>
+            {% else %}
             <td>{{ asset.member_name }}</td>
             <td>{{ asset.mnfacture }} ({{ asset.model }})</td>
             <td>{{ asset.serial }} </td>
-            {% if asset.is_state == 5 %}
             <td>보관중</td>
-            {% else %}
-            <td>대여중</td>
-            {% endif %}
-            {% if asset.comments is None %}
-            <td></td>
-            {% else %}
             <td>{{ asset.comments }}</td>
-            {% endif %}
-            {% if asset.is_state == 5 %}
             <td>
               <button type="button" class="btn btn-success" id="rent-btn{{asset.id}}"
                 onclick="asset_rent('{{asset.id}}', '{{asset.mnfacture}}', '{{asset.model}}')">대여하기</button>
             </td>
-            {% else %}
-            <td>
-              <button type="button" class="btn btn-primary" id="rent-btn{{asset.id}}"
-                onclick="asset_return('{{asset.id}}')">반납하기</button>
-            </td>
             {% endif %}
-
           </tr>
           {% endfor %}
 
