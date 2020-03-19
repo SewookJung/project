@@ -4,11 +4,11 @@
     <div class="card document">
         <div class="card-header document__header">
             <i class="fa fa-file-text-o"></i>
-            <h5 class="card-title document__title">문서관리 현황</h5>
+            <h5 class="card-title document__title">&nbsp;고객사 현황</h5>
         </div>
         <div class="card-body">
             <p class="card-text">
-                <table class="table table-striped table-bordered table-hover assets_table " id="myTable1">
+                <table class="table table-striped table-bordered table-hover assets_table " id="sites_table">
                     <thead>
                         <tr>
                             <th>고객사</th>
@@ -22,35 +22,45 @@
                             <th>기 타</th>
                         </tr>
                     </thead>
+
+                    {% for project in projects %}
                     <tr>
-                        <td>삼성디스플레이</td>
-                        <td>NAC</td>
-                        <td>NAC 확산사업 및 고도화</td>
-                        <td>제품소개서(+2)</td>
-                        <td>WBS(1)</td>
-                        <td>검수확인서 1.0v</td>
+                        <td>{{ project.client }}</td>
+                        <td>{{ project.product }}</td>
+                        <td>{{ project.title }}</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        {% for key, value in project.info.items %}
+                        {% if key == "mn_cycle" %}
+                        {% if value == "MON"%}
                         <td>매월</td>
-                        <td>진행 중</td>
-                        <td>분류되지 않은 문서(+2)</td>
-                    </tr>
-                    <tr>
-                        <td>LG 화학</td>
-                        <td>Riverbed</td>
-                        <td>가속기 도입 사업</td>
-                        <td>제품소개서(+1)</td>
-                        <td>WBS(1)</td>
-                        <td>검수확인서 1.5v</td>
+                        {% elif value == "QUA"%}
                         <td>분기</td>
-                        <td>완료</td>
-                        <td>분류되지 않은 문서(+2)</td>
+                        {% elif value == "HALF"%}
+                        <td>반기</td>
+                        {% else %}
+                        <td>매년</td>
+                        {% endif %}
+                        {% endif %}
+                        {% endfor %}
+
+
+                        {% if project.status == "P" %}
+                        <td>진행 중</td>
+                        {% else %}
+                        <td>진행 완료</td>
+                        {% endif %}
+                        <td>{{ project.comments }}</td>
                     </tr>
+                    {% endfor %}
                 </table>
             </p>
         </div>
     </div>
 </div>
 
-{% endblock %} {% block title %} 문서 현황 {% endblock %}
+{% endblock %} {% block title %} 고객사 현황 {% endblock %}
 {% block css %}
 <link rel="stylesheet" href="https://cdn.datatables.net/1.10.20/css/dataTables.bootstrap4.min.css">
 <link rel="stylesheet" href="{% static 'css/selectpicker/bootstrap-select.css' %}">
