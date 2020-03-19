@@ -1,9 +1,9 @@
-from django.conf.urls import url
+from django.conf.urls import re_path
+from django.conf import settings
+from django.conf.urls.static import static
 from . import views
 
 
 urlpatterns = [
-    url(r'^add/', views.document_add, name="document_add"),
-    url(r'^search/', views.document_search, name="document_search"),
-    url('', views.document_main, name="document_main"),
+    re_path(r'^$', views.document_main, name="document_main"),
 ]
