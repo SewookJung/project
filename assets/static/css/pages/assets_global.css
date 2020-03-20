@@ -1,7 +1,0 @@
-@import "./assets_add.css";
-@import "./assets_main.css";
-@import "./assets_status.css";
-
-.table td {
-  vertical-align: unset !important;
-}
