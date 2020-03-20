@@ -14,10 +14,6 @@ class Project(models.Model):
         to='common.Client', null=True, blank=True, verbose_name='the related client', on_delete=models.SET_NULL)
     product = models.ForeignKey(
         to='common.Product', null=True, blank=True, verbose_name='the related product', on_delete=models.SET_NULL)
-    model = models.ForeignKey(
-        to='common.ProductModel', null=True, blank=True, verbose_name='the related model', on_delete=models.SET_NULL
-    )
-
     info = JSONField(default=dict, blank=True,
                      null=True, editable=False)
     status = models.CharField(
@@ -49,9 +45,9 @@ class Project(models.Model):
 
 
 class Document(models.Model):
-    project_id = models.ForeignKey(
+    project = models.ForeignKey(
         Project, on_delete=models.SET_NULL, null=True)
-    member_id = models.ForeignKey(
+    member = models.ForeignKey(
         to=Member, null=True, blank=True, on_delete=models.SET_NULL)
     auth = JSONField(default=dict, blank=True,
                      null=True, editable=False)
@@ -61,17 +57,19 @@ class Document(models.Model):
     created_at = models.DateTimeField(auto_now_add=True, editable=False)
 
     def __str__(self):
-        return self.project_id.title
+        return self.project.title
 
 
-def _documentattatchment_upload_path(instance, filename):
-    return 'document/{0}/document/{1}/{2}'.format(
-        instance.document.project_id, instance.document.pk, filename)
+def _documentattachment_upload_path(instance, filename):
+    return 'files/{0}/{1}/{2}'.format(
+        instance.document.project, instance.document.pk, filename)
 
 
 class DocumentAttachment(models.Model):
     document = models.ForeignKey(
         Document, on_delete=models.SET_NULL, null=True)
+    attach = models.FileField(
+        upload_to=_documentattachment_upload_path, default="")
     attach_name = models.CharField(max_length=50, default="")
     upload_name = models.CharField(max_length=50, default="")
     upload_dir = models.CharField(max_length=100, default="")
@@ -83,7 +81,7 @@ def documentattachment_on_pre_save(sender, instance, *args, **kwargs):
     if instance.pk:
         try:
             obj = sender.objects.get(pk=instance.pk)
-            if obj.attach != instance.attach:
+            if obj.attach != instance.attach_name:
                 obj.attach.delete(save=False)
         except sender.DoesNotExist:
             pass
