@@ -1,13 +1,15 @@
+body,
+html {
+  height: 100%;
+}
 .body {
   background: url("/static/img/body-bg.jpg") no-repeat;
   background-size: cover;
   display: flex;
   justify-content: center;
   align-items: center;
-}
-
-nav {
-  display: none !important;
+  width: 100%;
+  height: 100%;
 }
 
 .login__content {

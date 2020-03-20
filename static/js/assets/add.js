@@ -1,5 +1,15 @@
+$("#datepicker1").keydown(myfunction);
+
+function myfunction(e) {
+  if (e.keyCode === 13) {
+    e.stopPropagation();
+    e.preventDefault();
+    return false;
+  }
+}
+
 function asset_add_cancel() {
-  if (confirm("정말 취소하시겠습니까?") == true) {
+  if (confirm("자산 등록을 취소하시겠습니까?") == true) {
     location.href = "/assets";
   } else {
     return false;

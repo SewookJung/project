@@ -47,6 +47,7 @@
     clear: "삭제",
     format: "yyyy-mm-dd",
     titleFormat: "yyyy년mm월",
-    weekStart: 0
+    weekStart: 0,
+    toggleActive: false
   };
 })(jQuery);

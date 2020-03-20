@@ -36,12 +36,6 @@ function asset_rent_apply() {
     return null;
   }
 
-  if (param.edDate == "") {
-    $("#datepicker2").val("");
-    alert("반납 날짜를 선택하세요");
-    return null;
-  }
-
   if (selectValue == "---------") {
     alert("대여자를 선택하시오!");
     return null;
@@ -57,7 +51,7 @@ function asset_rent_apply() {
     data: param,
     success: function() {
       alert("자산신청이 완료되었습니다.");
-      window.location.href = "/assets/status";
+      window.location.href = "/assets/status/rent";
     },
     error: function(request, status, error) {
       alert("자산신청에 실패하였습니다.");

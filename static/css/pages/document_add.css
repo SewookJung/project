@@ -33,3 +33,8 @@
 .document__add.form-group table th:last-child {
   text-align: right;
 }
+
+#mnStDate,
+#mnEdDate {
+  font-family: FontAwesome;
+}
