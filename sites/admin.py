@@ -9,9 +9,9 @@ class ProjectAdmin(admin.ModelAdmin):
 
 
 class DocumentAdmin(admin.ModelAdmin):
-    list_display = ['id',  'project_id', 'member_id',
+    list_display = ['id',  'project', 'member',
                     'kind', 'created_at', 'comments']
-    list_display_links = ['id', 'project_id']
+    list_display_links = ['id', 'project']
 
 
 class DocumentAttachmentAdmin(admin.ModelAdmin):
