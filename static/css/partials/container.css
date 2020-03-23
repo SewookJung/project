@@ -5,19 +5,22 @@
 }
 
 .document .document__header,
+.sites .sites__header,
 .assets .assets-header {
   display: flex;
   align-items: center;
 }
 
 .document__header i,
-.assets-header i {
+.assets-header i,
+.sites__header i {
   font-size: 18px;
   font-weight: 600;
 }
 
 .document__header .document__title,
-.assets-header .assets-header__title {
+.assets-header .assets-header__title,
+.sites__header .sites__title {
   color: black;
   margin-bottom: 0px !important;
   font-weight: 700;
