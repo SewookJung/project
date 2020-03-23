@@ -1,6 +1,6 @@
 import json
 
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
 from assets.forms import AssetForm
 from .forms import ProjectForm, DocumentAttachmentForm, DocumentForm
@@ -23,6 +23,44 @@ def sites_main(request):
     return render(request, 'sites/sites_main.html', {"projects": projects})
 
 
+def sites_detail(request, pk):
+    project = get_object_or_404(Project, pk=pk)
+    asset_form = AssetForm()
+    project_form = ProjectForm()
+    document_form = DocumentAttachmentForm()
+    return render(request, 'sites/sites_detail.html', {"project": project, "asset_form": asset_form, "project_form": project_form,  "document_form": document_form})
+
+
+def sites_edit(request, pk):
+
+    if request.method == "POST":
+        try:
+            print(request.POST)
+            project = Project.objects.get(pk=pk)
+            project.title = request.POST['project_name']
+            project.status = request.POST['status']
+            project.comments = request.POST['sites_comments']            
+            project.client_id = request.POST['client']
+            project.product_id = request.POST['product']
+            project.info['sales'] = request.POST['sales_id']
+            project.info['mn_cycle'] = request.POST['cycle']
+            project.info['eng'] = request.POST['eng']
+            project.info['started_at'] = request.POST.getlist('purchase_date')[
+                0]
+            project.info['ended_at'] = request.POST.getlist('purchase_date')[
+                1]
+            project.info['mnstarted_at'] = request.POST.getlist('purchase_date')[
+                2]
+            project.info['mnended_at'] = request.POST.getlist('purchase_date')[
+                3]
+            project.save()
+            return redirect("sites_main")
+        except:
+            return redirect("sites_main")
+    else:
+        return redirect("sites_main")
+
+
 def sites_add(request):
     asset_form = AssetForm()
     project_form = ProjectForm()
@@ -35,10 +73,10 @@ def sites_add_apply(request):
         print(request.POST)
         project_apply = Project(title=request.POST['project_name'], status=request.POST['status'],
                                 comments=request.POST['sites_comments'], client_id=request.POST[
-                                    'client'], product_id=request.POST['product'],
-                                info={"sales": request.POST.getlist('member_name')[0], "mn_cycle": request.POST['cycle'], "eng": request.POST.getlist('member_name')[1], "started_at": request.POST.getlist('purchase_date')[
-                                    0], "ended_at": request.POST.getlist('purchase_date')[1], "msstarted_at": request.POST.getlist('purchase_date')[2], "mended_at": request.POST.getlist('purchase_date')[3]}
-                                )
+            'client'], product_id=request.POST['product'],
+            info={"sales": request.POST.getlist('member_name')[0], "mn_cycle": request.POST['cycle'], "eng": request.POST.getlist('member_name')[1], "started_at": request.POST.getlist('purchase_date')[
+                0], "ended_at": request.POST.getlist('purchase_date')[1], "mnstarted_at": request.POST.getlist('purchase_date')[2], "mnended_at": request.POST.getlist('purchase_date')[3]}
+        )
         project_apply.save()
         return redirect("sites_main")
     else:
