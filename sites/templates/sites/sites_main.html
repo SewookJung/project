@@ -1,10 +1,10 @@
 {% extends 'base.html' %} {% block content %} {% load static %}
 
 <div class="container">
-    <div class="card document">
-        <div class="card-header document__header">
+    <div class="card sites">
+        <div class="card-header sites__header">
             <i class="fa fa-file-text-o"></i>
-            <h5 class="card-title document__title">&nbsp;고객사 현황</h5>
+            <h5 class="card-title sites__title">&nbsp;고객사 현황</h5>
         </div>
         <div class="card-body">
             <p class="card-text">
@@ -25,12 +25,16 @@
 
                     {% for project in projects %}
                     <tr>
-                        <td>{{ project.client }}</td>
+                        <td>
+                            <a href="{% url 'sites_detail' pk=project.pk %}">
+                                {{ project.client }}
+                            </a>
+                        </td>
                         <td>{{ project.product }}</td>
                         <td>{{ project.title }}</td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
+                        <td data-container="body" data-toggle="tooltip_presales" data-placement="top">제품소개서(+2)</td>
+                        <td data-container="body" data-toggle="tooltip_wbs" data-placement="top">wbs(+1)</td>
+                        <td data-container="body" data-toggle="tooltip_confirm" data-placement="top">검수확인서(+2)</td>
                         {% for key, value in project.info.items %}
                         {% if key == "mn_cycle" %}
                         {% if value == "MON"%}
@@ -44,8 +48,6 @@
                         {% endif %}
                         {% endif %}
                         {% endfor %}
-
-
                         {% if project.status == "P" %}
                         <td>진행 중</td>
                         {% else %}
@@ -67,6 +69,7 @@
 
 {% endblock %}
 {% block js%}
+<script src="{% static 'js/sites/tooltip.js' %}"></script>
 <script src="{% static 'js/selectpicker/bootstrap-select.js' %}"></script>
 <script src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
 <script src="https://cdn.datatables.net/1.10.20/js/dataTables.bootstrap4.min.js"></script>
