@@ -7,6 +7,7 @@ from .forms import ProjectForm, DocumentAttachmentForm, DocumentForm
 from .models import Document, DocumentAttachment, Project
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import View
+from django.contrib.auth.decorators import login_required
 
 
 def make_response(status=200, content_type="text/plain", content=None):
@@ -18,11 +19,13 @@ def make_response(status=200, content_type="text/plain", content=None):
     return response
 
 
+@login_required
 def sites_main(request):
     projects = Project.objects.all()
     return render(request, 'sites/sites_main.html', {"projects": projects})
 
 
+@login_required
 def sites_detail(request, pk):
     project = get_object_or_404(Project, pk=pk)
     asset_form = AssetForm()
@@ -31,6 +34,7 @@ def sites_detail(request, pk):
     return render(request, 'sites/sites_detail.html', {"project": project, "asset_form": asset_form, "project_form": project_form,  "document_form": document_form})
 
 
+@login_required
 def sites_edit(request, pk):
 
     if request.method == "POST":
@@ -39,7 +43,7 @@ def sites_edit(request, pk):
             project = Project.objects.get(pk=pk)
             project.title = request.POST['project_name']
             project.status = request.POST['status']
-            project.comments = request.POST['sites_comments']            
+            project.comments = request.POST['sites_comments']
             project.client_id = request.POST['client']
             project.product_id = request.POST['product']
             project.info['sales'] = request.POST['sales_id']
@@ -61,6 +65,7 @@ def sites_edit(request, pk):
         return redirect("sites_main")
 
 
+@login_required
 def sites_add(request):
     asset_form = AssetForm()
     project_form = ProjectForm()
@@ -68,6 +73,7 @@ def sites_add(request):
     return render(request, "sites/sites_add.html", {'asset_form': asset_form, 'project_form': project_form, 'document_form': document_form, })
 
 
+@login_required
 def sites_add_apply(request):
     if request.method == "POST":
         print(request.POST)
@@ -83,11 +89,13 @@ def sites_add_apply(request):
         return redirect("sites_main")
 
 
+@login_required
 def document_upload(request):
     document_form = DocumentForm()
     return render(request, "sites/sites_upload.html", {'document_form': document_form})
 
 
+@login_required
 @csrf_exempt
 def document_upload_apply(request):
     if request.method == "POST":
