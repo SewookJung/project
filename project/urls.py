@@ -15,6 +15,7 @@ Including another URLconf
 """
 from django.conf.urls import re_path, include
 from django.contrib import admin
+from login.views import redirect_root
 
 urlpatterns = [
     re_path(r'^admin/', admin.site.urls),
@@ -22,4 +23,5 @@ urlpatterns = [
     re_path(r'^document/', include('document.urls')),
     re_path(r'^login/', include('login.urls')),
     re_path(r'^sites/', include('sites.urls')),
+    re_path(r'^', redirect_root),
 ]
