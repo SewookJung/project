@@ -75,7 +75,7 @@
           <a href="#" class="text-reset text-decoration-none profile-link">
             {{request.session.member_name}} / {{request.session.member_rank}} / {{request.session.member_dept}}
           </a>
-          <a href="#">
+          <a href="{% url 'logout' %}">
             <button type="button" class="btn btn-outline-light ">
               로그아웃
             </button>
