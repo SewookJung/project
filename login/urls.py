@@ -3,6 +3,7 @@ from . import views
 
 
 urlpatterns = [
-    url('check', views.login_process, name="login_process"),
-    url('', views.login, name="login"),
+    url(r'^check/$', views.login_process, name="login_process"),
+    url(r'^logout/$', views.logout, name="logout"),
+    url(r'^', views.login, name="login"),
 ]
