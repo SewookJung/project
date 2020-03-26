@@ -1,21 +1,25 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from assets.models import Asset, Assetrent
 from django.db.models import Q
-from .forms import AssetForm, AssetrentForm
 from datetime import datetime
+from assets.models import Asset, Assetrent
+from .forms import AssetForm, AssetrentForm
+from django.contrib.auth.decorators import login_required
 
 
+@login_required
 def assets_main(request):
     assets = Asset.objects.exclude(
         is_state=4) & Asset.objects.exclude(is_state=5) & Asset.objects.exclude(is_state=3)
     return render(request, 'assets_main/assets_main.html', {'assets': assets})
 
 
+@login_required
 def assets_add(request):
     form = AssetForm()
     return render(request, 'assets_main/assets_add.html', {'form': form})
 
 
+@login_required
 def assets_status(request):
     assets = Asset.objects.filter(
         Q(is_state=3) |
@@ -25,6 +29,7 @@ def assets_status(request):
     return render(request, 'assets_main/assets_status.html', {'assets': assets, 'rent_form': rent_form, })
 
 
+@login_required
 def assets_rent(request):
     if request.method == "POST":
         asset = Asset.objects.get(pk=request.POST['assetId'])
@@ -38,6 +43,7 @@ def assets_rent(request):
         return render(request, 'assets_main/assets_rent.html', {})
 
 
+@login_required
 def assets_return(request):
     if request.method == "POST":
         asset_rent = Assetrent.objects.get(
@@ -53,6 +59,7 @@ def assets_return(request):
         return render(request, 'assets_main/assets_status.html', {})
 
 
+@login_required
 def assets_add_apply(request):
     if request.method == "POST":
         asset = Asset(mnfacture=request.POST['mnfacture'], model=request.POST['model'], cpu=request.POST['cpu'], memory=request.POST['memory'], harddisk=request.POST['hardDisk'], is_where=request.POST['where'],
