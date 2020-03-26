@@ -32,7 +32,11 @@
                         </td>
                         <td>{{ project.product }}</td>
                         <td>{{ project.title }}</td>
-                        <td data-container="body" data-toggle="tooltip_presales" data-placement="top">제품소개서(+2)</td>
+                        <td>
+
+                            <a href="#" title="Presales 파일 리스트" data-toggle="popover_presales" data-trigger="focus"
+                                data-placement="top">제품소개서(+2)</a>
+                        </td>
                         <td data-container="body" data-toggle="tooltip_wbs" data-placement="top">wbs(+1)</td>
                         <td data-container="body" data-toggle="tooltip_confirm" data-placement="top">검수확인서(+2)</td>
                         {% for key, value in project.info.items %}
