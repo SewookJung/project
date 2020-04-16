@@ -1,9 +1,10 @@
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import render, redirect
 from django.db.models import Q
+from django.contrib.auth.decorators import login_required
 from datetime import datetime
+
 from assets.models import Asset, Assetrent
 from .forms import AssetForm, AssetrentForm
-from django.contrib.auth.decorators import login_required
 
 
 @login_required
