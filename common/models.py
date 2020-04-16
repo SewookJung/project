@@ -17,7 +17,7 @@ class Client(models.Model):
 
     def __str__(self):
         return self.name
-    
+
     class Meta:
         ordering = ['name']
 
@@ -42,3 +42,14 @@ class ProductModel(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class Mnfacture(models.Model):
+    manafacture = models.CharField(max_length=40, default='')
+    created_at = models.DateTimeField(auto_now_add=True, editable=False)
+
+    def __str__(self):
+        return self.manafacture
+
+    class Meta:
+        ordering = ['manafacture']
