@@ -4,15 +4,12 @@
     <div class="card equipment">
         <div class="card-header document__header">
             <i class="fa fa-external-link"></i>
-            <h5 class="card-title equipment__title">&nbsp;고객사 운용제품현황</h5>
+            <h5 class="card-title equipment__title">&nbsp;운영장비 현황</h5>
         </div>
         <div class="card-body">
-            <form class="equipment__add" method="POST" name="ajaxForm">{% csrf_token %}
+
                 <div class="equipment__contents form-row">
                     <div class="form-group col-md-12">
-                        <div class="form-group">
-                            <div id="fine-uploader-manual-trigger"></div>
-                        </div>
                         <div class="form-group">
                             <table class="table table-striped table-bordered table-hover assets_table " id="myTable1">
                                 <thead>
@@ -46,16 +43,6 @@
                     </div>
                 </div>
 
-
-                <div class="text-right submit-box">
-                    <button type="button" class="btn btn-outline-danger" onclick="equipment_add_cancle()">
-                        취소
-                    </button>
-                    <button type="submit" class="btn btn-outline-secondary" id="submit-btn">
-                        등록
-                    </button>
-                </div>
-            </form>
         </div>
     </div>
 </div>
