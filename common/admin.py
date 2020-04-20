@@ -13,7 +13,7 @@ class ClientAdmin(admin.ModelAdmin):
 
 
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ['id', 'name', 'makers', 'created_at']
+    list_display = ['id', 'name', 'makers', 'level', 'created_at']
     list_display_links = ['id', 'name']
 
 
