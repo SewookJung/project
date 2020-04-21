@@ -14,6 +14,7 @@ Including another URLconf
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
 from django.conf.urls import re_path, include
+from django.urls import path
 from django.contrib import admin
 from login.views import redirect_root
 
@@ -21,7 +22,9 @@ urlpatterns = [
     re_path(r'^admin/', admin.site.urls),
     re_path(r'^assets/', include('assets.urls')),
     re_path(r'^document/', include('document.urls')),
+    re_path(r'^equipment/', include('equipment.urls')),
     re_path(r'^login/', include('login.urls')),
     re_path(r'^sites/', include('sites.urls')),
-    re_path(r'^', redirect_root),
+    re_path(r'^weekly/', include('weekly.urls')),
+    re_path(r'^$', redirect_root),
 ]

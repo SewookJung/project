@@ -16,7 +16,7 @@ class DocumentAdmin(admin.ModelAdmin):
 
 class DocumentAttachmentAdmin(admin.ModelAdmin):
     list_display = ['id',  'document', 'attach_name',
-                    'upload_name', 'upload_dir', 'created_at']
+                    'content_size', 'content_type', 'check_code', 'created_at']
     list_display_links = ['id', 'document']
 
 
