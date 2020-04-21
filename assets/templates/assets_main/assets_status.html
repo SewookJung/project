@@ -20,7 +20,7 @@
           </thead>
           {% for asset in assets %}
           <tr>
-            {% if asset.is_state == 3 %}
+            {% if asset.is_state == STATUS_RENTAL %}
             <td>{{ asset.renter }}</td>
             <td>{{ asset.mnfacture }} ({{ asset.model }})</td>
             <td>{{ asset.serial }} </td>
