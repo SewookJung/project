@@ -36,16 +36,16 @@
               <div class="login__icon">
                 <i class="fa fa-user"></i>
               </div>
-              <input type="text" name="member_id" placeholder="아이디입력" value="swjung" autofocus required/>
+              <input type="text" name="member_id" placeholder="아이디입력" autofocus required />
             </div>
             <div class="login__pw">
               <i class="fa fa-lock"></i>
-              <input type="password" name="member_pw" placeholder="패스워드입력" value="Glow1320!" required/>
+              <input type="password" name="member_pw" placeholder="패스워드입력" value="Glow1320!" required />
             </div>
             <div class="login__lost-pw">
               <span>Forgot password?</span>
             </div>
-	          <button type="submit" class="btn btn-primary" id="login_btn">login</button>
+            <button type="submit" class="btn btn-primary" id="login_btn">login</button>
           </div>
         </div>
       </div>
@@ -57,52 +57,5 @@
   <script trype="text/javascript" src="{% static 'js/bootstrap/jquery-3.4.1.min.js' %}"></script>
   <script trype="text/javascript" src="{% static 'js/bootstrap/bootstrap.js' %}"></script>
 </body>
-<script language="javascript">
-/*
-$('#login_btn').click(function () {
-  BootstrapDialog.alert('아이디를 입력하세요');
-    param = {};
-    param.member_id = $.trim($("#member_id").val());
-    param.member_pw = $.trim($("#member_pw").val());
 
-    if param.member_id == '') {
-       $('#member_id').val('');
-       BootstrapDialog.alert('아이디를 입력하세요');
-       return null;
-    }
-
-    if param.member_pw == '') {
-       $('#member_pw').val('');
-       BootstrapDialog.alert('패스워드를 입력하세요');
-       return null
-    }
-
-    checkLogin (param);
-
-});
-
-function checkLogin(param) {
-    $('#login_btn').attr('disabled', true);
-    $.ajax({
-        type: 'POST',
-        url: '/login/check',
-        contentType: "application/json",
-        dataType: "json",
-        data: JSON.stringify(param),
-        success: function(data) {
-          BootStrapDialog.alert('로그인에 성공하셨습니다.');
-          windows.location.href = '/assets'
-        },
-        error: function(jqXHR, textStatus, error) {
-          BootstrapDialog.alert('아이디 또는 패스워드를 확인하세요');
-          $('#member_id').val('');
-          $('#member_pw').val('');
-          $('#login_btn').attr('disabled', false);
-        }
-    }).then(function(data) {
-       
-    });
-}
-*/
-</script>
 </html>
