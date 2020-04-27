@@ -5,12 +5,13 @@ from datetime import datetime
 
 from assets.models import Asset, Assetrent
 from .forms import AssetForm, AssetrentForm
+from utils.constant import STATUS_PERSONAL, STATUS_TEST, STATUS_RENTAL, STATUS_DISPOSAL, STATUS_KEEP
 
 
 @login_required
 def assets_main(request):
     assets = Asset.objects.exclude(
-        is_state=4) & Asset.objects.exclude(is_state=5) & Asset.objects.exclude(is_state=3)
+        is_state=STATUS_RENTAL) & Asset.objects.exclude(is_state=STATUS_DISPOSAL) & Asset.objects.exclude(is_state=STATUS_KEEP)
     return render(request, 'assets_main/assets_main.html', {'assets': assets})
 
 
@@ -23,18 +24,18 @@ def assets_add(request):
 @login_required
 def assets_status(request):
     assets = Asset.objects.filter(
-        Q(is_state=3) |
-        Q(is_state=5)
+        Q(is_state=STATUS_RENTAL) |
+        Q(is_state=STATUS_KEEP)
     )
     rent_form = AssetForm()
-    return render(request, 'assets_main/assets_status.html', {'assets': assets, 'rent_form': rent_form, })
+    return render(request, 'assets_main/assets_status.html', {'assets': assets, 'rent_form': rent_form, 'STATUS_RENTAL': STATUS_RENTAL})
 
 
 @login_required
 def assets_rent(request):
     if request.method == "POST":
         asset = Asset.objects.get(pk=request.POST['assetId'])
-        asset.is_state = 3
+        asset.is_state = STATUS_RENTAL
         asset.save()
         asset_rent = Assetrent(stdate=request.POST['stDate'], eddate=request.POST['edDate'],
                                comments=request.POST['comments'], asset_id=request.POST['assetId'], member_name=request.POST['memberName'])
@@ -52,7 +53,7 @@ def assets_return(request):
         asset_rent.return_date = datetime.now()
         asset_rent.save()
         asset = Asset.objects.get(pk=request.POST['assetId'])
-        asset.is_state = 5
+        asset.is_state = STATUS_KEEP
         asset.is_where = "본사"
         asset.save()
         return redirect('assets_status')
@@ -62,10 +63,16 @@ def assets_return(request):
 
 @login_required
 def assets_add_apply(request):
+    print(request.POST)
     if request.method == "POST":
         asset = Asset(mnfacture=request.POST['mnfacture'], model=request.POST['model'], cpu=request.POST['cpu'], memory=request.POST['memory'], harddisk=request.POST['hardDisk'], is_where=request.POST['where'],
                       is_state=request.POST['state'], purchase_date=request.POST['purchase_date'], comments=request.POST['comments'], member_name_id=request.POST['memberId'], serial=request.POST['serial'])
         asset.save()
+        asset_status = int(request.POST['state'])
+        if asset_status == STATUS_RENTAL:
+            asset_rent = Assetrent(stdate=request.POST['rentDate'], eddate=request.POST['returnDate'],
+                                   comments=request.POST['comments'], asset_id=asset.id, member_name=request.POST['memberName'])
+            asset_rent.save()
         return redirect("assets_main")
     else:
         return render(request, 'assets_main/assets.html', {})
