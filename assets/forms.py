@@ -12,7 +12,7 @@ class AssetForm(forms.ModelForm):
                   'cpu', 'memory', 'harddisk', 'is_where', 'is_state', 'purchase_date', 'serial')
 
         widgets = {
-            'member_name': forms.Select(attrs={'class': 'selectpicker', 'title': '대여자 선택', 'id': 'member_id'}),
+            'member_name': forms.Select(attrs={'class': 'selectpicker', 'title': '소유자 선택', 'id': 'member_id'}),
             'comments': forms.Textarea(attrs={'class': 'form-control col-sm-12', 'rows': '5', 'id': 'comment'}),
             'purchase_date': forms.TextInput(attrs={'type': 'text', 'id': 'datepicker1', 'class': 'form-control calendar__start', 'autocomplete': 'off', 'class': 'form-control'}),
             'is_where': forms.TextInput(attrs={'type': 'text', 'class': 'form-control', 'placeholder': 'ex) 남부팀, 본사, 원주(인터넷망), 원주(업무망)', 'autocomplete': 'off'}),
