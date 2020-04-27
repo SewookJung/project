@@ -66,6 +66,10 @@
               <input type="text" name="return_date" id="return_date" class="form-control calendar__start hasDatepicker"
                 autocomplete="off" id="asset_purchase-date" data-provide="datepicker" placeholder="&#xf073;">
             </div>
+            <div class="form-group renter_form">
+              <label>대여자 선택</label>
+              {{ form.member_name }}
+            </div>
             <div class="form-group">
               <label>기 타 (최초사용자 입력)</label>
               <textarea class="form-control col-sm-12" rows="5" id="asset_comments"></textarea>
