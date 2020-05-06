@@ -4,11 +4,11 @@
     <div class="card sites">
         <div class="card-header sites__header">
             <i class="fa fa-external-link"></i>
-            <h5 class="card-title sites__title" id="sites__title"></h5>
+            <h5 class="card-title sites__title" id="sites__title">&nbsp; {{ project.title }} 세부사항</h5>
         </div>
         <div class="card-body">
-            <form class="sites__detail" method="POST" id="test" onsubmit="return checkValues()"
-                action="/sites/{{ project.id }}/edit/">{% csrf_token %}
+            <form class="sites__detail" method="POST" id="ajaxForm" onsubmit="return checkValues()"
+                action="/sites/edit/{{ project.id }}/">{% csrf_token %}
                 <div class="sites__contents form-row">
                     <div class="form-group col-md-12">
                         <div class="form-group">
