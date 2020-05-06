@@ -1,0 +1,26 @@
+{% extends 'base.html' %} {% block content %} {% load static %}
+
+<div class="container">
+    <div class="card sites">
+        <div class="card-header sites__header">
+            <i class="fa fa-file-text-o"></i>
+            <h5 class="card-title sites__title">&nbsp; {{project_name}} 문서 등록 현황</h5>
+        </div>
+        <div class="card-body">
+            <p class="card-text">
+                {% for item in documents_list %}
+                <a href="/sites/document/download/{{item.id}}/">
+                    {{item.id}} ////// {{item.attach_name}} ////// {{item.attach}}<br>
+                </a>
+                {% endfor %}
+            </p>
+        </div>
+    </div>
+</div>
+
+{% endblock %} {% block title %} 문서등록 현황 {% endblock %}
+{% block css %}
+
+{% endblock %}
+{% block js%}
+{% endblock %}
