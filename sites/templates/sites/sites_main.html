@@ -4,7 +4,7 @@
     <div class="card sites">
         <div class="card-header sites__header">
             <i class="fa fa-file-text-o"></i>
-            <h5 class="card-title sites__title">&nbsp;고객사 현황</h5>
+            <h5 class="card-title sites__title">&nbsp;문서 현황</h5>
         </div>
         <div class="card-body">
             <p class="card-text">
@@ -33,7 +33,6 @@
                         <td>{{ project.product }}</td>
                         <td>{{ project.title }}</td>
                         <td>
-
                             <a href="#" title="Presales 파일 리스트" data-toggle="popover_presales" data-trigger="focus"
                                 data-placement="top">제품소개서(+2)</a>
                         </td>
@@ -61,6 +60,14 @@
                     </tr>
                     {% endfor %}
                 </table>
+                <br>
+                <div>File list</div>
+                {% for document in documents %}
+                <a href="/sites/document/{{document.project_id}}/">
+                    {{document.id}}, {{document.project}}, {{document.member}}, {{document.kind}}, {{document.auth}}
+                    <br>
+                </a>
+                {% endfor %}
             </p>
         </div>
     </div>
