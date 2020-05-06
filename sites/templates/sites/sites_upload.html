@@ -7,7 +7,10 @@
             <h5 class="card-title document__title">&nbsp;문서 등록</h5>
         </div>
         <div class="card-body">
-            <form class="sites__add" method="POST" name="ajaxform">{% csrf_token %}
+            <form class="sites__add" method="POST" name="ajaxform">
+                {% csrf_token %}
+                <input type="hidden" value="{{check_code}}" id="check_code" name="check_code">
+                <input type="hidden" value="" id="document_id" name="document_id">
                 <div class="sites__contents form-row">
                     <div class="form-group col-md-12">
                         <div class="form-group">
@@ -19,15 +22,19 @@
                             {{ document_form.kind }}
                         </div>
                         <div class="form-group">
-                            <label>파일 업로드</label>
+                            <label>파일 업로드 (첨부파일 : 7개, 각 파일은 10M 이하로 가능 / pdf, excel, ppt, word, hwp, image, zip, txt
+                                가능)</label>
                         </div>
                         <div class="form-group">
                             <div id="fine-uploader-manual-trigger"></div>
                         </div>
+                        <div class="form-gruop">
+                            <div class="member_permission"></div>
+                        </div>
                     </div>
                 </div>
                 <div class="text-right submit-box">
-                    <button type="button" class="btn btn-outline-danger">
+                    <button type="button" class="btn btn-outline-danger" onclick="document_add_cancle()">
                         취소
                     </button>
                     <button type="submit" class="btn btn-outline-secondary" id="submit-btn">
@@ -45,6 +52,11 @@
 <link rel="stylesheet" href="{% static 'css/selectpicker/bootstrap-select.css' %}">
 <link rel="stylesheet" href="{% static 'css/datepicker/datepicker3.css' %}">
 <link rel="stylesheet" href="{% static 'css/fineuploader/fine-uploader-new.css' %}">
+<link rel="stylesheet" href="{% static 'css/listbox/icon_font.css' %}">
+<link rel="stylesheet" href="{% static 'css/listbox/jquery.transfer.css' %}">
+{% endblock %}
+
+{% block js %}
 <script type="text/template" id="qq-template-manual-trigger">
     <div class="qq-uploader-selector qq-uploader" qq-drop-area-text="Drop files here">
         <div class="qq-total-progress-bar-container-selector qq-total-progress-bar-container">
@@ -105,11 +117,11 @@
         </dialog>
     </div>
 </script>
-{% endblock %}
 
-{% block js %}
+
 <script src="{% static 'js/selectpicker/bootstrap-select.js' %}"></script>
 <script src="{% static 'js/fineuploader/jquery.fine-uploader.js' %}"></script>
 <script src="{% static 'js/sites/upload.js' %}"></script>
 <script src="{% static 'js/sites/jquery.form.js' %}"></script>
+<script src="{% static 'js/listbox/jquery.transfer.js' %}"></script>
 {% endblock %}
