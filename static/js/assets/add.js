@@ -1,12 +1,36 @@
+$(document).ready(function () {
+  $(".return_form").hide();
+  $(".rent_form").hide();
+  $(".renter_form").hide();
+
+  const selectboxs = document.querySelectorAll("#member_id");
+  selectboxs[1].id = "renter_id";
+
+  $("#asset_is-state").on("change", function (e) {
+    const isStateValue = this.value;
+    if (isStateValue == 3) {
+      $(".return_form").show();
+      $(".rent_form").show();
+      $(".renter_form").show();
+    } else {
+      $(".return_form").hide();
+      $(".rent_form").hide();
+      $(".renter_form").hide();
+    }
+  });
+});
+
 function asset_add_cancel() {
   if (confirm("자산 등록을 취소하시겠습니까?") == true) {
-    location.href = "/assets";
+    location.href = "/assets/";
   } else {
     return false;
   }
 }
 
 function asset_add_apply() {
+  const isStateValue = $("#asset_is-state").val();
+
   param = {};
   param.mnfacture = $.trim($("#asset_mnfacture").val());
   param.purchase_date = $.trim($("#datepicker1").val());
@@ -19,6 +43,19 @@ function asset_add_apply() {
   param.serial = $.trim($("#asset_serial").val());
   param.state = $.trim($("#asset_is-state").val());
   param.memory = $.trim($("#asset_memory").val());
+
+  if (isStateValue == 3) {
+    const getButtonElements = document.querySelectorAll("button");
+    getButtonElements.forEach((buttons) => {
+      let getButtonElements = buttons.getAttribute("data-id");
+      if (getButtonElements == "renter_id") {
+        let memberNameValue = buttons.innerText;
+        param.memberName = memberNameValue;
+      }
+    });
+    param.rentDate = $.trim($("#rent_date").val());
+    param.returnDate = $.trim($("#return_date").val());
+  }
 
   if (param.memberId == "") {
     $("#member_id").val("");
@@ -80,6 +117,17 @@ function asset_add_apply() {
     return null;
   }
 
+  if (param.rentDate == "") {
+    $("#rent_date").val("");
+    alert("대여 날짜를 선택하세요");
+    return null;
+  }
+
+  if (param.returnDate == "") {
+    $("#return_date").val("");
+    alert("반납 날짜를 선택하세요");
+    return null;
+  }
   const url = "/assets/add/apply";
   const csrfToken = document.getElementsByName("csrfmiddlewaretoken")[0].value;
 
@@ -88,12 +136,12 @@ function asset_add_apply() {
     url: url,
     headers: { "X-CSRFToken": csrfToken },
     data: param,
-    success: function() {
+    success: function () {
       alert("자산등록이 완료 되었습니다.");
       window.location.href = "/assets/";
     },
-    error: function(request, status, error) {
+    error: function (request, status, error) {
       alert("자산등록이 정상적으로 등록되지 않았습니다.");
-    }
+    },
   });
 }
