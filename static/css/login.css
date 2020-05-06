@@ -78,7 +78,7 @@ html {
 
 .login__main input {
   font-family: FontAwesome;
-  background-color: inherit;
+  background-color: transparent;
   outline: none;
   border: none;
   color: white;
@@ -126,4 +126,9 @@ html {
     width: 480px;
     height: 700px;
   }
+}
+
+.container {
+  margin-right: 0px !important;
+  margin-left: 0px !important;
 }
