@@ -16,7 +16,6 @@ $(document).ready(function() {
     '<div class="timePickerClock timePickerHours"><a href="#">EDR 제품소개서</a></div>',
     '<div class="timePickerClock timePickerMinutes"><a href="#">GPI 제품소개서</a></div>'
   ].join("");
-  console.log(content);
 
   $('[data-toggle="popover_presales"]').popover({
     trigger: "focus",
