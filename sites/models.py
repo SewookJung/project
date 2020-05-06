@@ -1,13 +1,17 @@
+import datetime
+import uuid
+
 from django.db import models
 from django.dispatch import receiver
 from django.contrib.postgres.fields import JSONField
 from member.models import Member
+from utils.constant import PROJECT_STATUS_CLOSED, PROJECT_STATUS_PROGRESSING
 
 
 class Project(models.Model):
     PROJECT_STATUS_CHOICE = (
-        ('C', 'CLOSED'),
-        ('P', 'PROGRESSING')
+        (PROJECT_STATUS_CLOSED, 'CLOSED'),
+        (PROJECT_STATUS_PROGRESSING, 'PROGRESSING')
     )
     title = models.CharField(max_length=100)
     client = models.ForeignKey(
@@ -17,7 +21,7 @@ class Project(models.Model):
     info = JSONField(default=dict, blank=True,
                      null=True, editable=False)
     status = models.CharField(
-        max_length=1, choices=PROJECT_STATUS_CHOICE, default='C', help_text='선택해주세요')
+        max_length=1, choices=PROJECT_STATUS_CHOICE, default=PROJECT_STATUS_CLOSED, help_text='선택해주세요')
     created_at = models.DateTimeField(auto_now_add=True, editable=False)
     update_at = models.DateTimeField(auto_now=True, editable=False)
     comments = models.TextField()
@@ -61,18 +65,21 @@ class Document(models.Model):
 
 
 def _documentattachment_upload_path(instance, filename):
-    return 'files/{0}/{1}/{2}'.format(
-        instance.document.project, instance.document.pk, filename)
+    dt = datetime.datetime.now()
+    filepath = dt.strftime('%Y/%m/')
+    return 'files/{0}/{1}'.format(filepath, uuid.uuid4().hex)
 
 
 class DocumentAttachment(models.Model):
     document = models.ForeignKey(
-        Document, on_delete=models.SET_NULL, null=True)
+        to=Document, on_delete=models.CASCADE, null=True)
     attach = models.FileField(
         upload_to=_documentattachment_upload_path, default="")
     attach_name = models.CharField(max_length=50, default="")
-    upload_name = models.CharField(max_length=50, default="")
-    upload_dir = models.CharField(max_length=100, default="")
+    content_size = models.CharField(max_length=50, default="")
+    content_type = models.CharField(max_length=100, default="")
+    check_code = models.CharField(max_length=128, default="")
+    is_state = models.SmallIntegerField(default=1)
     created_at = models.DateTimeField(auto_now_add=True, editable=False)
 
 
