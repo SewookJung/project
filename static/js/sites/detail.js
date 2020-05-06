@@ -11,12 +11,10 @@ function site_edit_cancel() {
   }
 }
 
-$(document).ready(function() {
+$(document).ready(function () {
   changeElementName();
   const clientId = $("input[name=client_id]").val();
   $("select[name=client]").val(clientId);
-  const clientName = $("select[name=client] option:selected").text();
-  $("#sites__title").text(clientName + " 세부사항");
   const productId = $("input[name=product_id]").val();
   $("select[name=product]").val(productId);
   const salesId = $("input[name=sales_id]").val();
@@ -24,14 +22,14 @@ $(document).ready(function() {
   const engId = $("input[name=eng_id]").val();
   $("select[name=eng]").val(engId);
   $(".selectpicker").selectpicker("refresh");
-  $("#test").ajaxForm({
-    success: function(data) {
+  $("#ajaxForm").ajaxForm({
+    success: function (data) {
       alert("고객사 수정을 완료하였습니다.");
       location.href = "/sites/";
     },
-    error: function() {
+    error: function () {
       alert("고객사 수정에 실패하였습니다.");
-    }
+    },
   });
 });
 
