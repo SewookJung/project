@@ -1,0 +1,15 @@
+#report_date {
+  font-family: FontAwesome;
+}
+
+.weekly__title #report_delete {
+  cursor: pointer;
+}
+
+.weekly__past-content {
+  color: black;
+}
+
+.tooltip-inner {
+  text-align: left;
+}
