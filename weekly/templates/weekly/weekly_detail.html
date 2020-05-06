@@ -1,0 +1,127 @@
+{% extends 'base.html' %} {% block content %} {% load static %}
+<div class="container">
+    <div class="card weekly">
+        <div class="card-header weekly__header">
+            <i class="fa fa-external-link"></i>
+            <h5 class="card-title weekly__title">&nbsp; {{report.client_name}} 주간업무보고 추가 및 상세정보
+            </h5>
+        </div>
+        <div class="card-body">
+            <form class="report__add" method="POST" name="ajaxform" onsubmit="return checkValues()"
+                action="/weekly/edit/{{ report.client_id }}/">{% csrf_token %}
+                <div class="repot__contents form-row">
+                    <div class="form-group col-md-12">
+                        <div class="form-group">
+                            <input type="hidden" value="{{report.client_id}}" name="client_id">
+                            <input type="hidden" value="{{report.pk}}" name="report_pk">
+                        </div>
+                        <div class="form-group">
+                            <span>제품 선택</span>
+                            <select class="selectpicker" title="제품 선택" id="product" name="product">
+                                {% for product in products %}
+                                {% if product.level == 0 and forloop.counter0 == 0 %}
+                                <option value="{{product.id}}">▶ {{product.name}}
+                                </option>
+                                {% elif product.level == 0 and forloop.counter0 != 0 %}
+                                <option value="{{product.id}}">▶ {{product.name}}</option>
+                                {% else %}
+                                <option value="{{product.id}}">
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{product.name}}</option>
+                                {% endif %}
+                                {% endfor %}
+                                <input type="hidden" value="{{report.product_id}}" name="product_id">
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <span>분 류</span>
+                            {{form.sales_type}}
+                            <input type="hidden" value="{{report.sales_type}}" name="sales_type_value">
+                        </div>
+                        <div class="form-group">
+                            <span>지원일자</span>
+                            <input type="text" name="report_date" id="report_date"
+                                class="form-control calendar__start hasDatepicker" autocomplete="off"
+                                id="asset_purchase-date" data-provide="datepicker" placeholder="&#xf073;"
+                                {% if report.member_id != login_id %}disabled{% endif %}
+                                value="{{report.support_date | date:"Y-m-d" }}">
+                        </div>
+                        <div class="form-group ">
+                            <span>담당자 정보</span>
+                            <input class="form-control" type="text" value="{{report.client_manager}}"
+                                name="client_manager" {% if report.member_id != login_id %}disabled{% endif %}>
+                        </div>
+                        <div class="form-group">
+                            <span>금주 진행사항</span>
+                            <textarea class="form-control col-sm-12" rows="5" id="weekly_comments"
+                                name="weekly_comments"
+                                {% if report.member_id != login_id %}disabled{% endif %}>{{report.support_comment}}</textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <span>비 고</span>
+                            <textarea class="form-control col-sm-12" rows="5" id="etc_comments" name="etc_comments"
+                                {% if report.member_id != login_id %}disabled{% endif %}>{{report.comments}}</textarea>
+                        </div>
+                        {% if report.pk %}
+                        {% else %}
+                        <div class="form-group">
+                            <span>지난 진행사항</span>
+                            <textarea class="form-control col-sm-12" rows="10" id="preview_comments"
+                                name="preview_comments"
+                                disabled>{% for item in report.support_items %}{{item.support_comment}} / {{item.created_at | date:"Y-m-d" }} &#13;&#10;{% endfor %}</textarea>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+
+
+                <div class="d-flex">
+                    <div class="mr-auto p-2">
+                        {% if report.pk and report.member_id == login_id%}
+                        <button type="button" class="btn btn-danger" id="report_delete"
+                            onclick="delete_report()">삭제</button>
+                        {% endif %}
+                    </div>
+                    <div class="p-2">
+                        {{report.member}}
+                        {% if report.member_id == login_id %}
+                        <button type="button" class="btn btn-outline-danger" onclick="report_add_cancel()">
+                            취소
+                        </button>
+                        <button type="submit" class="btn btn-outline-secondary" id="submit-btn">
+                            {% if report.pk %}
+                            수정
+                            {% else %}
+                            추가
+                            {% endif %}
+                        </button>
+                        {% else %}
+                        {% endif %}
+                    </div>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %} {% block title %} {{report.client}} 주간업무보고 {% endblock %}
+{% block css %}
+<link rel="stylesheet" href="{% static 'css/selectpicker/bootstrap-select.css' %}">
+<link rel="stylesheet" href="{% static 'css/datepicker/datepicker3.css' %}">
+<link rel="stylesheet" href="{% static 'css/weekly.css' %}">
+{% endblock %}
+
+
+
+
+{% block js %}
+<script src="{% static 'js/selectpicker/bootstrap-select.js' %}"></script>
+<script src="{% static 'js/datepicker/bootstrap-datepicker.js' %}"></script>
+<script src="{% static 'js/datepicker/bootstrap-datepicker.kr.js' %}"></script>
+<script src="{% static 'js/datepicker/datepicker.js' %}"></script>
+<script src="{% static 'js/sites/jquery.form.js' %}"></script>
+<script src="{% static 'js/weekly/detail.js' %}"></script>
+{% endblock %}
