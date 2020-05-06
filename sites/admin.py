@@ -10,7 +10,7 @@ class ProjectAdmin(admin.ModelAdmin):
 
 class DocumentAdmin(admin.ModelAdmin):
     list_display = ['id',  'project', 'member',
-                    'kind', 'created_at', 'comments']
+                    'kind', 'created_at', 'comments', 'auth']
     list_display_links = ['id', 'project']
 
 
