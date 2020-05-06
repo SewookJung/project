@@ -5,3 +5,7 @@
 .table td {
   vertical-align: unset !important;
 }
+
+.hasDatepicker {
+  font-family: FontAwesome;
+}
