@@ -21,6 +21,7 @@ from login.views import redirect_root
 urlpatterns = [
     re_path(r'^admin/', admin.site.urls),
     re_path(r'^assets/', include('assets.urls')),
+    re_path(r'^common/', include('common.urls')),
     re_path(r'^document/', include('document.urls')),
     re_path(r'^equipment/', include('equipment.urls')),
     re_path(r'^login/', include('login.urls')),
