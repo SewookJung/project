@@ -26,13 +26,12 @@ from utils.functions import make_response
 def sites_main(request):
     projects = Project.objects.all()
     documents = Document.objects.all()
-    distinct_documents = documents.values('project').distinct()
-
+    documents_attach = DocumentAttachment.objects.all()
+    project_id = documents.values('project').distinct()
     documents_array = []
-    for item in distinct_documents:
+    for item in project_id:
         all_document = documents.filter(
             project=item['project']).order_by('project').distinct()
-
         for item in all_document:
             rework_document = {"id": item.id, "project": item.project,
                                "member": item.member, "kind": item.kind, "auth": item.auth, "project_id": item.project.id}
@@ -114,17 +113,22 @@ def document_upload(request):
 
 @login_required
 def document_detail(request, project_id):
-    projects = Document.objects.filter(project_id=project_id)
-    project_name = projects[0].project
-    documents_id = [project.id for project in projects]
+    documents = Document.objects.filter(project_id=project_id)
+    documents_attach = DocumentAttachment.objects.all()
 
-    documents_list = []
+    documents_id = documents.values("id")
+    project_name = documents[0].project
+
+    documents_attach_list = []
     for document_id in documents_id:
-        document_attached = DocumentAttachment.objects.get(
-            document_id=document_id)
-        documents_list.append(document_attached)
-
-    return render(request, "sites/document_detail.html", {"documents_list": documents_list, 'project_name': project_name})
+        document_file_list = documents_attach.filter(
+            document_id=document_id['id'])
+        for file in document_file_list:
+            document = documents.get(id=file.document_id)
+            rework_document_attached = {'id': file.id, 'attach_name': file.attach_name,
+                                        'created_at': file.created_at, 'permission': document.auth, 'kind': document.kind}
+            documents_attach_list.append(rework_document_attached)
+    return render(request, "sites/document_detail.html", {"documents_attach_list": documents_attach_list, 'project_name': project_name, })
 
 
 @login_required
@@ -183,16 +187,12 @@ def document_reg_delete(request):
 @csrf_exempt
 def document_download(request, pk):
     attach_info = DocumentAttachment.objects.get(id=pk)
-    print(attach_info)
     filename = os.path.join(settings.MEDIA_ROOT, attach_info.attach.name)
-    print(filename)
-    print(attach_info.upload_dir)
-    print(attach_info.attach_name)
     response = ""
     if os.path.exists(filename):
         with open(filename, 'rb') as f:
             response = HttpResponse(FileWrapper(
-                f), content_type=attach_info.upload_dir)
+                f), content_type=attach_info.attach)
             response['Content-Disposition'] = 'attachment; filename*=UTF-8\'\'%s' % urllib.parse.quote(
                 attach_info.attach_name.encode('utf-8'))
     return response
