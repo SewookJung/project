@@ -12,10 +12,6 @@
                 <div class="repot__contents form-row">
                     <div class="form-group col-md-12">
                         <div class="form-group">
-                            <input type="hidden" value="{{report.client_id}}" name="client_id">
-                            <input type="hidden" value="{{report.pk}}" name="report_pk">
-                        </div>
-                        <div class="form-group">
                             <span>제품 선택</span>
                             <select class="selectpicker" title="제품 선택" id="product" name="product">
                                 {% for product in products %}
@@ -42,65 +38,45 @@
                             <input type="text" name="report_date" id="report_date"
                                 class="form-control calendar__start hasDatepicker" autocomplete="off"
                                 id="asset_purchase-date" data-provide="datepicker" placeholder="&#xf073;"
-                                {% if report.member_id != login_id %}disabled{% endif %}
+                                {% if login_id != report.member_id %}disabled{% endif %}
                                 value="{{report.support_date | date:"Y-m-d" }}">
                         </div>
                         <div class="form-group ">
                             <span>담당자 정보</span>
                             <input class="form-control" type="text" value="{{report.client_manager}}"
-                                name="client_manager" {% if report.member_id != login_id %}disabled{% endif %}>
+                                name="client_manager" {% if login_id != report.member_id %}disabled{% endif %}>
                         </div>
                         <div class="form-group">
                             <span>금주 진행사항</span>
                             <textarea class="form-control col-sm-12" rows="5" id="weekly_comments"
                                 name="weekly_comments"
-                                {% if report.member_id != login_id %}disabled{% endif %}>{{report.support_comment}}</textarea>
+                                {% if login_id != report.member_id %}disabled{% endif %}>{{report.support_comment}}</textarea>
                         </div>
 
                         <div class="form-group">
                             <span>비 고</span>
                             <textarea class="form-control col-sm-12" rows="5" id="etc_comments" name="etc_comments"
-                                {% if report.member_id != login_id %}disabled{% endif %}>{{report.comments}}</textarea>
+                                {% if login_id != report.member_id %}disabled{% endif %}>{{report.comments}}</textarea>
                         </div>
-                        {% if report.pk %}
-                        {% else %}
                         <div class="form-group">
                             <span>지난 진행사항</span>
                             <textarea class="form-control col-sm-12" rows="10" id="preview_comments"
                                 name="preview_comments"
                                 disabled>{% for item in report.support_items %}{{item.support_comment}} / {{item.created_at | date:"Y-m-d" }} &#13;&#10;{% endfor %}</textarea>
                         </div>
-                        {% endif %}
                     </div>
                 </div>
-
-
-
-                <div class="d-flex">
-                    <div class="mr-auto p-2">
-                        {% if report.pk and report.member_id == login_id%}
-                        <button type="button" class="btn btn-danger" id="report_delete"
-                            onclick="delete_report()">삭제</button>
-                        {% endif %}
-                    </div>
-                    <div class="p-2">
-                        {{report.member}}
-                        {% if report.member_id == login_id %}
-                        <button type="button" class="btn btn-outline-danger" onclick="report_add_cancel()">
-                            취소
-                        </button>
-                        <button type="submit" class="btn btn-outline-secondary" id="submit-btn">
-                            {% if report.pk %}
-                            수정
-                            {% else %}
-                            추가
-                            {% endif %}
-                        </button>
-                        {% else %}
-                        {% endif %}
-                    </div>
+                <div class="text-right">
+                    {% if report.member_id == login_id %}
+                    <button type="button" class="btn btn-outline-danger" onclick="report_add_cancel()">
+                        취소
+                    </button>
+                    <button type="submit" class="btn btn-outline-secondary" id="submit-btn">
+                        추가
+                    </button>
+                    {% else %}
+                    {% endif %}
                 </div>
-
             </form>
         </div>
     </div>
