@@ -12,6 +12,8 @@ urlpatterns = [
     re_path(r'^add/apply/$', views.sites_add_apply, name="sites_add_apply"),
     re_path(r'^document/(?P<project_id>\d+)/$',
             views.document_detail, name="document_detail"),
+    re_path(r'^document/(?P<attachment_id>\d+)/detail/$',
+            views.document_attach_detail, name="document_attach_detail"),
     re_path(r'^document/upload/$',
             views.document_upload, name="document_upload"),
     re_path(r'^document/reg/$',
