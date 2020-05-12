@@ -17,9 +17,6 @@ from .forms import ReportForm
 from utils.constant import REPORT_PERMISSION_DEFAULT, REPORT_PERMISSION_EXCEPT, REPORT_DEFAULT_ID, REPORT_DEFAULT_SELECT
 
 
-# Create your views here.
-
-
 @login_required
 def weekly_main(request, **kwargs):
     if not request.session['member_dept'] in REPORT_PERMISSION_DEFAULT:
@@ -55,8 +52,8 @@ def weekly_main(request, **kwargs):
 
         clinets_reports_array = []
         for report in reports:
-            client_reports = Report.objects.filter(
-                client_id=report['client_id'], product_id=report['product_id']).order_by('-created_at')
+            client_reports = Report.objects.filter(member=selected_id,
+                                                   client_id=report['client_id'], product_id=report['product_id']).order_by('-created_at')
             support_items = client_reports.values(
                 'id', 'support_comment', 'comments', 'sales_type', 'created_at', 'support_date', 'client_manager')
             rework_client = {'client_id': report['client_id'], 'client_name': client_reports[0].client_name, 'product_name': client_reports[0].product_name, 'product_id': report['product_id'],
@@ -75,7 +72,6 @@ def weekly_add(request):
 
 @login_required
 def weekly_add_apply(request):
-    print(request.POST)
     if request.method == "POST":
         try:
             report = Report(client_id=request.POST['client'], member_id=request.session['id'], product_id=request.POST['product_id'], client_manager=request.POST['client_manager'],
@@ -89,42 +85,49 @@ def weekly_add_apply(request):
 
 @login_required
 def weekly_detail(request, **kwargs):
-    if 'pk' in kwargs:
-        rework_client = Report.objects.get(id=kwargs['pk'])
-    else:
-        client_id = kwargs['client_id']
-        product_id = kwargs['product_id']
-        reports = Report.objects.filter(
-            client_id=client_id, product_id=product_id).order_by('-created_at')
-        support_items = reports.values(
-            'support_comment', 'created_at')
-        rework_client = {'client_id': client_id, 'client_name': reports[0].client_name, 'product_name': reports[0].product_name, 'product_id': product_id,
-                         'support_items': support_items, 'member_id': reports[0].member_id, }
+    client_id = kwargs['client_id']
+    product_id = kwargs['product_id']
+    selected_id = int(kwargs['selected_id'])
+    reports = Report.objects.filter(
+        client_id=client_id, product_id=product_id, member_id=selected_id).order_by('-created_at')
+    support_items = reports.values('support_comment', 'created_at')
+    rework_client = {'client_id': client_id, 'client_name': reports[0].client_name, 'product_name': reports[0].product_name, 'product_id': product_id,
+                     'support_items': support_items, 'member_id': selected_id}
     form = ReportForm()
-    products = Product.objects.values('id',
-                                      'name', 'makers', 'level').order_by('makers', 'level')
-
+    products = Product.objects.values(
+        'id', 'name', 'makers', 'level').order_by('makers', 'level')
     return render(request, 'weekly/weekly_detail.html', {"report": rework_client, "form": form, 'login_id': request.session['id'], 'products': products})
 
 
 @login_required
-def weekly_detail_apply(request, **kwargs):
-    if request.POST['report_pk'] == "":
-        report = Report(client_id=request.POST['client_id'], member_id=request.session['id'], product_id=request.POST['product'], client_manager=request.POST['client_manager'],
-                        sales_type=request.POST['sales_type'], support_comment=request.POST['weekly_comments'], support_date=request.POST['report_date'], comments=request.POST['etc_comments'])
-        report.save()
-        return redirect('weekly_main')
-    else:
-        report = Report.objects.get(pk=request.POST['report_pk'])
-        report.client_id = request.POST['client_id']
-        report.member_id = request.session['id']
-        report.product_id = request.POST['product']
-        report.client_manager = request.POST['client_manager']
-        report.sales_type = request.POST['sales_type']
-        report.support_comment = request.POST['weekly_comments']
-        report.support_date = request.POST['report_date']
-        report.comments = request.POST['etc_comments']
-        report.save()
+def weekly_detail_apply(request, client_id):
+    report = Report(client_id=client_id, member_id=request.session['id'], product_id=request.POST['product'], client_manager=request.POST['client_manager'],
+                    sales_type=request.POST['sales_type'], support_comment=request.POST['weekly_comments'], support_date=request.POST['report_date'], comments=request.POST['etc_comments'])
+    report.save()
+    return redirect('weekly_main')
+
+
+@login_required
+def weekly_report_detail(request, report_id):
+    report = Report.objects.get(id=report_id)
+    products = Product.objects.values(
+        'id', 'name', 'makers', 'level').order_by('makers', 'level')
+    form = ReportForm()
+    return render(request, 'weekly/weekly_report_detail.html', {"report": report, "form": form, 'login_id': request.session['id'], 'products': products})
+
+
+@login_required
+def weekly_report_detail_apply(request, report_id):
+    report = Report.objects.get(id=report_id)
+    report.client_id = request.POST['client_id']
+    report.member_id = request.session['id']
+    report.product_id = request.POST['product']
+    report.client_manager = request.POST['client_manager']
+    report.sales_type = request.POST['sales_type']
+    report.support_comment = request.POST['weekly_comments']
+    report.support_date = request.POST['report_date']
+    report.comments = request.POST['etc_comments']
+    report.save()
     return redirect('weekly_main')
 
 
