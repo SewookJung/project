@@ -1,0 +1,56 @@
+{% extends 'base.html' %} {% block content %} {% load static %}
+
+<div class="container">
+    <div class="card document">
+        <div class="card-header document__header">
+            <i class="fa fa-external-link"></i>
+            <h5 class="card-title document__title">&nbsp; {{ document_attach.attach_name }} &nbsp;파일 수정페이지 </h5>
+        </div>
+        <div class="card-body">
+            <form class="sites__add" method="POST" name="ajaxform">
+                {% csrf_token %}
+                <div class="sites__contents form-row">
+                    <div class="form-group col-md-12">
+                        <div class="form-group">
+                            <label>프로젝트 명</label>
+                            {{ document_form.project }}
+                            <input type="hidden" value="{{ document.project_id }}" name="project_id">
+                        </div>
+                        <div class="form-group">
+                            <label>문서 형태 선택</label>
+                            {{ document_form.kind }}
+                            <input type="hidden" value="{{ document.kind }}" name="document_kind">
+                            {{ document.auth }}
+                        </div>
+                        <div class="form-gruop">
+                            <div class="member_permission"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="text-right submit-box">
+                    <button type="button" class="btn btn-outline-danger" onclick="document_add_cancle()">
+                        취소
+                    </button>
+                    <button type="submit" class="btn btn-outline-secondary" id="submit-btn">
+                        수정
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %} {% block title %} 문서 등록 {% endblock %}
+{% block css %}
+<link rel="stylesheet" href="{% static 'css/selectpicker/bootstrap-select.css' %}">
+<link rel="stylesheet" href="{% static 'css/listbox/icon_font.css' %}">
+<link rel="stylesheet" href="{% static 'css/listbox/jquery.transfer.css' %}">
+{% endblock %}
+
+{% block js %}
+<script src="{% static 'js/selectpicker/bootstrap-select.js' %}"></script>
+<script src="{% static 'js/sites/test.js' %}"></script>
+<script src="{% static 'js/sites/jquery.form.js' %}"></script>
+<script src="{% static 'js/listbox/jquery.transfer.js' %}"></script>
+{% endblock %}
