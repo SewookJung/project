@@ -5,7 +5,6 @@ function report_add_cancel() {
 }
 
 function checkValues() {
-  console.log($("#sales_type_id").val());
   const client = $("#client_id").val();
   const product = $("#product_id").val();
   const report_date = $("#report_date").val();
