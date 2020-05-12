@@ -26,7 +26,6 @@ from utils.functions import make_response
 def sites_main(request):
     projects = Project.objects.all()
     documents = Document.objects.all()
-    documents_attach = DocumentAttachment.objects.all()
     project_id = documents.values('project').distinct()
     documents_array = []
     for item in project_id:
@@ -126,9 +125,17 @@ def document_detail(request, project_id):
         for file in document_file_list:
             document = documents.get(id=file.document_id)
             rework_document_attached = {'id': file.id, 'attach_name': file.attach_name,
-                                        'created_at': file.created_at, 'permission': document.auth, 'kind': document.kind}
+                                        'created_at': file.created_at, 'permission': document.auth, 'kind': document.kind, 'member': document.member}
             documents_attach_list.append(rework_document_attached)
-    return render(request, "sites/document_detail.html", {"documents_attach_list": documents_attach_list, 'project_name': project_name, })
+    return render(request, "sites/document_detail.html", {"documents_attach_list": documents_attach_list, 'project_name': project_name})
+
+
+@login_required
+def document_attach_detail(request, attachment_id):
+    document_form = DocumentForm()
+    document_attach = DocumentAttachment.objects.get(id=attachment_id)
+    document = Document.objects.get(id=document_attach.document_id)
+    return render(request, "sites/document_attach_detail.html", {'document_attach': document_attach, 'document_form': document_form, 'document': document})
 
 
 @login_required
