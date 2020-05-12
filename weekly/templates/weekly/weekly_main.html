@@ -43,7 +43,8 @@
                                 {% for report in reports %}
                                 <tr>
                                     <td>
-                                        <a href="/weekly/{{report.client_id}}/{{report.product_id}}/detail/">
+                                        <a
+                                            href="/weekly/{{report.client_id}}/{{report.product_id}}/{{selected_id}}/detail/">
                                             {{report.client_name}}
                                         </a>
                                     </td>
