@@ -8,72 +8,72 @@
         </div>
         <div class="card-body">
             <p class="card-text">
-                <table class="table table-striped table-bordered table-hover assets_table " id="sites_table">
-                    <thead>
-                        <tr>
-                            <th>고객사</th>
-                            <th>제품명</th>
-                            <th>프로젝트 명</th>
-                            <th>Presales</th>
-                            <th>수행계획서</th>
-                            <th>검 수</th>
-                            <th>유지보수</th>
-                            <th>진행여부</th>
-                            <th>기 타</th>
-                        </tr>
-                    </thead>
-
-                    {% for project in projects %}
+            <table class="table table-striped table-bordered table-hover assets_table " id="sites_table">
+                <thead>
                     <tr>
-                        <td>
-                            <a href="{% url 'sites_detail' pk=project.pk %}">
-                                {{ project.client }}
-                            </a>
-                        </td>
-                        <td>{{ project.product }}</td>
-                        <td>{{ project.title }}</td>
-                        <td>
-                            <a href="#" title="Presales 파일 리스트" data-toggle="popover_presales" data-trigger="focus"
-                                data-placement="top">제품소개서(+2)</a>
-                        </td>
-                        <td data-container="body" data-toggle="tooltip_wbs" data-placement="top">wbs(+1)</td>
-                        <td data-container="body" data-toggle="tooltip_confirm" data-placement="top">검수확인서(+2)</td>
-                        {% for key, value in project.info.items %}
-                        {% if key == "mn_cycle" %}
-                        {% if value == "MON"%}
-                        <td>매월</td>
-                        {% elif value == "QUA"%}
-                        <td>분기</td>
-                        {% elif value == "HALF"%}
-                        <td>반기</td>
-                        {% else %}
-                        <td>매년</td>
-                        {% endif %}
-                        {% endif %}
-                        {% endfor %}
-                        {% if project.status == "P" %}
-                        <td>진행 중</td>
-                        {% else %}
-                        <td>진행 완료</td>
-                        {% endif %}
-                        <td>{{ project.comments }}</td>
+                        <th>고객사</th>
+                        <th>제품명</th>
+                        <th>프로젝트 명</th>
+                        <th>Presales</th>
+                        <th>수행계획서</th>
+                        <th>검 수</th>
+                        <th>유지보수</th>
+                        <th>진행여부</th>
+                        <th>기 타</th>
                     </tr>
+                </thead>
+
+                {% for project in projects %}
+                <tr>
+                    <td>
+                        <a href="{% url 'sites_detail' pk=project.pk %}">
+                            {{ project.client }}
+                        </a>
+                    </td>
+                    <td>{{ project.product }}</td>
+                    <td>{{ project.title }}</td>
+                    <td>
+                        <a href="#" title="Presales 파일 리스트" data-toggle="popover_presales" data-trigger="focus"
+                            data-placement="top">제품소개서(+2)</a>
+                    </td>
+                    <td data-container="body" data-toggle="tooltip_wbs" data-placement="top">wbs(+1)</td>
+                    <td data-container="body" data-toggle="tooltip_confirm" data-placement="top">검수확인서(+2)</td>
+                    {% for key, value in project.info.items %}
+                    {% if key == "mn_cycle" %}
+                    {% if value == "MON"%}
+                    <td>매월</td>
+                    {% elif value == "QUA"%}
+                    <td>분기</td>
+                    {% elif value == "HALF"%}
+                    <td>반기</td>
+                    {% else %}
+                    <td>매년</td>
+                    {% endif %}
+                    {% endif %}
                     {% endfor %}
-                </table>
-                <br>
-                <div>File list</div>
-                {% for document in documents %}
-                <a href="/sites/document/{{document.project_id}}/">
-                    {{document.id}}, {{document.project}}, {{document.member}}, {{document.kind}}, {{document.auth}}
-                    <br>
-                </a>
+                    {% if project.status == "P" %}
+                    <td>진행 중</td>
+                    {% else %}
+                    <td>진행 완료</td>
+                    {% endif %}
+                    <td>{{ project.comments }}</td>
+                </tr>
                 {% endfor %}
+            </table>
+            <br>
+            <div>File list</div>
+            {% for document in documents %}
+            <a href="{% url 'document_detail' project_id=document.project_id %}">
+                {{document.project}}, {{document.member}}, {{document.kind}}
+                <br>
+            </a>
+            {% endfor %}
             </p>
         </div>
     </div>
 </div>
 
-{% endblock %} {% block title %} 고객사 현황 {% endblock %}
+{% endblock %} {% block title %} 문서 현황 {% endblock %}
 {% block css %}
 <link rel="stylesheet" href="https://cdn.datatables.net/1.10.20/css/dataTables.bootstrap4.min.css">
 <link rel="stylesheet" href="{% static 'css/selectpicker/bootstrap-select.css' %}">
