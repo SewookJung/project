@@ -13,7 +13,7 @@
   margin-bottom: 30px;
 }
 
-.dropdown:hover {
+.navbar-nav .dropdown:hover {
   background-color: grey;
 }
 
