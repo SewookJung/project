@@ -1,0 +1,11 @@
+.qq-uploader {
+  position: relative;
+  min-height: 200px;
+  max-height: 490px;
+  overflow-y: hidden;
+  width: 640px;
+  border-radius: 6px;
+  background-color: #fdfdfd;
+  border: 1px dashed #cccccc;
+  padding: 20px;
+}
