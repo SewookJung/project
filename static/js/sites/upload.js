@@ -152,11 +152,6 @@ $("#fine-uploader-manual-trigger").fineUploader({
         );
       }
     },
-    onError: function () {
-      // alert("파일 업로드에 실패하였습니다. 다시 시도하여주세요");
-      // location.href = "/sites/document/upload/";
-      // 파일 업로드 실패시 전체 삭제 루틴을 반영한다.
-    },
     onSubmit: function (id, fileName, responseJSON) {
       fileCount++;
     },
