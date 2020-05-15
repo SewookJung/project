@@ -18,6 +18,7 @@ from assets.forms import AssetForm
 from .forms import ProjectForm, DocumentAttachmentForm, DocumentForm
 from .models import Document, DocumentAttachment, Project
 from member.models import Member
+from common.views import member_info, member_info_all
 
 from utils.functions import make_response
 
@@ -35,7 +36,6 @@ def sites_main(request):
             rework_document = {"id": item.id, "project": item.project,
                                "member": item.member, "kind": item.kind, "auth": item.auth, "project_id": item.project.id}
             documents_array.append(rework_document)
-
     return render(request, 'sites/sites_main.html', {"projects": projects, "documents": documents_array})
 
 
@@ -112,9 +112,10 @@ def document_upload(request):
 
 @login_required
 def document_detail(request, project_id):
+    login_id_type_str = str(request.session['id'])
+    login_id_type_int = request.session['id']
     documents = Document.objects.filter(project_id=project_id)
     documents_attach = DocumentAttachment.objects.all()
-
     documents_id = documents.values("id")
     project_name = documents[0].project
 
@@ -127,7 +128,7 @@ def document_detail(request, project_id):
             rework_document_attached = {'id': file.id, 'attach_name': file.attach_name,
                                         'created_at': file.created_at, 'permission': document.auth, 'kind': document.kind, 'member': document.member}
             documents_attach_list.append(rework_document_attached)
-    return render(request, "sites/document_detail.html", {"documents_attach_list": documents_attach_list, 'project_name': project_name})
+    return render(request, "sites/document_detail.html", {"documents_attach_list": documents_attach_list, 'project_name': project_name, 'login_id_type_int': login_id_type_int, 'login_id_type_str': login_id_type_str})
 
 
 @login_required
@@ -136,6 +137,36 @@ def document_attach_detail(request, attachment_id):
     document_attach = DocumentAttachment.objects.get(id=attachment_id)
     document = Document.objects.get(id=document_attach.document_id)
     return render(request, "sites/document_attach_detail.html", {'document_attach': document_attach, 'document_form': document_form, 'document': document})
+
+
+@login_required
+def document_attach_detail_apply(request, attachment_id):
+    permissions = json.loads(request.POST['permission'])
+    document_attach = DocumentAttachment.objects.values(
+        'document_id').get(id=attachment_id)
+    document = Document.objects.get(id=document_attach['document_id'])
+    document.kind = request.POST['kind']
+    document.auth = permissions
+    document.save()
+    return redirect('sites_main')
+
+
+@login_required
+def document_attach_auth(request, attachment_id):
+    document_attach = DocumentAttachment.objects.get(id=attachment_id)
+    document = Document.objects.get(id=document_attach.document_id)
+    selected = {"selected": "true"}
+    document_auth = document.auth
+    member_info = member_info_all(request)
+
+    for item in document_auth:
+        auth_name = item['name']
+        for item in member_info:
+            group_data = item['groupData']
+            for item in group_data:
+                if auth_name == item['name']:
+                    item.update(selected)
+    return make_response(content=json.dumps({'success': True, 'auth_info': member_info}))
 
 
 @login_required
@@ -188,6 +219,21 @@ def document_reg_delete(request):
         return make_response(status=400, content=json.dumps({'success': True}))
     except:
         return make_response(status=400, content=json.dumps({'success': False, 'error': "document delete fail"}))
+
+
+@login_required
+def document_delete(request, attachment_id):
+    document_attach = DocumentAttachment.objects.all()
+    document_id = document_attach.values(
+        'document_id').get(id=attachment_id)
+    document_attach_count = document_attach.filter(
+        document_id=document_id['document_id']).count()
+    if document_attach_count > 1:
+        document_attach.get(
+            id=attachment_id, document_id=document_id['document_id']).delete()
+    else:
+        Document.objects.get(id=document_id['document_id']).delete()
+    return redirect('sites_main')
 
 
 @login_required
