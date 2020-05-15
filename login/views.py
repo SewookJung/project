@@ -1,8 +1,9 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.contrib import auth
+
 from member.models import Member
-# Create your views here.
+from utils.constant import REPORT_PERMISSION_DEFAULT
 
 
 def login(request):
@@ -34,7 +35,10 @@ def login_process(request):
             request.session['member_dept'] = member_info.dept
             request.session['member_rank'] = member_info.rank
             auth.login(request, user)
-            return redirect("assets_main")
+            if request.session['member_dept'] in REPORT_PERMISSION_DEFAULT:
+                return redirect("weekly_main")
+            else:
+                return redirect("assets_main")
         else:
             msg = "계정 또는 비밀번호가 일치하지 않습니다."
             return render(request, "login/login.html", {"message": msg})
