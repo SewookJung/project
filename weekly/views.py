@@ -96,7 +96,8 @@ def weekly_detail(request, **kwargs):
     form = ReportForm()
     products = Product.objects.values(
         'id', 'name', 'makers', 'level').order_by('makers', 'level')
-    return render(request, 'weekly/weekly_detail.html', {"report": rework_client, "form": form, 'login_id': request.session['id'], 'products': products})
+    reporter = Member.objects.get(id=selected_id)
+    return render(request, 'weekly/weekly_detail.html', {"report": rework_client, "form": form, 'login_id': request.session['id'], 'products': products, 'reporter': reporter})
 
 
 @login_required
@@ -113,7 +114,8 @@ def weekly_report_detail(request, report_id):
     products = Product.objects.values(
         'id', 'name', 'makers', 'level').order_by('makers', 'level')
     form = ReportForm()
-    return render(request, 'weekly/weekly_report_detail.html', {"report": report, "form": form, 'login_id': request.session['id'], 'products': products})
+    reporter = Member.objects.get(id=report.member_id)
+    return render(request, 'weekly/weekly_report_detail.html', {"report": report, "form": form, 'login_id': request.session['id'], 'products': products, 'reporter': reporter})
 
 
 @login_required
