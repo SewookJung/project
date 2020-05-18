@@ -112,23 +112,23 @@ def document_upload(request):
 
 @login_required
 def document_detail(request, project_id):
-    login_id_type_str = str(request.session['id'])
-    login_id_type_int = request.session['id']
+    login_id = request.session['id']
     documents = Document.objects.filter(project_id=project_id)
     documents_attach = DocumentAttachment.objects.all()
     documents_id = documents.values("id")
     project_name = documents[0].project
-
     documents_attach_list = []
     for document_id in documents_id:
         document_file_list = documents_attach.filter(
             document_id=document_id['id'])
         for file in document_file_list:
             document = documents.get(id=file.document_id)
+            document_auth_value = [item['value'] for item in document.auth]
+            document_auth_value.append(str(document.member_id))
             rework_document_attached = {'id': file.id, 'attach_name': file.attach_name,
-                                        'created_at': file.created_at, 'permission': document.auth, 'kind': document.kind, 'member': document.member}
+                                        'created_at': file.created_at, 'permission': document.auth, 'kind': document.kind, 'member': document.member, 'auth_value': document_auth_value}
             documents_attach_list.append(rework_document_attached)
-    return render(request, "sites/document_detail.html", {"documents_attach_list": documents_attach_list, 'project_name': project_name, 'login_id_type_int': login_id_type_int, 'login_id_type_str': login_id_type_str})
+    return render(request, "sites/document_detail.html", {"documents_attach_list": documents_attach_list, 'project_name': project_name, 'login_id': login_id, })
 
 
 @login_required
@@ -148,7 +148,14 @@ def document_attach_detail_apply(request, attachment_id):
     document.kind = request.POST['kind']
     document.auth = permissions
     document.save()
-    return redirect('sites_main')
+    return make_response(content=json.dumps({'success': True}))
+
+
+@login_required
+@csrf_exempt
+def document_attach_detail_upload_apply(request):
+    print(request.POST)
+    return make_response(content=json.dumps({'success': True}))
 
 
 @login_required
