@@ -1,4 +1,5 @@
 const csrfToken = document.getElementsByName("csrfmiddlewaretoken")[0].value;
+console.log(csrfToken);
 const maxUploadfile = 1;
 const maxfilesize = 1024 * 1024 * 1024;
 let fileCount = 0;
@@ -87,6 +88,7 @@ function site_reg_document() {
     success: function (data) {
       if (data.success) {
         $("#document_id").val(data.document_id);
+        $("#fine-uploader-manual-trigger").fineUploader("uploadStoredFiles");
       } else {
         alert("문서등록 작업이 정상적으로 이루어 지지 않았습니다.");
       }
@@ -118,6 +120,7 @@ $("#fine-uploader-manual-trigger").fineUploader({
   debug: false,
   autoUpload: false,
   maxConnections: maxUploadfile,
+  multiple: false,
   validation: {
     allowedExtensions: [
       "pptx",
@@ -144,7 +147,7 @@ $("#fine-uploader-manual-trigger").fineUploader({
     sizeError: "파일 사이즈는 10M를 넘을 수 없습니다, {file}",
   },
   request: {
-    endpoint: "/sites/document/upload/apply/",
+    endpoint: "/sites/document/attach/detail/apply/",
     customHeaders: {
       "X-SCRF-TOKEN": csrfToken,
     },
