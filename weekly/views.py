@@ -41,7 +41,6 @@ def weekly_main(request, **kwargs):
         # 가장 최근 날짜 가져오기 (weekday() + 7) / 0:월, .... 6:일요일
         current_week = date_now.weekday()
         last_monday = datetime.now() - timedelta(current_week + 7)
-
         if selected_all == REPORT_DEFAULT_SELECT:
             reports = Report.objects.values('client_id', 'product_id').filter(
                 created_at__range=(last_monday.strftime("%Y-%m-%d"), date_now), member_id=selected_id).distinct()
