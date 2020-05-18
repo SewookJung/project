@@ -26,6 +26,8 @@ urlpatterns = [
             views.document_reg_apply, name="document_reg_apply"),
     re_path(r'^document/upload/apply/$', views.document_upload_apply,
             name="document_upload_apply"),
+    re_path(r'^document/attach/detail/apply/$', views.document_attach_detail_upload_apply,
+            name="document_attach_detail_upload_apply"),
     re_path(r'^document/download/(?P<pk>\d+)/$',
             views.document_download, name="document_download"),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
