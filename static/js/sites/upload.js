@@ -12,7 +12,7 @@ function getDocumentId() {
   return $("#document_id").val();
 }
 
-function site_add_cancel() {
+function document_upload_cancel() {
   if (confirm("문서등록을 취소하시겠습니까?") == true) {
     location.href = "/sites/";
   } else {
@@ -27,10 +27,10 @@ let transfer;
 function init() {
   $.ajax({
     type: "GET",
-    url: "/common/member/info/",
+    url: "/sites/document/auth/",
     dataType: "json",
     success: function (data) {
-      const memberInfo = data["members_data"];
+      const memberInfo = data["member_info"];
       let settings = {
         tabNameText: "권한자 선택",
         rightTabNameText: "선택된 권한자",
