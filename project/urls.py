@@ -25,6 +25,7 @@ urlpatterns = [
     re_path(r'^document/', include('document.urls')),
     re_path(r'^equipment/', include('equipment.urls')),
     re_path(r'^login/', include('login.urls')),
+    re_path(r'^member/', include('member.urls')),
     re_path(r'^sites/', include('sites.urls')),
     re_path(r'^weekly/', include('weekly.urls')),
     re_path(r'^$', redirect_root),
