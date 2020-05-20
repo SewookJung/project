@@ -1,6 +1,5 @@
 import json
 
-
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
@@ -15,7 +14,6 @@ from common.models import Client, Product
 from .models import Report
 from .forms import ReportForm
 from utils.constant import REPORT_PERMISSION_DEFAULT, REPORT_PERMISSION_EXCEPT, REPORT_DEFAULT_ID, REPORT_DEFAULT_SELECT
-
 
 @login_required
 def weekly_main(request, **kwargs):
@@ -43,7 +41,7 @@ def weekly_main(request, **kwargs):
         last_monday = datetime.now() - timedelta(current_week + 7)
         if selected_all == REPORT_DEFAULT_SELECT:
             reports = Report.objects.values('client_id', 'product_id').filter(
-                created_at__range=(last_monday.strftime("%Y-%m-%d"), date_now), member_id=selected_id).distinct()
+                created_at__range=(last_monday.strftime("%Y-%m-%d 12:00:00"), date_now), member_id=selected_id).distinct()
 
         else:
             reports = Report.objects.values('client_id', 'product_id').filter(
