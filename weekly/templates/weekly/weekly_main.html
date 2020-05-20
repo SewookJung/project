@@ -51,7 +51,7 @@
                                     <td>{{report.product_name}}</td>
                                     <td>
                                         {% for item in report.support_items %}
-                                        {% if item.created_at|date:'Ymd' >= last_monday|date:'Ymd' %}
+                                        {% if item.created_at|date:'Ymd H:i:s' >= last_monday|date:'Ymd 12:00:00' %}
                                         <b>
                                             {% if item.comments != "" %}
                                             <a href="/weekly/{{item.id}}/detail/" data-container="body"
