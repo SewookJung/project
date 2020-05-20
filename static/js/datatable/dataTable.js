@@ -64,4 +64,20 @@ $(document).ready(function () {
     },
     order: [[2, "dec"]],
   });
+
+  $("#doument_attach_detail").DataTable({
+    pageLength: 15,
+    lengthMenu: [5, 10, 15, 20, 30, 50, 100],
+    columnDefs: [
+      { orderable: true, targets: [1] },
+      { orderable: false, targets: "_all" },
+    ],
+    language: {
+      paginate: {
+        previous: "‹",
+        next: "›",
+      },
+    },
+    order: [[1, "dec"]],
+  });
 });
