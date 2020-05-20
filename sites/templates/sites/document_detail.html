@@ -1,4 +1,4 @@
-{% extends 'base.html' %} {% block content %} {% load static %} {% load sites_tags %}
+{% extends 'base.html' %} {% block content %} {% load static %}
 <div class="container">
     <div class="card sites">
         <div class="card-header sites__header">
@@ -20,8 +20,8 @@
                 </thead>
                 {% for document in documents_attach_list %}
                 <tr>
-                    <td><a {% if document.member.id == login_id_type_int %}
-                            href="{% url 'document_attach_detail' attachment_id=document.id %}"
+                    <td><a {% if document.member.id == login_id %}
+                            href="{% url 'document_attach_detail' document_id=document.document_id %}"
                             {% endif %}>{{document.attach_name}}</a>
                     </td>
                     <td>{{document.member}}</td>
@@ -44,7 +44,9 @@
                     </td>
                     <td>
                         <button type="button" class="btn btn-outline-dark"
-                            onclick="location.href='{% url 'document_download' pk=document.id %}'">다운로드</button>
+                            {% if login_id|stringformat:"i" in document.auth_value %}
+                            onclick="location.href='{% url 'document_download' pk=document.id %}'" {% else %} disabled
+                            {% endif %}>다운로드</button>
                     </td>
                 </tr>
                 {% endfor %}
