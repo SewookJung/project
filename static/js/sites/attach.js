@@ -1,6 +1,5 @@
 const csrfToken = document.getElementsByName("csrfmiddlewaretoken")[0].value;
-console.log(csrfToken);
-const maxUploadfile = 1;
+const maxUploadfile = 7;
 const maxfilesize = 1024 * 1024 * 1024;
 let fileCount = 0;
 let addedFiles = 0;
@@ -14,9 +13,17 @@ function getDocumentId() {
 }
 
 function document_delete() {
-  const attachmentId = $("input[name=document_attach-id").val();
-  if (confirm("업로드한 파일을 삭제하시겠습니까?") == true) {
-    location.href = "/sites/document/" + attachmentId + "/delete/";
+  const documentId = $("input[name=document_id]").val();
+  if (confirm("업로드한 파일들을 전체 삭제하시겠습니까?") == true) {
+    location.href = "/sites/document/" + documentId + "/delete/";
+  } else {
+    return false;
+  }
+}
+
+function document_attach_delete(attachment_id) {
+  if (confirm("선택한 파일을 삭제하시겠습니까?") == true) {
+    location.href = "/sites/document/attach/" + attachment_id + "/delete/";
   } else {
     return false;
   }
@@ -28,7 +35,7 @@ let transfer;
 
 function init() {
   const projectId = $("input[name=project_id]").val();
-  const attachmentId = $("input[name=document_attach-id").val();
+  const attachmentId = $("input[name=document_id]").val();
   const documentKind = $("input[name=document_kind]").val();
   $("select[name=project]").val(projectId);
   $("select[name=kind]").val(documentKind);
@@ -62,7 +69,7 @@ function init() {
 function site_reg_document() {
   const acceptPermissionMember = transfer.getSelectedItems();
   const serializeData = JSON.stringify(acceptPermissionMember);
-  const attachmentId = $("input[name=document_attach-id").val();
+  const documentId = $("input[name=document_id").val();
 
   if ($("#project").val() == "") {
     alert("프로젝트를 선택하세요");
@@ -81,13 +88,12 @@ function site_reg_document() {
 
   $.ajax({
     type: "POST",
-    url: "/sites/document/" + attachmentId + "/detail/apply/",
+    url: "/sites/document/" + documentId + "/detail/apply/",
     headers: { "X-CSRFToken": csrfToken },
     dataType: "json",
     data: param,
     success: function (data) {
       if (data.success) {
-        $("#document_id").val(data.document_id);
         $("#fine-uploader-manual-trigger").fineUploader("uploadStoredFiles");
       } else {
         alert("문서등록 작업이 정상적으로 이루어 지지 않았습니다.");
@@ -147,7 +153,7 @@ $("#fine-uploader-manual-trigger").fineUploader({
     sizeError: "파일 사이즈는 10M를 넘을 수 없습니다, {file}",
   },
   request: {
-    endpoint: "/sites/document/attach/detail/apply/",
+    endpoint: "/sites/document/upload/apply/",
     customHeaders: {
       "X-SCRF-TOKEN": csrfToken,
     },
