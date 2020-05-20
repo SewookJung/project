@@ -4,19 +4,19 @@
     <div class="card document">
         <div class="card-header document__header">
             <i class="fa fa-external-link"></i>
-            <h5 class="card-title document__title">&nbsp; {{ document_attach.attach_name }} &nbsp;파일 수정페이지 </h5>
+            <h5 class="card-title document__title">&nbsp; 파일 수정페이지 </h5>
         </div>
         <div class="card-body">
-            <form class="document__attach" method="POST" name="ajaxform"
-                action="{% url 'document_attach_detail_apply' attachment_id=document_attach.id %}">
+            <form class="document__attach" method="POST" name="ajaxform">
                 {% csrf_token %}
-                <input type="hidden" value="{{ document_attach.id }}" name="document_attach-id">
-                <input type="hidden" value="{{ document.project_id }}" name="project_id">
+                <input type="hidden" value="{{check_code}}" id="check_code" name="check_code">
+                <input type="hidden" value="{{ document.id }}" id="document_id" name="document_id">
                 <div class="sites__contents form-row">
                     <div class="form-group col-md-12">
                         <div class="form-group">
                             <label>프로젝트 명</label>
                             {{ document_form.project }}
+                            <input type="hidden" value="{{ document.project_id }}" name="project_id">
                         </div>
                         <div class="form-group">
                             <label>문서 형태 선택</label>
@@ -24,17 +24,29 @@
                             <input type="hidden" value="{{ document.kind }}" name="document_kind">
                         </div>
                         <div class="form-group">
-                            <label>파일명</label>
-                            <input type="text" value="{{ document_attach.attach_name }}" class="form-control col-md-3"
-                                disabled>
+                            <label>파일 리스트</label>
+                            <table class="table table-striped table-bordered table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>파일이름</th>
+                                        <th>업로드 날짜</th>
+                                        <th>기 타</th>
+                                    </tr>
+                                </thead>
+                                {% for item in document_attach_list %}
+                                <tr>
+                                    <td>{{item.attach_name}}</td>
+                                    <td>{{item.created_at}}</td>
+                                    <td><button type="button" class="btn btn-outline-danger"
+                                            onclick="document_attach_delete({{item.id}})">파일삭제</button>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </table>
                         </div>
                         <div class="form-group">
-
-                        </div>
-                        <div class="form-group">
-                            <span>파일 업로드 (첨부파일 : 1개, 각 파일은 10M 이하로 가능 / pdf, excel, ppt, word, hwp, image, zip, txt
+                            <span>파일 업로드 (첨부파일 : 7개, 각 파일은 10M 이하로 가능 / pdf, excel, ppt, word, hwp, image, zip, txt
                                 가능)</span><br>
-                            <span>파일 업로드 시 기존파일은 삭제되고 현재 업로드된 파일로 교체된다.</span>
                             <div id="fine-uploader-manual-trigger"></div>
                         </div>
                         <div class="form-gruop">
@@ -44,8 +56,8 @@
                 </div>
                 <div class="d-flex">
                     <div class="mr-auto p-2">
-                        <button type="button" class="btn btn-danger" id="report_delete"
-                            onclick="document_delete()">삭제</button>
+                        <button type="button" class="btn btn-danger" id="report_delete" onclick="document_delete()">전체
+                            삭제</button>
                     </div>
                     <div class="p-2">
                         <button type="button" class="btn btn-outline-danger" onclick="document_modify_cancel()">
@@ -129,7 +141,6 @@
         </dialog>
     </div>
 </script>
-
 <script src="{% static 'js/selectpicker/bootstrap-select.js' %}"></script>
 <script src="{% static 'js/fineuploader/jquery.fine-uploader.js' %}"></script>
 <script src="{% static 'js/sites/attach.js' %}"></script>
