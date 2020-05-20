@@ -5,12 +5,13 @@ import uuid
 import datetime
 
 
-from django.shortcuts import render, redirect, get_object_or_404
-from django.http import HttpResponse
+from django.shortcuts import render, redirect, get_object_or_404, resolve_url, reverse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import View
 from django.contrib.auth.decorators import login_required
 from django.conf import settings
+
 
 from wsgiref.util import FileWrapper
 
@@ -106,8 +107,19 @@ def document_upload(request):
     dt = datetime.datetime.now()
     check_code = "{0}-{1}-{2}".format(dt.strftime('%Y%m%d'),
                                       uuid.uuid4().hex, request.session['id'])
-    attach_list = DocumentAttachment.objects.all()
-    return render(request, "sites/sites_upload.html", {'document_form': document_form, 'attach_list': attach_list, 'check_code': check_code})
+    return render(request, "sites/sites_upload.html", {'document_form': document_form,  'check_code': check_code})
+
+
+@login_required
+def document_default_auth(request):
+    member_info = member_info_all(request)
+    selected = {"selected": "true"}
+    for item in member_info:
+        group_data = item['groupData']
+        for item in group_data:
+            if item['value'] == request.session['id']:
+                item.update(selected)
+    return make_response(content=json.dumps({'success': True, 'member_info': member_info}))
 
 
 @login_required
@@ -125,26 +137,29 @@ def document_detail(request, project_id):
             document = documents.get(id=file.document_id)
             document_auth_value = [item['value'] for item in document.auth]
             document_auth_value.append(str(document.member_id))
-            rework_document_attached = {'id': file.id, 'attach_name': file.attach_name,
+            rework_document_attached = {'id': file.id, 'attach_name': file.attach_name, 'document_id': file.document_id,
                                         'created_at': file.created_at, 'permission': document.auth, 'kind': document.kind, 'member': document.member, 'auth_value': document_auth_value}
             documents_attach_list.append(rework_document_attached)
     return render(request, "sites/document_detail.html", {"documents_attach_list": documents_attach_list, 'project_name': project_name, 'login_id': login_id, })
 
 
 @login_required
-def document_attach_detail(request, attachment_id):
+def document_attach_detail(request, document_id):
     document_form = DocumentForm()
-    document_attach = DocumentAttachment.objects.get(id=attachment_id)
-    document = Document.objects.get(id=document_attach.document_id)
-    return render(request, "sites/document_attach_detail.html", {'document_attach': document_attach, 'document_form': document_form, 'document': document})
+    document_all = Document.objects.all()
+    document_attach_all = DocumentAttachment.objects.all()
+    document = document_all.get(id=document_id)
+    document_attach_list = document_attach_all.filter(document=document_id)
+    dt = datetime.datetime.now()
+    check_code = "{0}-{1}-{2}".format(dt.strftime('%Y%m%d'),
+                                      uuid.uuid4().hex, request.session['id'])
+    return render(request, "sites/document_attach_detail.html", {'document_form': document_form, 'document': document, 'document_attach_list': document_attach_list, 'check_code': check_code})
 
 
 @login_required
-def document_attach_detail_apply(request, attachment_id):
+def document_attach_detail_apply(request, document_id):
     permissions = json.loads(request.POST['permission'])
-    document_attach = DocumentAttachment.objects.values(
-        'document_id').get(id=attachment_id)
-    document = Document.objects.get(id=document_attach['document_id'])
+    document = Document.objects.get(id=document_id)
     document.kind = request.POST['kind']
     document.auth = permissions
     document.save()
@@ -159,9 +174,8 @@ def document_attach_detail_upload_apply(request):
 
 
 @login_required
-def document_attach_auth(request, attachment_id):
-    document_attach = DocumentAttachment.objects.get(id=attachment_id)
-    document = Document.objects.get(id=document_attach.document_id)
+def document_attach_auth(request, document_id):
+    document = Document.objects.get(id=document_id)
     selected = {"selected": "true"}
     document_auth = document.auth
     member_info = member_info_all(request)
@@ -229,15 +243,22 @@ def document_reg_delete(request):
 
 
 @login_required
-def document_delete(request, attachment_id):
-    document_attach = DocumentAttachment.objects.all()
-    document_id = document_attach.values(
-        'document_id').get(id=attachment_id)
-    document_attach_count = document_attach.filter(
+def document_delete(request, document_id):
+    document_all = Document.objects.all()
+    document_all.filter(id=document_id).delete()
+    return redirect('sites_main')
+
+
+@login_required
+def document_attach_delete(request, attachment_id):
+    document_attach_all = DocumentAttachment.objects.all()
+    document_id = document_attach_all.values(
+        "document_id").get(id=attachment_id)
+    attach_count = document_attach_all.filter(
         document_id=document_id['document_id']).count()
-    if document_attach_count > 1:
-        document_attach.get(
-            id=attachment_id, document_id=document_id['document_id']).delete()
+    if attach_count > 1:
+        DocumentAttachment.objects.get(id=attachment_id).delete()
+        return redirect('document_attach_detail', document_id['document_id'])
     else:
         Document.objects.get(id=document_id['document_id']).delete()
     return redirect('sites_main')
