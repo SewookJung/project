@@ -12,6 +12,8 @@ def login(request):
             if request.session.get("member_id", None) == None:
                 msg = ""
                 return render(request, "login/login.html", {"message": msg})
+            elif request.session['member_dept'] in REPORT_PERMISSION_DEFAULT:
+                return redirect('weekly_main')
             else:
                 return redirect('assets_main')
         except:
