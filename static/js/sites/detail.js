@@ -37,7 +37,7 @@ function checkValues() {
   const projectName = $("#project_name").val();
   const status = $("#status").val();
   const clientId = $("#client_id").val();
-  const productId = $("#product_id").val();
+  const productId = $("#product").val();
   const sales = $("#sales").val();
   const eng = $("#member_id").val();
   const pjStDate = $("#pjStDate").val();
