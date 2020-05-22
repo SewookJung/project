@@ -3,6 +3,7 @@ import os
 import urllib
 import uuid
 import datetime
+import pandas
 
 
 from django.shortcuts import render, redirect, get_object_or_404, resolve_url, reverse
@@ -19,6 +20,7 @@ from assets.forms import AssetForm
 from .forms import ProjectForm, DocumentAttachmentForm, DocumentForm
 from .models import Document, DocumentAttachment, Project
 from member.models import Member
+from common.models import Product
 from common.views import member_info, member_info_all
 
 from utils.functions import make_response
@@ -27,17 +29,39 @@ from utils.functions import make_response
 @login_required
 def sites_main(request):
     projects = Project.objects.all()
-    documents = Document.objects.all()
-    project_id = documents.values('project').distinct()
-    documents_array = []
-    for item in project_id:
-        all_document = documents.filter(
-            project=item['project']).order_by('project').distinct()
-        for item in all_document:
-            rework_document = {"id": item.id, "project": item.project,
-                               "member": item.member, "kind": item.kind, "auth": item.auth, "project_id": item.project.id}
-            documents_array.append(rework_document)
-    return render(request, 'sites/sites_main.html', {"projects": projects, "documents": documents_array})
+    documents_all = Document.objects.all()
+
+    project_lists = []
+    for project in projects:
+
+        rework_reports = {'id': project.id, 'client': project.client, 'product': project.product,
+                          'title': project.title, 'PRE': [], "PRO": [], "EXA": [], "MAN": [], "ETC": []}
+
+        documents = documents_all.filter(
+            project=project.id).order_by('project')
+
+        for document in documents:
+            document_attachs = DocumentAttachment.objects.filter(
+                document=document.id)
+
+            for document_attach in document_attachs:
+                kind = document.kind
+                rework_attach = {"id": document_attach.id,
+                                 "title": document_attach.attach_name}
+
+                if kind == "PRE":
+                    rework_reports['PRE'].append(rework_attach)
+                elif kind == "PRO":
+                    rework_reports['PRO'].append(rework_attach)
+                elif kind == "EXA":
+                    rework_reports['EXA'].append(rework_attach)
+                elif kind == "MAN":
+                    rework_reports['MAN'].append(rework_attach)
+                else:
+                    rework_reports['ETC'].append(rework_attach)
+
+        project_lists.append(rework_reports)
+    return render(request, 'sites/sites_main.html', {"projects": project_lists })
 
 
 @login_required
@@ -46,7 +70,9 @@ def sites_detail(request, pk):
     asset_form = AssetForm()
     project_form = ProjectForm()
     document_form = DocumentAttachmentForm()
-    return render(request, 'sites/sites_detail.html', {"project": project, "asset_form": asset_form, "project_form": project_form,  "document_form": document_form})
+    products = Product.objects.values(
+        'id', 'name', 'makers', 'level').order_by('makers', 'level')
+    return render(request, 'sites/sites_detail.html', {"project": project, "asset_form": asset_form, "project_form": project_form,  "document_form": document_form, "products": products})
 
 
 @login_required
@@ -83,7 +109,9 @@ def sites_add(request):
     asset_form = AssetForm()
     project_form = ProjectForm()
     document_form = DocumentAttachmentForm()
-    return render(request, "sites/sites_add.html", {'asset_form': asset_form, 'project_form': project_form, 'document_form': document_form, })
+    products = Product.objects.values('id',
+                                      'name', 'makers', 'level').order_by('makers', 'level')
+    return render(request, "sites/sites_add.html", {'asset_form': asset_form, 'project_form': project_form, 'document_form': document_form, "products": products})
 
 
 @login_required
@@ -91,7 +119,7 @@ def sites_add_apply(request):
     if request.method == "POST":
         project_apply = Project(title=request.POST['project_name'], status=request.POST['status'],
                                 comments=request.POST['sites_comments'], client_id=request.POST[
-            'client'], product_id=request.POST['product'],
+            'client'], product_id=request.POST['product_id'],
             info={"sales": request.POST.getlist('member_name')[0], "mn_cycle": request.POST['cycle'], "eng": request.POST.getlist('member_name')[1], "started_at": request.POST.getlist('purchase_date')[
                 0], "ended_at": request.POST.getlist('purchase_date')[1], "mnstarted_at": request.POST.getlist('purchase_date')[2], "mnended_at": request.POST.getlist('purchase_date')[3]}
         )
