@@ -18,7 +18,6 @@
                         <th>수행계획서</th>
                         <th>검 수</th>
                         <th>유지보수</th>
-                        <th>진행여부</th>
                         <th>기 타</th>
                     </tr>
                 </thead>
@@ -26,49 +25,63 @@
                 {% for project in projects %}
                 <tr>
                     <td>
-                        <a href="{% url 'sites_detail' pk=project.pk %}">
+                        <a href="{% url 'sites_detail' pk=project.id %}">
                             {{ project.client }}
                         </a>
                     </td>
                     <td>{{ project.product }}</td>
                     <td>{{ project.title }}</td>
+
+                    {% if project.PRE|length == 0 %}
+                    <td>-</td>
+                    {% else %}
                     <td>
                         <a href="#" title="Presales 파일 리스트" data-toggle="popover_presales" data-trigger="focus"
-                            data-placement="top">제품소개서(+2)</a>
+                            data-placement="top">File list(+{{project.PRE|length}})</a><br>
                     </td>
-                    <td data-container="body" data-toggle="tooltip_wbs" data-placement="top">wbs(+1)</td>
-                    <td data-container="body" data-toggle="tooltip_confirm" data-placement="top">검수확인서(+2)</td>
-                    {% for key, value in project.info.items %}
-                    {% if key == "mn_cycle" %}
-                    {% if value == "MON"%}
-                    <td>매월</td>
-                    {% elif value == "QUA"%}
-                    <td>분기</td>
-                    {% elif value == "HALF"%}
-                    <td>반기</td>
+                    {% endif %}
+
+                    {% if project.PRO|length == 0 %}
+                    <td>-</td>
                     {% else %}
-                    <td>매년</td>
+                    <td>
+                        <a href="#" title="Presales 파일 리스트" data-toggle="popover_presales" data-trigger="focus"
+                            data-placement="top">File list(+{{project.PRO|length}})</a><br>
+                    </td>
                     {% endif %}
-                    {% endif %}
-                    {% endfor %}
-                    {% if project.status == "P" %}
-                    <td>진행 중</td>
+
+
+                    {% if project.EXA|length == 0 %}
+                    <td>-</td>
                     {% else %}
-                    <td>진행 완료</td>
+                    <td>
+                        <a href="#" title="Presales 파일 리스트" data-toggle="popover_presales" data-trigger="focus"
+                            data-placement="top">File list(+{{project.EXA|length}})</a><br>
+                    </td>
                     {% endif %}
-                    <td>{{ project.comments }}</td>
+
+                    {% if project.MAN|length == 0 %}
+                    <td>-</td>
+                    {% else %}
+                    <td>
+                        <a href="#" title="Presales 파일 리스트" data-toggle="popover_presales" data-trigger="focus"
+                            data-placement="top">File list(+{{project.MAN|length}})</a><br>
+                    </td>
+                    {% endif %}
+
+                    {% if project.ETC|length == 0 %}
+                    <td>-</td>
+                    {% else %}
+                    <td>
+                        <a href="#" title="Presales 파일 리스트" data-toggle="popover_presales" data-trigger="focus"
+                            data-placement="top">File list(+{{project.ETC|length}})</a><br>
+                    </td>
+                    {% endif %}
+
+
                 </tr>
                 {% endfor %}
             </table>
-            <br>
-            <div>File list</div>
-            {% for document in documents %}
-            <a href="{% url 'document_detail' project_id=document.project_id %}">
-                {{document.project}}, {{document.member}}, {{document.kind}}
-                <br>
-            </a>
-            {% endfor %}
-            </p>
         </div>
     </div>
 </div>
