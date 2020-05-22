@@ -9,7 +9,6 @@ class ProjectForm(forms.ModelForm):
         fields = ('client', 'product', 'status')
         widgets = {
             'client': forms.Select(attrs={'class': 'selectpicker', 'title': '고객사 선택', 'id': 'client_id', 'data-live-search': 'true'}),
-            'product': forms.Select(attrs={'class': 'selectpicker', 'title': '제품 선택', 'id': 'product_id'}),
             'status': forms.Select(attrs={'class': 'selectpicker', 'title': '진행 여부 선택', 'id': 'status'})
         }
 
