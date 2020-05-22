@@ -1,4 +1,4 @@
-{% extends 'base.html' %} {% block content %} {% load static %}
+{% extends 'base.html' %} {% block content %} {% load static %} {% load common_tags %}
 
 <div class="container">
     <div class="card sites">
@@ -22,7 +22,22 @@
                         </div>
                         <div class="form-group">
                             <label>제조사</label>
-                            {{ project_form.product }}
+                            <select class="selectpicker" title="제품 선택" id="product_id" name="product_id"
+                                data-live-search="true">
+                                {% with current_makers='' %}
+                                {% for product in products %}
+                                {% if product.level == 0 %}
+                                {% assign_value product.makers as current_makers %}
+                                <optgroup label="{{product.makers}}">
+                                    {% endif %}
+                                    <option value="{{product.id}}" data-tokens="{{product.makers}}">{{product.name}}
+                                    </option>
+                                    {% if current_makers != product.makers %}
+                                </optgroup>
+                                {% endif %}
+                                {% endfor %}
+                                {% endwith %}
+                            </select>
                         </div>
                         <div class="form-group">
                             <label>진행 상태</label>
