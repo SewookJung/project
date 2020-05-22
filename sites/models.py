@@ -32,7 +32,6 @@ class Project(models.Model):
     PRE = "PRE"
     PRO = "PRO"
     EXA = "EXA"
-    REV = "REV"
     ETC = "ETC"
     MAN = "MAN"
 
