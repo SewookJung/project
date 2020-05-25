@@ -7,43 +7,43 @@
     </div>
     <div class="card-body">
       <p class="card-text">
-        <table class="table table-striped table-bordered table-hover assets_table" id="asset__table">
-          <thead>
-            <tr>
-              <th>대여자</th>
-              <th>제조사 및 모델명</th>
-              <th>시리얼</th>
-              <th>상태</th>
-              <th>기타</th>
-              <th>반납처리</th>
-            </tr>
-          </thead>
-          {% for asset in assets %}
+      <table class="table table-striped table-bordered table-hover assets_table" id="asset__table">
+        <thead>
           <tr>
-            {% if asset.is_state == STATUS_RENTAL %}
-            <td>{{ asset.renter }}</td>
-            <td>{{ asset.mnfacture }} ({{ asset.model }})</td>
-            <td>{{ asset.serial }} </td>
-            <td>대여중</td>
-            <td>{{ asset.rent_comment }}</td>
-            <td>
-              <button type="button" class="btn btn-primary" id="rent-btn{{asset.rent_id}}"
-                onclick="asset_return('{{asset.id}}', '{{asset.rent_id}}')">반납하기</button>
-            </td>
-            {% else %}
-            <td>{{ asset.member_name }}</td>
-            <td>{{ asset.mnfacture }} ({{ asset.model }})</td>
-            <td>{{ asset.serial }} </td>
-            <td>보관중</td>
-            <td>{{ asset.comments }}</td>
-            <td>
-              <button type="button" class="btn btn-success" id="rent-btn{{asset.id}}"
-                onclick="asset_rent('{{asset.id}}', '{{asset.mnfacture}}', '{{asset.model}}')">대여하기</button>
-            </td>
-            {% endif %}
+            <th>대여자</th>
+            <th>제조사 및 모델명</th>
+            <th>시리얼</th>
+            <th>상태</th>
+            <th>기타</th>
+            <th>반납처리</th>
           </tr>
-          {% endfor %}
-        </table>
+        </thead>
+        {% for asset in assets %}
+        <tr>
+          {% if asset.is_state == STATUS_RENTAL %}
+          <td>{{ asset.renter }}</td>
+          <td>{{ asset.mnfacture }} ({{ asset.model }})</td>
+          <td>{{ asset.serial }} </td>
+          <td>대여중</td>
+          <td>{{ asset.rent_comment }}</td>
+          <td>
+            <button type="button" class="btn btn-primary" id="rent-btn{{asset.rent_id}}"
+              onclick="asset_return('{{asset.id}}', '{{asset.rent_id}}')">반납하기</button>
+          </td>
+          {% else %}
+          <td>{{ asset.member_name }}</td>
+          <td>{{ asset.mnfacture }} ({{ asset.model }})</td>
+          <td>{{ asset.serial }} </td>
+          <td>보관중</td>
+          <td>{{ asset.comments }}</td>
+          <td>
+            <button type="button" class="btn btn-success" id="rent-btn{{asset.id}}"
+              onclick="asset_rent('{{asset.id}}', '{{asset.mnfacture}}', '{{asset.model}}')">대여하기</button>
+          </td>
+          {% endif %}
+        </tr>
+        {% endfor %}
+      </table>
       </p>
     </div>
   </div>
@@ -116,5 +116,4 @@
 <script src="{% static 'js/selectpicker/bootstrap-select.js' %}"></script>
 <script src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
 <script src="https://cdn.datatables.net/1.10.20/js/dataTables.bootstrap4.min.js"></script>
-
 {% endblock %}
