@@ -13,7 +13,6 @@ from django.views.generic import View
 from django.contrib.auth.decorators import login_required
 from django.conf import settings
 
-
 from wsgiref.util import FileWrapper
 
 from assets.forms import AssetForm
@@ -32,36 +31,26 @@ def sites_main(request):
     documents_all = Document.objects.all()
 
     project_lists = []
+
     for project in projects:
-
         rework_reports = {'id': project.id, 'client': project.client, 'product': project.product,
-                          'title': project.title, 'PRE': [], "PRO": [], "EXA": [], "MAN": [], "ETC": []}
+                          'title': project.title, }
+        presales_count = documents_all.filter(
+            project=project.id, kind="PRE").count()
+        progressing_count = documents_all.filter(
+            project=project.id, kind="PRO").count()
+        examination_count = documents_all.filter(
+            project=project.id, kind="EXA").count()
+        manafacture_count = documents_all.filter(
+            project=project.id, kind="MAN").count()
+        etc_count = documents_all.filter(
+            project=project.id, kind="ETC").count()
 
-        documents = documents_all.filter(
-            project=project.id).order_by('project')
-
-        for document in documents:
-            document_attachs = DocumentAttachment.objects.filter(
-                document=document.id)
-
-            for document_attach in document_attachs:
-                kind = document.kind
-                rework_attach = {"id": document_attach.id,
-                                 "title": document_attach.attach_name}
-
-                if kind == "PRE":
-                    rework_reports['PRE'].append(rework_attach)
-                elif kind == "PRO":
-                    rework_reports['PRO'].append(rework_attach)
-                elif kind == "EXA":
-                    rework_reports['EXA'].append(rework_attach)
-                elif kind == "MAN":
-                    rework_reports['MAN'].append(rework_attach)
-                else:
-                    rework_reports['ETC'].append(rework_attach)
-
+        rework_document = {'PRE': {"count": presales_count}, "PRO": {"count": progressing_count}, "EXA": {
+            "count": examination_count}, "MAN": {"count": manafacture_count}, "ETC": {"count": etc_count}}
+        rework_reports.update(rework_document)
         project_lists.append(rework_reports)
-    return render(request, 'sites/sites_main.html', {"projects": project_lists })
+    return render(request, 'sites/sites_main.html', {"projects": project_lists})
 
 
 @login_required
