@@ -8,6 +8,25 @@ $(document).ready(function () {
   $('[data-toggle="popover_presales"]').popover({
     trigger: "focus",
     html: true,
-    content: content,
   });
+});
+
+$("#presales_popover").on("show.bs.popover", function () {
+  console.log("test");
+});
+
+$("#progressing_popover").on("show.bs.popover", function () {
+  console.log("test");
+});
+
+$("#examination_popover").on("show.bs.popover", function () {
+  console.log("test");
+});
+
+$("#manafacture_popover").on("show.bs.popover", function () {
+  console.log("test");
+});
+
+$("#etc_popover").on("show.bs.popover", function () {
+  console.log("test");
 });
