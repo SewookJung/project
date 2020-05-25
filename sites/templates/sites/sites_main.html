@@ -21,7 +21,6 @@
                         <th>기 타</th>
                     </tr>
                 </thead>
-
                 {% for project in projects %}
                 <tr>
                     <td>
@@ -32,53 +31,55 @@
                     <td>{{ project.product }}</td>
                     <td>{{ project.title }}</td>
 
-                    {% if project.PRE|length == 0 %}
+                    {% if project.PRE.count == 0 %}
                     <td>-</td>
                     {% else %}
                     <td>
                         <a href="#" title="Presales 파일 리스트" data-toggle="popover_presales" data-trigger="focus"
-                            data-placement="top">File list(+{{project.PRE|length}})</a><br>
+                            data-placement="top" id="presales_popover">
+                            File list(+{{project.PRE.count}})</a><br>
                     </td>
                     {% endif %}
 
-                    {% if project.PRO|length == 0 %}
+                    {% if project.PRO.count == 0 %}
                     <td>-</td>
                     {% else %}
                     <td>
-                        <a href="#" title="Presales 파일 리스트" data-toggle="popover_presales" data-trigger="focus"
-                            data-placement="top">File list(+{{project.PRO|length}})</a><br>
+                        <a href="#" title="수행계획서 파일 리스트" data-toggle="popover_presales" data-trigger="focus"
+                            data-placement="top" id="progressing_popover">
+                            File list(+{{project.PRO.count}})</a><br>
                     </td>
                     {% endif %}
 
-
-                    {% if project.EXA|length == 0 %}
+                    {% if project.EXA.count == 0 %}
                     <td>-</td>
                     {% else %}
                     <td>
-                        <a href="#" title="Presales 파일 리스트" data-toggle="popover_presales" data-trigger="focus"
-                            data-placement="top">File list(+{{project.EXA|length}})</a><br>
+                        <a href="#" title="검수 파일 리스트" data-toggle="popover_presales" data-trigger="focus"
+                            data-placement="top" id="examination_popover">
+                            File list(+{{project.EXA.count}})</a><br>
                     </td>
                     {% endif %}
 
-                    {% if project.MAN|length == 0 %}
+                    {% if project.MAN.count == 0 %}
                     <td>-</td>
                     {% else %}
                     <td>
-                        <a href="#" title="Presales 파일 리스트" data-toggle="popover_presales" data-trigger="focus"
-                            data-placement="top">File list(+{{project.MAN|length}})</a><br>
+                        <a href="#" title="유지보수 파일 리스트" data-toggle="popover_presales" data-trigger="focus"
+                            data-placement="top" id="manafacture_popover">
+                            File list(+{{project.MAN.count}})</a><br>
                     </td>
                     {% endif %}
 
-                    {% if project.ETC|length == 0 %}
+                    {% if project.ETC.count == 0 %}
                     <td>-</td>
                     {% else %}
                     <td>
-                        <a href="#" title="Presales 파일 리스트" data-toggle="popover_presales" data-trigger="focus"
-                            data-placement="top">File list(+{{project.ETC|length}})</a><br>
+                        <a href="#" title="기타 파일 리스트" data-toggle="popover_presales" data-trigger="focus"
+                            id="etc_popover" data-placement="top">
+                            File list(+{{project.ETC.count}})</a><br>
                     </td>
                     {% endif %}
-
-
                 </tr>
                 {% endfor %}
             </table>
