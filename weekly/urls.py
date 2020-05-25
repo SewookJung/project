@@ -1,7 +1,6 @@
 from django.conf.urls import re_path
 from . import views
 
-
 urlpatterns = [
     re_path(r'^$', views.weekly_main, name="weekly_main"),
     re_path(r'^add/$', views.weekly_add, name="weekly_add"),
