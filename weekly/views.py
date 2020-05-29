@@ -15,6 +15,7 @@ from .models import Report
 from .forms import ReportForm
 from utils.constant import REPORT_PERMISSION_DEFAULT, REPORT_PERMISSION_EXCEPT, REPORT_DEFAULT_ID, REPORT_DEFAULT_SELECT
 
+
 @login_required
 def weekly_main(request, **kwargs):
     if not request.session['member_dept'] in REPORT_PERMISSION_DEFAULT:

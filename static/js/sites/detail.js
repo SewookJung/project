@@ -1,3 +1,19 @@
+function checkLoginId() {
+  const inputElements = document.querySelectorAll("input");
+  const textareaElement = document.querySelector("textarea");
+  const loginId = document.getElementById("login_id").value;
+  const projectCreator = document.getElementById("project_creator").value;
+
+  if (loginId != projectCreator) {
+    $(".selectpicker").prop("disabled", true);
+    $(".selectpicker").selectpicker("refresh");
+    textareaElement.disabled = "true";
+    inputElements.forEach(function (item) {
+      item.disabled = true;
+    });
+  }
+}
+
 function changeElementName() {
   const eng = document.querySelectorAll("#member_id");
   eng[1].setAttribute("name", "eng");
@@ -11,8 +27,18 @@ function site_edit_cancel() {
   }
 }
 
+function delete_project() {
+  const projectId = $("#project_id").val();
+  if (confirm("해당 프로젝트를 삭제 하시겠습니까?") == true) {
+    location.href = "/sites/" + projectId + "/delete/";
+  } else {
+    return false;
+  }
+}
+
 $(document).ready(function () {
   changeElementName();
+  checkLoginId();
   const clientId = $("input[name=client_id]").val();
   $("select[name=client]").val(clientId);
   const productId = $("input[name=product_id]").val();

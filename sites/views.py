@@ -31,26 +31,95 @@ def sites_main(request):
     documents_all = Document.objects.all()
 
     project_lists = []
-
     for project in projects:
-        rework_reports = {'id': project.id, 'client': project.client, 'product': project.product,
-                          'title': project.title, }
-        presales_count = documents_all.filter(
-            project=project.id, kind="PRE").count()
-        progressing_count = documents_all.filter(
-            project=project.id, kind="PRO").count()
-        examination_count = documents_all.filter(
-            project=project.id, kind="EXA").count()
-        manafacture_count = documents_all.filter(
-            project=project.id, kind="MAN").count()
-        etc_count = documents_all.filter(
-            project=project.id, kind="ETC").count()
 
-        rework_document = {'PRE': {"count": presales_count}, "PRO": {"count": progressing_count}, "EXA": {
-            "count": examination_count}, "MAN": {"count": manafacture_count}, "ETC": {"count": etc_count}}
-        rework_reports.update(rework_document)
+        rework_reports = {'id': project.id, 'client': project.client, 'product': project.product, 'creator': project.member, 'document_id': None,
+                          'title': project.title, 'PRE': [], "PRO": [], "EXA": [], "MAN": [], "ETC": []}
+
+        documents = documents_all.filter(
+            project=project.id).order_by('project')
+
+        for document in documents:
+            document_attachs = DocumentAttachment.objects.filter(
+                document=document.id)
+            document_id = {'document_id': document.id}
+            rework_reports.update(document_id)
+
+            for document_attach in document_attachs:
+                kind = document.kind
+                rework_attach = {"id": document_attach.id,
+                                 "title": document_attach.attach_name,
+                                 "document_id": document.id
+                                 }
+                if kind == "PRE":
+                    rework_reports['PRE'].append(rework_attach)
+                elif kind == "PRO":
+                    rework_reports['PRO'].append(rework_attach)
+                elif kind == "EXA":
+                    rework_reports['EXA'].append(rework_attach)
+                elif kind == "MAN":
+                    rework_reports['MAN'].append(rework_attach)
+                else:
+                    rework_reports['ETC'].append(rework_attach)
         project_lists.append(rework_reports)
     return render(request, 'sites/sites_main.html', {"projects": project_lists})
+
+    # for project in projects:
+    #     rework_reports = {'id': project.id, 'client': project.client, 'product': project.product,
+    #                       'title': project.title, 'member': project.member, 'member_id': project.member_id, }
+
+    #     presales = document_all.filter(
+    #         project=project.id, kind="PRE")
+    #     progressing = document_all.filter(
+    #         project=project.id, kind="PRO")
+    #     examination = document_all.filter(
+    #         project=project.id, kind="EXA")
+    #     manafacture = document_all.filter(
+    #         project=project.id, kind="MAN")
+    #     etc = document_all.filter(
+    #         project=project.id, kind="ETC")
+
+    #     if presales.count() != 0:
+    #         for item in presales:
+    #             presales_counter = document_attach_all.filter(document=item.id).count()
+    #             print(presales_counter)
+    #     else:
+    #         presales_count = 0
+
+    #     if progressing.count() != 0:
+    #         progressing_count = document_attach_all.filter(
+    #             document=progressing[0].id)
+    #     else:
+    #         progressing_count = 0
+
+    #     if examination.count() != 0:
+    #         examination_count = document_attach_all.filter(
+    #             document=examination[0].id).count()
+    #     else:
+    #         examination_count = 0
+
+    #     if manafacture.count() != 0:
+    #         manafacture_count = document_attach_all.filter(
+    #             document=manafacture[0].id).count()
+    #     else:
+    #         manafacture_count = 0
+
+    #     if etc.count() != 0:
+    #         etc_count = document_attach_all.filter(document=etc[0].id).count()
+    #     else:
+    #         etc_count = 0
+
+    #     rework_document = {'PRE': {"count": presales.count()}, "PRO": {"count": progressing.count()}, "EXA": {
+    #         "count": examination.count()}, "MAN": {"count": manafacture.count()}, "ETC": {"count": etc.count()}}
+    #     rework_reports.update(rework_document)
+
+    #     check_document = document_all.filter(project=project.id)
+    #     if check_document.count() != 0:
+    #         document_id = {"document_id": check_document[0].id}
+    #         rework_reports.update(document_id)
+    #     project_lists.append(rework_reports)
+
+    # return render(request, 'sites/sites_main.html', {"projects": project_lists, })
 
 
 @login_required
@@ -61,7 +130,8 @@ def sites_detail(request, pk):
     document_form = DocumentAttachmentForm()
     products = Product.objects.values(
         'id', 'name', 'makers', 'level').order_by('makers', 'level')
-    return render(request, 'sites/sites_detail.html', {"project": project, "asset_form": asset_form, "project_form": project_form,  "document_form": document_form, "products": products})
+    project_creator = Member.objects.get(id=project.member_id)
+    return render(request, 'sites/sites_detail.html', {"project": project, "asset_form": asset_form, "project_form": project_form,  "document_form": document_form, "products": products, "project_creator": project_creator, 'login_id': request.session['id']})
 
 
 @login_required
@@ -108,7 +178,7 @@ def sites_add_apply(request):
     if request.method == "POST":
         project_apply = Project(title=request.POST['project_name'], status=request.POST['status'],
                                 comments=request.POST['sites_comments'], client_id=request.POST[
-            'client'], product_id=request.POST['product_id'],
+            'client'], product_id=request.POST['product_id'], member_id=request.session['id'],
             info={"sales": request.POST.getlist('member_name')[0], "mn_cycle": request.POST['cycle'], "eng": request.POST.getlist('member_name')[1], "started_at": request.POST.getlist('purchase_date')[
                 0], "ended_at": request.POST.getlist('purchase_date')[1], "mnstarted_at": request.POST.getlist('purchase_date')[2], "mnended_at": request.POST.getlist('purchase_date')[3]}
         )
@@ -116,6 +186,12 @@ def sites_add_apply(request):
         return redirect("sites_main")
     else:
         return redirect("sites_main")
+
+
+@login_required
+def sites_delete(request, pk):
+    Project.objects.get(id=pk).delete()
+    return redirect("sites_main")
 
 
 @login_required
@@ -148,14 +224,14 @@ def document_detail(request, project_id):
     project_name = documents[0].project
     documents_attach_list = []
     for document_id in documents_id:
-        document_file_list = documents_attach.filter(
+        document_attach_list = documents_attach.filter(
             document_id=document_id['id'])
-        for file in document_file_list:
-            document = documents.get(id=file.document_id)
+        for attach in document_attach_list:
+            document = documents.get(id=attach.document_id)
             document_auth_value = [item['value'] for item in document.auth]
             document_auth_value.append(str(document.member_id))
-            rework_document_attached = {'id': file.id, 'attach_name': file.attach_name, 'document_id': file.document_id,
-                                        'created_at': file.created_at, 'permission': document.auth, 'kind': document.kind, 'member': document.member, 'auth_value': document_auth_value}
+            rework_document_attached = {'id': attach.id, 'attach_name': attach.attach_name, 'document_id': attach.document_id,
+                                        'created_at': attach.created_at, 'permission': document.auth, 'kind': document.kind, 'member': document.member, 'auth_value': document_auth_value}
             documents_attach_list.append(rework_document_attached)
     return render(request, "sites/document_detail.html", {"documents_attach_list": documents_attach_list, 'project_name': project_name, 'login_id': login_id, })
 
@@ -171,6 +247,29 @@ def document_attach_detail(request, document_id):
     check_code = "{0}-{1}-{2}".format(dt.strftime('%Y%m%d'),
                                       uuid.uuid4().hex, request.session['id'])
     return render(request, "sites/document_attach_detail.html", {'document_form': document_form, 'document': document, 'document_attach_list': document_attach_list, 'check_code': check_code})
+
+
+@login_required
+def document_attach_kind_detail(request, document_id):
+    login_id = request.session['id']
+    document_all = Document.objects.all()
+    document_attach_all = DocumentAttachment.objects.all()
+    
+    document = document_all.get(id=document_id)
+    documents_id = document_all.filter(
+        project=document.project_id, kind=document.kind).values('id')
+    project_name = document.project
+    documents_attach_list = []
+    for document_id in documents_id:
+        document_attach_list = document_attach_all.filter(
+            document=document_id['id'])
+        for attach in document_attach_list:
+            document_auth_value = [item['value'] for item in document.auth]
+            document_auth_value.append(str(document.member_id))
+            rework_document_attached = {'id': attach.id, 'attach_name': attach.attach_name, 'document_id': attach.document_id,
+                                        'created_at': attach.created_at, 'permission': document.auth, 'kind': document.kind, 'member': document.member, 'auth_value': document_auth_value}
+            documents_attach_list.append(rework_document_attached)
+    return render(request, "sites/document_attach_kind_detail.html", {"documents_attach_list": documents_attach_list, 'project_name': project_name, 'login_id': login_id})
 
 
 @login_required

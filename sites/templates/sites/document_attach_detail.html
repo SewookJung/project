@@ -35,10 +35,10 @@
                                 </thead>
                                 {% for item in document_attach_list %}
                                 <tr>
-                                    <td>{{item.attach_name}}</td>
-                                    <td>{{item.created_at}}</td>
+                                    <td>{{ item.attach_name }}</td>
+                                    <td>{{ item.created_at }}</td>
                                     <td><button type="button" class="btn btn-outline-danger"
-                                            onclick="document_attach_delete({{item.id}})">파일삭제</button>
+                                            onclick="document_attach_delete({{ item.id }})">파일삭제</button>
                                     </td>
                                 </tr>
                                 {% endfor %}

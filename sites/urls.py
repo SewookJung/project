@@ -7,6 +7,7 @@ from . import views
 urlpatterns = [
     re_path(r'^$', views.sites_main, name="sites_main"),
     re_path(r'^(?P<pk>\d+)/$', views.sites_detail, name="sites_detail"),
+    re_path(r'^(?P<pk>\d+)/delete/$', views.sites_delete, name="sites_delete"),
     re_path(r'^edit/(?P<pk>\d+)/$', views.sites_edit, name="sites_edit"),
     re_path(r'^add/$', views.sites_add, name="sites_add"),
     re_path(r'^add/apply/$', views.sites_add_apply, name="sites_add_apply"),
@@ -18,6 +19,8 @@ urlpatterns = [
             views.document_attach_delete, name="document_attach_delete"),
     re_path(r'^document/(?P<document_id>\d+)/detail/$',
             views.document_attach_detail, name="document_attach_detail"),
+    re_path(r'^document/attach/(?P<document_id>\d+)/detail/$',
+            views.document_attach_kind_detail, name="document_attach_kind_detail"),
     re_path(r'^document/(?P<document_id>\d+)/detail/apply/$',
             views.document_attach_detail_apply, name="document_attach_detail_apply"),
     re_path(r'^document/(?P<document_id>\d+)/auth/$',

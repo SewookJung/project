@@ -1,3 +1,5 @@
+
+
 const csrfToken = document.getElementsByName("csrfmiddlewaretoken")[0].value;
 const maxUploadfile = 7;
 const maxfilesize = 1024 * 1024 * 1024;

@@ -14,6 +14,8 @@ class Project(models.Model):
         (PROJECT_STATUS_PROGRESSING, 'PROGRESSING')
     )
     title = models.CharField(max_length=100)
+    member = models.ForeignKey(
+        to=Member, null=True, blank=True, on_delete=models.SET_NULL)
     client = models.ForeignKey(
         to='common.Client', null=True, blank=True, verbose_name='the related client', on_delete=models.SET_NULL)
     product = models.ForeignKey(
@@ -49,7 +51,7 @@ class Project(models.Model):
 
 class Document(models.Model):
     project = models.ForeignKey(
-        Project, on_delete=models.SET_NULL, null=True)
+        Project, on_delete=models.CASCADE, null=True)
     member = models.ForeignKey(
         to=Member, null=True, blank=True, on_delete=models.SET_NULL)
     auth = JSONField(default=dict, blank=True,
