@@ -47,10 +47,11 @@ def sites_main(request):
 
             for document_attach in document_attachs:
                 kind = document.kind
-                rework_attach = {"id": document_attach.id,
-                                 "title": document_attach.attach_name,
-                                 "document_id": document.id
-                                 }
+                rework_attach = {
+                    "id": document_attach.id,
+                    "title": document_attach.attach_name,
+                    "document_id": document.id
+                }
                 if kind == "PRE":
                     rework_reports['PRE'].append(rework_attach)
                 elif kind == "PRO":
@@ -67,17 +68,6 @@ def sites_main(request):
     # for project in projects:
     #     rework_reports = {'id': project.id, 'client': project.client, 'product': project.product,
     #                       'title': project.title, 'member': project.member, 'member_id': project.member_id, }
-
-    #     presales = document_all.filter(
-    #         project=project.id, kind="PRE")
-    #     progressing = document_all.filter(
-    #         project=project.id, kind="PRO")
-    #     examination = document_all.filter(
-    #         project=project.id, kind="EXA")
-    #     manafacture = document_all.filter(
-    #         project=project.id, kind="MAN")
-    #     etc = document_all.filter(
-    #         project=project.id, kind="ETC")
 
     #     if presales.count() != 0:
     #         for item in presales:
@@ -131,7 +121,7 @@ def sites_detail(request, pk):
     products = Product.objects.values(
         'id', 'name', 'makers', 'level').order_by('makers', 'level')
     project_creator = Member.objects.get(id=project.member_id)
-    return render(request, 'sites/sites_detail.html', {"project": project, "asset_form": asset_form, "project_form": project_form,  "document_form": document_form, "products": products, "project_creator": project_creator, 'login_id': request.session['id']})
+    return render(request, 'sites/sites_detail.html', {"project": project, "asset_form": asset_form, "project_form": project_form,  "document_form": document_form, "products": products, "project_creator": project_creator.id, 'login_id': request.session['id']})
 
 
 @login_required
@@ -217,6 +207,8 @@ def document_default_auth(request):
 
 @login_required
 def document_detail(request, project_id):
+    print(project_id)
+
     login_id = request.session['id']
     documents = Document.objects.filter(project_id=project_id)
     documents_attach = DocumentAttachment.objects.all()
@@ -254,7 +246,7 @@ def document_attach_kind_detail(request, document_id):
     login_id = request.session['id']
     document_all = Document.objects.all()
     document_attach_all = DocumentAttachment.objects.all()
-    
+
     document = document_all.get(id=document_id)
     documents_id = document_all.filter(
         project=document.project_id, kind=document.kind).values('id')
