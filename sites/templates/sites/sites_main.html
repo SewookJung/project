@@ -32,12 +32,9 @@
                     <td>
                         {% if project.document_id == None %}
                         {{ project.title }}
-
                         {% else %}
-                        <a
-                            href="{% url 'document_attach_kind_detail' document_id=project.document_id %}">{{ project.title }}</a>
+                        <a href="{% url 'document_detail' project_id=project.id %}">{{ project.title }}</a>
                         {% endif %}
-
                     </td>
 
                     {% if project.PRE|length == 0 %}
