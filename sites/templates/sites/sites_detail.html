@@ -11,6 +11,9 @@
                 action="/sites/edit/{{ project.id }}/">{% csrf_token %}
                 <div class="sites__contents form-row">
                     <div class="form-group col-md-12">
+                        <input type="hidden" value="{{login_id}}" id=login_id>
+                        <input type="hidden" value="{{project_creator}}" id=project_creator>
+                        <input type="hidden" value="{{project.id}}" id=project_id>
                         <div class="form-group">
                             <label>프로젝트 명</label>
                             <input type="text" name="project_name" id="project_name" class="form-control"
@@ -151,7 +154,6 @@
                         </div>
                         {% endif %}
                         {% endfor %}
-
                         <div class="form-group">
                             <label>기 타 </label>
                             <textarea class="form-control col-sm-12" rows="5" id="sites_comments"
@@ -160,14 +162,22 @@
 
                     </div>
                 </div>
-                <div class="text-right submit-box">
-                    <button type="button" class="btn btn-outline-danger" onclick="site_edit_cancel()">
-                        취소
-                    </button>
-                    <button type="submit" class="btn btn-outline-secondary" id="submit-btn">
-                        수정
-                    </button>
+                {% if project_creator == login_id %}
+                <div class="d-flex">
+                    <div class="mr-auto p-2">
+                        <button type="button" class="btn btn-danger" id="report_delete"
+                            onclick="delete_project()">삭제</button>
+                    </div>
+                    <div class="p-2">
+                        <button type="button" class="btn btn-outline-danger" onclick="site_edit_cancel()">
+                            취소
+                        </button>
+                        <button type="submit" class="btn btn-outline-secondary" id="submit-btn">
+                            수정
+                        </button>
+                    </div>
                 </div>
+                {% endif %}
             </form>
         </div>
     </div>
