@@ -34,82 +34,76 @@ def sites_main(request):
     for project in projects:
 
         rework_reports = {'id': project.id, 'client': project.client, 'product': project.product, 'creator': project.member, 'document_id': None,
-                          'title': project.title, 'PRE': [], "PRO": [], "EXA": [], "MAN": [], "ETC": []}
-
+                          'title': project.title, 'PRE': {}, "PRO": {}, "EXA": {}, "MAN": {}, "ETC": {}}
         documents = documents_all.filter(
             project=project.id).order_by('project')
 
         for document in documents:
             document_attachs = DocumentAttachment.objects.filter(
                 document=document.id)
+            kind = document.kind
+            count = document_attachs.count()
+
+            if kind == "PRE":
+                if rework_reports['PRE'] == {}:
+                    data = {
+                        'kind': kind,
+                        'count': count
+                    }
+                    rework_reports['PRE'].update(data)
+                else:
+                    add_count = rework_reports['PRE']['count'] + count
+                    rework_reports['PRE']['count'] = add_count
+
+            elif kind == "PRO":
+                if rework_reports['PRO'] == {}:
+                    data = {
+                        'kind': kind,
+                        'count': count
+                    }
+                    rework_reports['PRO'].update(data)
+                else:
+                    add_count = rework_reports['PRO']['count'] + count
+                    rework_reports['PRO']['count'] = add_count
+
+            elif kind == "EXA":
+                if rework_reports['EXA'] == {}:
+                    data = {
+                        'kind': kind,
+                        'count': count
+                    }
+                    rework_reports['EXA'].update(data)
+                else:
+                    add_count = rework_reports['EXA']['count'] + count
+                    rework_reports['EXA']['count'] = add_count
+
+            elif kind == "MAN":
+                if rework_reports['MAN'] == {}:
+                    data = {
+                        'kind': kind,
+                        'count': count
+                    }
+                    rework_reports['MAN'].update(data)
+                else:
+                    add_count = rework_reports['MAN']['count'] + count
+                    rework_reports['MAN']['count'] = add_count
+
+            elif kind == "ETC":
+                if rework_reports['ETC'] == {}:
+                    data = {
+                        'kind': kind,
+                        'count': count
+                    }
+                    rework_reports['ETC'].update(data)
+                else:
+                    add_count = rework_reports['ETC']['count'] + count
+                    rework_reports['ETC']['count'] = add_count
+
             document_id = {'document_id': document.id}
             rework_reports.update(document_id)
-
-            for document_attach in document_attachs:
-                kind = document.kind
-                rework_attach = {
-                    "id": document_attach.id,
-                    "title": document_attach.attach_name,
-                    "document_id": document.id
-                }
-                if kind == "PRE":
-                    rework_reports['PRE'].append(rework_attach)
-                elif kind == "PRO":
-                    rework_reports['PRO'].append(rework_attach)
-                elif kind == "EXA":
-                    rework_reports['EXA'].append(rework_attach)
-                elif kind == "MAN":
-                    rework_reports['MAN'].append(rework_attach)
-                else:
-                    rework_reports['ETC'].append(rework_attach)
         project_lists.append(rework_reports)
+
     return render(request, 'sites/sites_main.html', {"projects": project_lists})
-
-    # for project in projects:
-    #     rework_reports = {'id': project.id, 'client': project.client, 'product': project.product,
-    #                       'title': project.title, 'member': project.member, 'member_id': project.member_id, }
-
-    #     if presales.count() != 0:
-    #         for item in presales:
-    #             presales_counter = document_attach_all.filter(document=item.id).count()
-    #             print(presales_counter)
-    #     else:
-    #         presales_count = 0
-
-    #     if progressing.count() != 0:
-    #         progressing_count = document_attach_all.filter(
-    #             document=progressing[0].id)
-    #     else:
-    #         progressing_count = 0
-
-    #     if examination.count() != 0:
-    #         examination_count = document_attach_all.filter(
-    #             document=examination[0].id).count()
-    #     else:
-    #         examination_count = 0
-
-    #     if manafacture.count() != 0:
-    #         manafacture_count = document_attach_all.filter(
-    #             document=manafacture[0].id).count()
-    #     else:
-    #         manafacture_count = 0
-
-    #     if etc.count() != 0:
-    #         etc_count = document_attach_all.filter(document=etc[0].id).count()
-    #     else:
-    #         etc_count = 0
-
-    #     rework_document = {'PRE': {"count": presales.count()}, "PRO": {"count": progressing.count()}, "EXA": {
-    #         "count": examination.count()}, "MAN": {"count": manafacture.count()}, "ETC": {"count": etc.count()}}
-    #     rework_reports.update(rework_document)
-
-    #     check_document = document_all.filter(project=project.id)
-    #     if check_document.count() != 0:
-    #         document_id = {"document_id": check_document[0].id}
-    #         rework_reports.update(document_id)
-    #     project_lists.append(rework_reports)
-
-    # return render(request, 'sites/sites_main.html', {"projects": project_lists, })
 
 
 @login_required
@@ -207,8 +201,6 @@ def document_default_auth(request):
 
 @login_required
 def document_detail(request, project_id):
-    print(project_id)
-
     login_id = request.session['id']
     documents = Document.objects.filter(project_id=project_id)
     documents_attach = DocumentAttachment.objects.all()
@@ -239,6 +231,19 @@ def document_attach_detail(request, document_id):
     check_code = "{0}-{1}-{2}".format(dt.strftime('%Y%m%d'),
                                       uuid.uuid4().hex, request.session['id'])
     return render(request, "sites/document_attach_detail.html", {'document_form': document_form, 'document': document, 'document_attach_list': document_attach_list, 'check_code': check_code})
+
+
+@login_required
+def document_attach_kind_get_detail(request, project_id):
+    kind = request.GET['kind']
+    documents = Document.objects.filter(project=project_id, kind=kind)
+    document_attach_names = []
+    for document in documents:
+        document_attachs = DocumentAttachment.objects.filter(
+            document=document.id)
+        for document_attach in document_attachs:
+            document_attach_names.append(document_attach.attach_name)
+    return make_response(content=json.dumps({'success': True, 'document_attach_names': document_attach_names}))
 
 
 @login_required
