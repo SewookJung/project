@@ -21,6 +21,8 @@ urlpatterns = [
             views.document_attach_detail, name="document_attach_detail"),
     re_path(r'^document/attach/(?P<document_id>\d+)/detail/$',
             views.document_attach_kind_detail, name="document_attach_kind_detail"),
+    re_path(r'^document/attach/(?P<project_id>\d+)/list/$',
+            views.document_attach_kind_get_detail, name="document_attach_kind_get_detail"),
     re_path(r'^document/(?P<document_id>\d+)/detail/apply/$',
             views.document_attach_detail_apply, name="document_attach_detail_apply"),
     re_path(r'^document/(?P<document_id>\d+)/auth/$',
