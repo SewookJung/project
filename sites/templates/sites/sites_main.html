@@ -41,20 +41,20 @@
                     <td>-</td>
                     {% else %}
                     <td>
-                        <a href="#" title="Presales 파일 리스트" data-toggle="popover_presales" data-trigger="focus"
-                            data-placement="top" id="presales_popover"
-                            data-content="{% for item in project.PRE %} <div> <a href='{% url 'document_attach_kind_detail' document_id=item.document_id %}'> {{item.title}} </a> </div> {% endfor %}">
-                            File list(+{{project.PRE|length}})</a><br </td>
-                        {% endif %}
+                        <a href="#" title="Presales 파일 리스트" data-toggle="popover" data-trigger="focus"
+                            data-placement="top" data-val="{{project.id}}" data-info="PRE"
+                            data-document-id="{{project.document_id}}">
+                            File list(+{{project.PRE.count}})</a><br>
+                    </td>
+                    {% endif %}
 
-                        {% if project.PRO|length == 0 %}
+                    {% if project.PRO|length == 0 %}
                     <td>-</td>
                     {% else %}
                     <td>
-                        <a href="#" title="수행계획서 파일 리스트" data-toggle="popover_presales" data-trigger="focus"
-                            data-placement="top" id="progressing_popover"
-                            data-content="{% for item in project.PRO %} <div> <a href='{% url 'document_attach_kind_detail' document_id=item.document_id %}'> {{item.title}} </a> </div> {% endfor %}">
-                            File list(+{{project.PRO|length}})</a><br>
+                        <a href="#" title="수행계획서 파일 리스트" data-toggle="popover" data-trigger="focus" data-placement="top"
+                            data-val="{{project.id}}" data-info="PRO" data-document-id="{{project.document_id}}">
+                            File list(+{{project.PRO.count}})</a><br>
                     </td>
                     {% endif %}
 
@@ -62,11 +62,9 @@
                     <td>-</td>
                     {% else %}
                     <td>
-                        <a href="#" title="검수 파일 리스트" data-toggle="popover_presales" data-trigger="focus"
-                            data-placement="top" id="examination_popover"
-                            data-content="{% for item in project.EXA %} <div> <a href='{% url 'document_attach_kind_detail' document_id=item.document_id %}'> {{item.title}} </a> </div> {% endfor %}">
-                            File list(+{{project.EXA|length}})</a><br>
-
+                        <a href="#" title="검수 파일 리스트" data-toggle="popover" data-trigger="focus" data-placement="top"
+                            data-val="{{project.id}}" data-info="EXA" data-document-id="{{project.document_id}}">
+                            File list(+{{project.EXA.count}})</a><br>
                     </td>
                     {% endif %}
 
@@ -74,11 +72,9 @@
                     <td>-</td>
                     {% else %}
                     <td>
-                        <a href="#" title="유지보수 파일 리스트" data-toggle="popover_presales" data-trigger="focus"
-                            data-placement="top" id="manafacture_popover"
-                            data-content="{% for item in project.MAN %} <div> <a href='{% url 'document_attach_kind_detail' document_id=item.document_id %}'> {{item.title}} </a> </div> {% endfor %}">
-                            File list(+{{project.MAN|length}})</a><br>
-
+                        <a href="#" title="유지보수 파일 리스트" data-toggle="popover" data-trigger="focus" data-placement="top"
+                            data-val="{{project.id}}" data-info="MAN" data-document-id="{{project.document_id}}">
+                            File list(+{{project.MAN.count}})</a><br>
                     </td>
                     {% endif %}
 
@@ -86,10 +82,9 @@
                     <td>-</td>
                     {% else %}
                     <td>
-                        <a href="#" title="기타 파일 리스트" data-toggle="popover_presales" data-trigger="focus"
-                            id="etc_popover" data-placement="top"
-                            data-content="{% for item in project.ETC %} <div> <a href='{% url 'document_attach_kind_detail' document_id=item.document_id %}'> {{item.title}} </a> </div> {% endfor %}">
-                            File list(+{{project.ETC|length}}) </a><br>
+                        <a href="#" title="기타 파일 리스트" data-toggle="popover" data-trigger="focus" data-placement="top"
+                            data-val="{{project.id}}" data-info="ETC" data-document-id="{{project.document_id}}">
+                            File list(+{{project.ETC.count}}) </a><br>
                     </td>
                     {% endif %}
                 </tr>
