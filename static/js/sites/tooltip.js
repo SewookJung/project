@@ -1,32 +1,37 @@
 $(document).ready(function () {
-  const content = [
-    '<div class="timePickerCanvas"><a href="#">NAC 제품소개서</a></div>',
-    '<div class="timePickerClock timePickerHours"><a href="#">EDR 제품소개서</a></div>',
-    '<div class="timePickerClock timePickerMinutes"><a href="#">GPI 제품소개서</a></div>',
-  ].join("");
+  $('[data-toggle="popover"]').on("click", function () {
+    const selectedPopover = $(this);
+    const projectId = $(this).data("val");
+    const kind = $(this).data("info");
+    const documentId = $(this).data("document-id");
+    url = "/sites/document/attach/" + projectId + "/list/";
+    $.ajax({
+      type: "GET",
+      url: url,
+      data: {
+        kind: kind,
+      },
+      success: function (data) {
+        const getData = JSON.parse(data);
+        const getDocumentAttachs = getData["document_attach_names"];
+        const documentAttachLists = [];
+        getDocumentAttachs.forEach((ele) => {
+          const element = `<div><a href="/sites/document/attach/${documentId}/detail/">${ele}</div>`;
+          documentAttachLists.push(element);
+        });
 
-  $('[data-toggle="popover_presales"]').popover({
-    trigger: "focus",
-    html: true,
+        if (getData) {
+          selectedPopover.popover({
+            trigger: "focus",
+            html: true,
+          });
+          selectedPopover.attr("data-content", documentAttachLists.join(""));
+          selectedPopover.popover("show");
+        }
+      },
+      error: function (request, status, error) {
+        alert("문서등록 작업이 정상적으로 이루어 지지 않았습니다.");
+      },
+    });
   });
-});
-
-$("#presales_popover").on("show.bs.popover", function () {
-  console.log("test");
-});
-
-$("#progressing_popover").on("show.bs.popover", function () {
-  console.log("test");
-});
-
-$("#examination_popover").on("show.bs.popover", function () {
-  console.log("test");
-});
-
-$("#manafacture_popover").on("show.bs.popover", function () {
-  console.log("test");
-});
-
-$("#etc_popover").on("show.bs.popover", function () {
-  console.log("test");
 });
