@@ -17,10 +17,11 @@ class DocumentForm(forms.ModelForm):
 
     class Meta:
         model = Document
-        fields = ('project', 'kind')
+        fields = ('project', 'kind', 'middle_class')
         widgets = {
             'project': forms.Select(attrs={'class': 'selectpicker',  'id': 'project'}),
             'kind': forms.Select(attrs={'class': 'selectpicker',  'id': 'kind'}),
+            'middle_class': forms.Select(attrs={'class': 'selectpicker',  'id': 'middle_class'})
         }
 
 
