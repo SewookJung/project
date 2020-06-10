@@ -10,6 +10,7 @@ $(document).ready(function () {
       url: url,
       data: {
         kind: kind,
+        documentId: documentId,
       },
       success: function (data) {
         const getData = JSON.parse(data);
@@ -30,7 +31,7 @@ $(document).ready(function () {
         }
       },
       error: function (request, status, error) {
-        alert("문서등록 작업이 정상적으로 이루어 지지 않았습니다.");
+        alert("문서현황을 정상적으로 가지고 올 수 없습니다.");
       },
     });
   });
