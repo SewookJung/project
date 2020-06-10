@@ -3,7 +3,7 @@ import os
 import urllib
 import uuid
 import datetime
-import pandas
+from collections import Counter
 
 
 from django.shortcuts import render, redirect, get_object_or_404, resolve_url, reverse
@@ -34,7 +34,7 @@ def sites_main(request):
     for project in projects:
 
         rework_reports = {'id': project.id, 'client': project.client, 'product': project.product, 'creator': project.member, 'document_id': None,
-                          'title': project.title, 'PRE': {}, "PRO": {}, "EXA": {}, "MAN": {}, "ETC": {}}
+                          'title': project.title, 'PRE': {}, "PRO": {}, "EXA": {}, "MAN": {}, "ETC": {}, }
         documents = documents_all.filter(
             project=project.id).order_by('project')
 
@@ -42,24 +42,28 @@ def sites_main(request):
             document_attachs = DocumentAttachment.objects.filter(
                 document=document.id)
             kind = document.kind
+            middle_class = document.middle_class
             count = document_attachs.count()
 
             if kind == "PRE":
-                if rework_reports['PRE'] == {}:
+                if rework_reports['PRE'].get(middle_class) == None:
                     data = {
-                        'kind': kind,
-                        'count': count
+                        middle_class: {
+                            'document_id': document.id,
+                            'count': count
+                        }
                     }
                     rework_reports['PRE'].update(data)
                 else:
-                    add_count = rework_reports['PRE']['count'] + count
-                    rework_reports['PRE']['count'] = add_count
+                    add_count = rework_reports['PRE'][middle_class]['count'] + count
+                    rework_reports['PRE'][middle_class]['count'] = add_count
 
-            elif kind == "PRO":
+            if kind == "PRO":
                 if rework_reports['PRO'] == {}:
                     data = {
                         'kind': kind,
-                        'count': count
+                        'count': count,
+                        'document_id': document.id
                     }
                     rework_reports['PRO'].update(data)
                 else:
@@ -70,7 +74,8 @@ def sites_main(request):
                 if rework_reports['EXA'] == {}:
                     data = {
                         'kind': kind,
-                        'count': count
+                        'count': count,
+                        'document_id': document.id
                     }
                     rework_reports['EXA'].update(data)
                 else:
@@ -81,7 +86,8 @@ def sites_main(request):
                 if rework_reports['MAN'] == {}:
                     data = {
                         'kind': kind,
-                        'count': count
+                        'count': count,
+                        'document_id': document.id
                     }
                     rework_reports['MAN'].update(data)
                 else:
@@ -92,7 +98,8 @@ def sites_main(request):
                 if rework_reports['ETC'] == {}:
                     data = {
                         'kind': kind,
-                        'count': count
+                        'count': count,
+                        'document_id': document.id
                     }
                     rework_reports['ETC'].update(data)
                 else:
@@ -102,7 +109,6 @@ def sites_main(request):
             document_id = {'document_id': document.id}
             rework_reports.update(document_id)
         project_lists.append(rework_reports)
-
     return render(request, 'sites/sites_main.html', {"projects": project_lists})
 
 
@@ -236,7 +242,15 @@ def document_attach_detail(request, document_id):
 @login_required
 def document_attach_kind_get_detail(request, project_id):
     kind = request.GET['kind']
-    documents = Document.objects.filter(project=project_id, kind=kind)
+    document_id = request.GET['documentId']
+    document = Document.objects.get(id=document_id)
+
+    if document.middle_class == "":
+        documents = Document.objects.filter(project=project_id, kind=kind)
+    else:
+        documents = Document.objects.filter(
+            middle_class=document.middle_class, project=project_id)
+
     document_attach_names = []
     for document in documents:
         document_attachs = DocumentAttachment.objects.filter(
@@ -254,7 +268,7 @@ def document_attach_kind_detail(request, document_id):
 
     document = document_all.get(id=document_id)
     documents_id = document_all.filter(
-        project=document.project_id, kind=document.kind).values('id')
+        project=document.project_id, kind=document.kind, middle_class=document.middle_class).values('id')
     project_name = document.project
     documents_attach_list = []
     for document_id in documents_id:
@@ -310,7 +324,7 @@ def document_reg_apply(request):
     try:
         document_apply = Document(
             project_id=request.POST['project'], member_id=request.session[
-                'id'], kind=request.POST['kind'], auth=permission
+                'id'], kind=request.POST['kind'], auth=permission, middle_class=request.POST['middleClass']
         )
         document_apply.save()
         return make_response(content=json.dumps({'success': True, 'document_id': document_apply.id}))
