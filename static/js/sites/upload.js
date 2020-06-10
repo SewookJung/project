@@ -20,11 +20,23 @@ function document_upload_cancel() {
   }
 }
 
+$("select").on("change", function () {
+  const selectValue = $("#kind").val();
+  const middleClass = document.getElementById("middle__class-form");
+  if (selectValue == "PRE") {
+    middleClass.style.display = "block";
+  } else {
+    middleClass.style.display = "none";
+  }
+});
+
 $(document).ready(init());
 
 let transfer;
 
 function init() {
+  const middleClass = document.getElementById("middle__class-form");
+  middleClass.style.display = "none";
   $.ajax({
     type: "GET",
     url: "/sites/document/auth/",
@@ -66,6 +78,7 @@ function site_reg_document() {
   param = {};
   param.project = $("#project").val();
   param.kind = $("#kind").val();
+  param.middleClass = $("#middle_class").val();
   param.permission = serializeData;
 
   $.ajax({
