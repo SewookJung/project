@@ -4,7 +4,7 @@
     <div class="card sites">
         <div class="card-header sites__header">
             <i class="fa fa-external-link"></i>
-            <h5 class="card-title sites__title">&nbsp;개인 프로필</h5>
+            <h5 class="card-title sites__title">&nbsp;비밀번호 변경</h5>
         </div>
         <div class="card-body">
             <form class="sites__add" method="POST" name="ajaxform" onsubmit="return checkValues()"
@@ -27,55 +27,6 @@
                             <label>진행 상태</label>
                             <input type="text" class="form-control" disabled>
                         </div>
-                        <div class="form-group">
-                            <label>담당 영업</label>
-                            {{ asset_form.member_name }}
-                        </div>
-                        <div class="form-group">
-                            <label>담당 엔지니어</label>
-                            {{ asset_form.member_name }}
-                        </div>
-                        <div class="form-group ">
-                            <label>시작일</label>
-                            <input type="text" name="purchase_date" id="pjStDate"
-                                class="form-control calendar__start hasDatepicker" autocomplete="off"
-                                id="asset_purchase-date" data-provide="datepicker" placeholder="&#xf073;">
-                        </div>
-                        <div class="form-group ">
-                            <label>종료 예정일</label>
-                            <input type="text" name="purchase_date" id="pjEdDate"
-                                class="form-control calendar__start hasDatepicker" autocomplete="off"
-                                id="asset_purchase-date" data-provide="datepicker" placeholder="&#xf073;">
-                        </div>
-
-                        <div class="form-group ">
-                            <label>유지보수 주기</label>
-                            <select class="selectpicker" name="cycle" title="유지보수 주기 선택" id="cycle">
-                                <option value="MON">매월</option>
-                                <option value="QUA">분기</option>
-                                <option value="HALF">반기</option>
-                                <option value="YEAR">매년</option>
-                            </select>
-                        </div>
-
-                        <div class="form-group ">
-                            <label>유지보수 시작일</label>
-                            <input type="text" name="purchase_date" id="mnStDate"
-                                class="form-control calendar__start hasDatepicker" autocomplete="off"
-                                id="asset_purchase-date" data-provide="datepicker" placeholder="&#xf073;">
-                        </div>
-                        <div class="form-group ">
-                            <label>유지보수 종료일</label>
-                            <input type="text" name="purchase_date" id="mnEdDate"
-                                class="form-control calendar__start hasDatepicker" autocomplete="off"
-                                id="asset_purchase-date" data-provide="datepicker" placeholder="&#xf073;">
-                        </div>
-                        <div class="form-group">
-                            <label>기 타 </label>
-                            <textarea class="form-control col-sm-12" rows="5" id="sites_comments"
-                                name="sites_comments"></textarea>
-                        </div>
-
                     </div>
                 </div>
                 <div class="text-right submit-box">
