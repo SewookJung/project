@@ -50,6 +50,18 @@ class Project(models.Model):
 
 
 class Document(models.Model):
+    A = "A"
+    B = "B"
+    C = "C"
+    D = "D"
+
+    MIDDLE_CLASS = (
+        (A, "A"),
+        (B, "B"),
+        (C, "C"),
+        (D, "D")
+    )
+
     project = models.ForeignKey(
         Project, on_delete=models.CASCADE, null=True)
     member = models.ForeignKey(
@@ -58,6 +70,8 @@ class Document(models.Model):
                      null=True, editable=False)
     kind = models.CharField(
         max_length=3, choices=Project.WORK_STEP_CHOICE, default=Project.ETC)
+    middle_class = models.CharField(
+        max_length=10, choices=MIDDLE_CLASS, null=True, blank=True)
     comments = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True, editable=False)
 
