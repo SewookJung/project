@@ -4,6 +4,7 @@ $(document).ready(function () {
     const projectId = $(this).data("val");
     const kind = $(this).data("info");
     const documentId = $(this).data("document-id");
+    const middleClass = $(this).data("middle-class");
     url = "/sites/document/attach/" + projectId + "/list/";
     $.ajax({
       type: "GET",
@@ -11,16 +12,16 @@ $(document).ready(function () {
       data: {
         kind: kind,
         documentId: documentId,
+        middleClass: middleClass,
       },
       success: function (data) {
         const getData = JSON.parse(data);
         const getDocumentAttachs = getData["document_attach_names"];
         const documentAttachLists = [];
         getDocumentAttachs.forEach((ele) => {
-          const element = `<div><a href="/sites/document/attach/${documentId}/detail/">${ele}</div>`;
-          documentAttachLists.push(element);
+          const documentAttach = `<div><a href="/sites/document/attach/${documentId}/${kind}/${middleClass}/detail/">${ele}</div>`;
+          documentAttachLists.push(documentAttach);
         });
-
         if (getData) {
           selectedPopover.popover({
             trigger: "focus",
