@@ -6,6 +6,7 @@ from . import views
 
 urlpatterns = [
     re_path(r'^$', views.sites_main, name="sites_main"),
+    re_path(r'^test/$', views.sites_main_test, name="sites_main_test"),
     re_path(r'^(?P<pk>\d+)/$', views.sites_detail, name="sites_detail"),
     re_path(r'^(?P<pk>\d+)/delete/$', views.sites_delete, name="sites_delete"),
     re_path(r'^edit/(?P<pk>\d+)/$', views.sites_edit, name="sites_edit"),
