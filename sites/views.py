@@ -42,10 +42,10 @@ def sites_main(request):
             document_attachs = DocumentAttachment.objects.filter(
                 document=document.id)
             kind = document.kind
-            middle_class = document.middle_class
             count = document_attachs.count()
 
             if kind == "PRE":
+                middle_class = document.pre_middle_class
                 if rework_reports['PRE'].get(middle_class) == None:
                     data = {
                         middle_class: {
@@ -58,53 +58,61 @@ def sites_main(request):
                     add_count = rework_reports['PRE'][middle_class]['count'] + count
                     rework_reports['PRE'][middle_class]['count'] = add_count
 
-            if kind == "PRO":
-                if rework_reports['PRO'] == {}:
+            elif kind == "PRO":
+                middle_class = document.pro_middle_class
+                if rework_reports['PRO'].get(middle_class) == None:
                     data = {
-                        'kind': kind,
-                        'count': count,
-                        'document_id': document.id
+                        middle_class: {
+                            'document_id': document.id,
+                            'count': count
+                        }
                     }
                     rework_reports['PRO'].update(data)
                 else:
-                    add_count = rework_reports['PRO']['count'] + count
-                    rework_reports['PRO']['count'] = add_count
+                    add_count = rework_reports['PRO'][middle_class]['count'] + count
+                    rework_reports['PRO'][middle_class]['count'] = add_count
 
             elif kind == "EXA":
-                if rework_reports['EXA'] == {}:
+                middle_class = document.exa_middle_class
+                if rework_reports['EXA'].get(middle_class) == None:
                     data = {
-                        'kind': kind,
-                        'count': count,
-                        'document_id': document.id
+                        middle_class: {
+                            'document_id': document.id,
+                            'count': count
+                        }
                     }
                     rework_reports['EXA'].update(data)
                 else:
-                    add_count = rework_reports['EXA']['count'] + count
-                    rework_reports['EXA']['count'] = add_count
+                    add_count = rework_reports['EXA'][middle_class]['count'] + count
+                    rework_reports['EXA'][middle_class]['count'] = add_count
 
             elif kind == "MAN":
-                if rework_reports['MAN'] == {}:
+                middle_class = document.man_middle_class
+                if rework_reports['MAN'].get(middle_class) == None:
                     data = {
-                        'kind': kind,
-                        'count': count,
-                        'document_id': document.id
+                        middle_class: {
+                            'document_id': document.id,
+                            'count': count
+                        }
                     }
                     rework_reports['MAN'].update(data)
                 else:
-                    add_count = rework_reports['MAN']['count'] + count
-                    rework_reports['MAN']['count'] = add_count
+                    add_count = rework_reports['MAN'][middle_class]['count'] + count
+                    rework_reports['MAN'][middle_class]['count'] = add_count
 
-            elif kind == "ETC":
-                if rework_reports['ETC'] == {}:
+            else:
+                middle_class = document.etc_middle_class
+                if rework_reports['ETC'].get(middle_class) == None:
                     data = {
-                        'kind': kind,
-                        'count': count,
-                        'document_id': document.id
+                        middle_class: {
+                            'document_id': document.id,
+                            'count': count
+                        }
                     }
                     rework_reports['ETC'].update(data)
                 else:
-                    add_count = rework_reports['ETC']['count'] + count
-                    rework_reports['ETC']['count'] = add_count
+                    add_count = rework_reports['ETC'][middle_class]['count'] + count
+                    rework_reports['ETC'][middle_class]['count'] = add_count
 
             document_id = {'document_id': document.id}
             rework_reports.update(document_id)
@@ -242,14 +250,23 @@ def document_attach_detail(request, document_id):
 @login_required
 def document_attach_kind_get_detail(request, project_id):
     kind = request.GET['kind']
-    document_id = request.GET['documentId']
-    document = Document.objects.get(id=document_id)
+    middle_class = request.GET['middleClass']
 
-    if document.middle_class == "":
-        documents = Document.objects.filter(project=project_id, kind=kind)
+    if kind == "PRE":
+        documents = Document.objects.filter(
+            project=project_id, kind=kind, pre_middle_class=middle_class)
+    elif kind == "PRO":
+        documents = Document.objects.filter(
+            project=project_id, kind=kind, pro_middle_class=middle_class)
+    elif kind == "EXA":
+        documents = Document.objects.filter(
+            project=project_id, kind=kind, exa_middle_class=middle_class)
+    elif kind == "MAN":
+        documents = Document.objects.filter(
+            project=project_id, kind=kind, man_middle_class=middle_class)
     else:
         documents = Document.objects.filter(
-            middle_class=document.middle_class, project=project_id)
+            project=project_id, kind=kind, etc_middle_class=middle_class)
 
     document_attach_names = []
     for document in documents:
@@ -261,14 +278,32 @@ def document_attach_kind_get_detail(request, project_id):
 
 
 @login_required
-def document_attach_kind_detail(request, document_id):
+def document_attach_kind_detail(request, document_id, middle_class, kind):
+
     login_id = request.session['id']
+
     document_all = Document.objects.all()
     document_attach_all = DocumentAttachment.objects.all()
 
     document = document_all.get(id=document_id)
-    documents_id = document_all.filter(
-        project=document.project_id, kind=document.kind, middle_class=document.middle_class).values('id')
+
+    if kind == "PRE":
+        documents_id = document_all.filter(
+            project=document.project_id, kind=document.kind, pre_middle_class=middle_class).values('id')
+    elif kind == "PRO":
+        documents_id = document_all.filter(
+            project=document.project_id, kind=document.kind, pro_middle_class=middle_class).values('id')
+    elif kind == "EXA":
+        documents_id = document_all.filter(
+            project=document.project_id, kind=document.kind, exa_middle_class=middle_class).values('id')
+    elif kind == "MAN":
+        documents_id = document_all.filter(
+            project=document.project_id, kind=document.kind, man_middle_class=middle_class).values('id')
+    else:
+        documents_id = document_all.filter(
+            project=document.project_id, kind=document.kind, etc_middle_class=middle_class).values('id')
+
+
     project_name = document.project
     documents_attach_list = []
     for document_id in documents_id:
@@ -321,11 +356,24 @@ def document_attach_auth(request, document_id):
 @csrf_exempt
 def document_reg_apply(request):
     permission = json.loads(request.POST['permission'])
+    middle_class = request.POST['middleClass']
+    kind = request.POST['kind']
     try:
         document_apply = Document(
             project_id=request.POST['project'], member_id=request.session[
-                'id'], kind=request.POST['kind'], auth=permission, middle_class=request.POST['middleClass']
+                'id'], kind=request.POST['kind'], auth=permission,
         )
+
+        if kind == "PRE":
+            document_apply.pre_middle_class = middle_class
+        elif kind == "PRO":
+            document_apply.pro_middle_class = middle_class
+        elif kind == "EXA":
+            document_apply.exa_middle_class = middle_class
+        elif kind == "MAN":
+            document_apply.man_middle_class = middle_class
+        else:
+            document_apply.etc_middle_class = middle_class
         document_apply.save()
         return make_response(content=json.dumps({'success': True, 'document_id': document_apply.id}))
     except:
