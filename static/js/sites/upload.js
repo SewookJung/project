@@ -21,14 +21,41 @@ function document_upload_cancel() {
 }
 
 $("select").on("change", function () {
-  const selectValue = $("#kind").val();
-  const middleClass = document.getElementById("middle__class-form");
-  if (selectValue == "PRE") {
-    middleClass.style.display = "block";
-  } else {
-    middleClass.style.display = "none";
-  }
+  selecteMiddleClass();
 });
+
+function clearMiddleClass() {
+  const middleClasses = document.querySelectorAll("#middle__class-form");
+  middleClasses.forEach((selectBox) => {
+    selectBox.style.display = "none";
+  });
+}
+
+function selecteMiddleClass() {
+  const documentKind = $("#kind").val();
+  const preMiddleClass = document.querySelector(".pre__middle-class");
+  const proMiddleClass = document.querySelector(".pro__middle-class");
+  const exaMiddleClass = document.querySelector(".exa__middle-class");
+  const manMiddleClass = document.querySelector(".man__middle-class");
+  const etcMiddleClass = document.querySelector(".etc__middle-class");
+
+  if (documentKind == "PRE") {
+    clearMiddleClass();
+    preMiddleClass.style.display = "block";
+  } else if (documentKind == "PRO") {
+    clearMiddleClass();
+    proMiddleClass.style.display = "block";
+  } else if (documentKind == "EXA") {
+    clearMiddleClass();
+    exaMiddleClass.style.display = "block";
+  } else if (documentKind == "MAN") {
+    clearMiddleClass();
+    manMiddleClass.style.display = "block";
+  } else {
+    clearMiddleClass();
+    etcMiddleClass.style.display = "block";
+  }
+}
 
 $(document).ready(init());
 
@@ -37,6 +64,7 @@ let transfer;
 function init() {
   const middleClass = document.getElementById("middle__class-form");
   middleClass.style.display = "none";
+  selecteMiddleClass();
   $.ajax({
     type: "GET",
     url: "/sites/document/auth/",
@@ -64,6 +92,7 @@ function init() {
 function site_reg_document() {
   const acceptPermissionMember = transfer.getSelectedItems();
   const serializeData = JSON.stringify(acceptPermissionMember);
+  const documentKind = $("#kind").val();
 
   if ($("#project").val() == "") {
     alert("프로젝트를 선택하세요");
@@ -78,8 +107,19 @@ function site_reg_document() {
   param = {};
   param.project = $("#project").val();
   param.kind = $("#kind").val();
-  param.middleClass = $("#middle_class").val();
   param.permission = serializeData;
+
+  if (documentKind == "PRE") {
+    param.middleClass = $("#pre__middle-class").val();
+  } else if (documentKind == "PRO") {
+    param.middleClass = $("#pro__middle-class").val();
+  } else if (documentKind == "EXA") {
+    param.middleClass = $("#exa__middle-class").val();
+  } else if (documentKind == "MAN") {
+    param.middleClass = $("#man__middle-class").val();
+  } else {
+    param.middleClass = $("#etc__middle-class").val();
+  }
 
   $.ajax({
     type: "POST",
