@@ -44,7 +44,7 @@
                         {% for key, value in project.PRE.items %}
                         <a href="#" title="Presales 파일 리스트" data-toggle="popover" data-trigger="focus"
                             data-placement="top" data-val="{{project.id}}" data-info="PRE"
-                            data-document-id="{{value.document_id}}">
+                            data-document-id="{{value.document_id}}" data-middle-class="{{key}}">
                             {{key}}(+{{value.count}})
                         </a><br>
                         {% endfor %}
@@ -55,9 +55,13 @@
                     <td>-</td>
                     {% else %}
                     <td>
+                        {% for key, value in project.PRO.items %}
                         <a href="#" title="수행계획서 파일 리스트" data-toggle="popover" data-trigger="focus" data-placement="top"
-                            data-val="{{project.id}}" data-info="PRO" data-document-id="{{project.PRO.document_id}}">
-                            File list(+{{project.PRO.count}})</a><br>
+                            data-val="{{project.id}}" data-info="PRO" data-document-id="{{value.document_id}}"
+                            data-middle-class="{{key}}">
+                            {{key}}(+{{value.count}})
+                        </a><br>
+                        {% endfor %}
                     </td>
                     {% endif %}
 
@@ -65,9 +69,13 @@
                     <td>-</td>
                     {% else %}
                     <td>
+                        {% for key, value in project.EXA.items %}
                         <a href="#" title="검수 파일 리스트" data-toggle="popover" data-trigger="focus" data-placement="top"
-                            data-val="{{project.id}}" data-info="EXA" data-document-id="{{project.EXA.document_id}}">
-                            File list(+{{project.EXA.count}})</a><br>
+                            data-val="{{project.id}}" data-info="EXA" data-document-id="{{value.document_id}}"
+                            data-middle-class="{{key}}">
+                            {{key}}(+{{value.count}})
+                        </a><br>
+                        {% endfor %}
                     </td>
                     {% endif %}
 
@@ -75,9 +83,13 @@
                     <td>-</td>
                     {% else %}
                     <td>
+                        {% for key, value in project.MAN.items %}
                         <a href="#" title="유지보수 파일 리스트" data-toggle="popover" data-trigger="focus" data-placement="top"
-                            data-val="{{project.id}}" data-info="MAN" data-document-id="{{project.MAN.document_id}}">
-                            File list(+{{project.MAN.count}})</a><br>
+                            data-val="{{project.id}}" data-info="MAN" data-document-id="{{value.document_id}}"
+                            data-middle-class="{{key}}">
+                            {{key}}(+{{value.count}})
+                        </a><br>
+                        {% endfor %}
                     </td>
                     {% endif %}
 
@@ -85,9 +97,13 @@
                     <td>-</td>
                     {% else %}
                     <td>
+                        {% for key, value in project.ETC.items %}
                         <a href="#" title="기타 파일 리스트" data-toggle="popover" data-trigger="focus" data-placement="top"
-                            data-val="{{project.id}}" data-info="ETC" data-document-id="{{project.ETC.document_id}}">
-                            File list(+{{project.ETC.count}}) </a><br>
+                            data-val="{{project.id}}" data-info="ETC" data-document-id="{{value.document_id}}"
+                            data-middle-class="{{key}}">
+                            {{key}}(+{{value.count}})
+                        </a><br>
+                        {% endfor %}
                     </td>
                     {% endif %}
                 </tr>
