@@ -55,11 +55,39 @@ class Document(models.Model):
     C = "C"
     D = "D"
 
-    MIDDLE_CLASS = (
-        (A, "A"),
-        (B, "B"),
-        (C, "C"),
-        (D, "D")
+    PRE_MIDDLE_CLASS_CHOICE = (
+        ("WBS", "WBS"),
+        ("제안서", "제안서"),
+        ("제품소개서", "제품소개서"),
+        ("계약서", "계약서")
+    )
+
+    PRO_MIDDLE_CLASS_CHOICE = (
+        ("고객사 요구사항", "고객사 요구사항"),
+        (B, "PRO: B"),
+        (C, "PRO: C"),
+        (D, "PRO: D")
+    )
+
+    EXA_MIDDLE_CLASS_CHOICE = (
+        ("검수확인서", "검수확인서"),
+        (B, "EXA: B"),
+        (C, "EXA: C"),
+        (D, "EXA: D")
+    )
+
+    ETC_MIDDLE_CLASS_CHOICE = (
+        (A, "ETC: A"),
+        (B, "ETC: B"),
+        (C, "ETC: C"),
+        (D, "ETC: D")
+    )
+
+    MAN_MIDDLE_CLASS_CHOICE = (
+        ("유지보수 계약서", "유지보수 계약서"),
+        (B, "MAN: B"),
+        (C, "MAN: C"),
+        (D, "MAN: D")
     )
 
     project = models.ForeignKey(
@@ -70,8 +98,16 @@ class Document(models.Model):
                      null=True, editable=False)
     kind = models.CharField(
         max_length=3, choices=Project.WORK_STEP_CHOICE, default=Project.ETC)
-    middle_class = models.CharField(
-        max_length=10, choices=MIDDLE_CLASS, null=True, blank=True)
+    pre_middle_class = models.CharField(
+        max_length=10, choices=PRE_MIDDLE_CLASS_CHOICE, null=True, blank=True)
+    pro_middle_class = models.CharField(
+        max_length=10, choices=PRO_MIDDLE_CLASS_CHOICE, null=True, blank=True)
+    exa_middle_class = models.CharField(
+        max_length=10, choices=EXA_MIDDLE_CLASS_CHOICE, null=True, blank=True)
+    man_middle_class = models.CharField(
+        max_length=10, choices=MAN_MIDDLE_CLASS_CHOICE, null=True, blank=True)
+    etc_middle_class = models.CharField(
+        max_length=10, choices=ETC_MIDDLE_CLASS_CHOICE, null=True, blank=True)
     comments = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True, editable=False)
 
