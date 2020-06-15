@@ -5,13 +5,13 @@ import uuid
 import datetime
 from collections import Counter
 
-
 from django.shortcuts import render, redirect, get_object_or_404, resolve_url, reverse
 from django.http import HttpResponse, HttpResponseRedirect
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import View
 from django.contrib.auth.decorators import login_required
 from django.conf import settings
+from django.core.paginator import Paginator
 
 from wsgiref.util import FileWrapper
 
@@ -23,6 +23,17 @@ from common.models import Product
 from common.views import member_info, member_info_all
 
 from utils.functions import make_response
+
+
+@login_required
+def sites_main_test(request):
+    documents = Document.objects
+    document_list = Document.objects.all()
+    paginator = Paginator(document_list, 3)
+    page = request.GET.get('page', 1)
+    posts = paginator.get_page(page)
+    print(posts)
+    return render(request, 'sites/sites_main_test.html', {'documents': documents, 'posts': posts})
 
 
 @login_required
@@ -302,7 +313,6 @@ def document_attach_kind_detail(request, document_id, middle_class, kind):
     else:
         documents_id = document_all.filter(
             project=document.project_id, kind=document.kind, etc_middle_class=middle_class).values('id')
-
 
     project_name = document.project
     documents_attach_list = []
