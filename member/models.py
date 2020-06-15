@@ -61,7 +61,6 @@ class Member(models.Model):
     )
 
     member_id = models.CharField(max_length=20, null=True)
-    pw = models.CharField(max_length=20, null=True)
     name = models.CharField(max_length=10, null=True)
     dept = models.CharField(max_length=10, null=True)
     status = models.CharField(
