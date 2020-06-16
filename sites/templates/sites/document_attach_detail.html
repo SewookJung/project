@@ -23,6 +23,40 @@
                             {{ document_form.kind }}
                             <input type="hidden" value="{{ document.kind }}" name="document_kind">
                         </div>
+
+                        <div class="form-group pre__middle-class" id="middle__class-form">
+                            <label>중분류 선택</label>
+                            {{document_form.pre_middle_class}}
+                        </div>
+                        <div class="form-group pro__middle-class" id="middle__class-form">
+                            <label>중분류 선택</label>
+                            {{document_form.pro_middle_class}}
+                        </div>
+                        <div class="form-group exa__middle-class" id="middle__class-form">
+                            <label>중분류 선택</label>
+                            {{document_form.exa_middle_class}}
+                        </div>
+                        <div class="form-group man__middle-class" id="middle__class-form">
+                            <label>중분류 선택</label>
+                            {{document_form.man_middle_class}}
+                        </div>
+                        <div class="form-group etc__middle-class" id="middle__class-form">
+                            <label>중분류 선택</label>
+                            {{document_form.etc_middle_class}}
+                        </div>
+
+                        {% if document.kind == "PRE" %}
+                        <input type="hidden" value="{{ document.pre_middle_class }}" name="preMiddleClass">
+                        {% elif document.kind == "PRO" %}
+                        <input type="hidden" value="{{ document.pro_middle_class }}" name="proMiddleClass">
+                        {% elif document.kind == "EXA" %}
+                        <input type="hidden" value="{{ document.exa_middle_class }}" name="exaMiddleClass">
+                        {% elif document.kind == "MAN" %}
+                        <input type="hidden" value="{{ document.man_middle_class }}" name="manMiddleClass">
+                        {% elif document.kind == "ETC" %}
+                        <input type="hidden" value="{{ document.etc_middle_class }}" name="etcMiddleClass">
+                        {% endif %}
+
                         <div class="form-group">
                             <label>파일 리스트</label>
                             <table class="table table-striped table-bordered table-hover">
