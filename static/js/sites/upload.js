@@ -80,9 +80,7 @@ function init() {
         groupArrayName: "groupData",
         itemName: "name",
         valueName: "value",
-        callable: function (items) {
-          console.log(items);
-        },
+        callable: function (items) {},
       };
       transfer = $(".member_permission").transfer(settings);
     },
@@ -129,8 +127,13 @@ function site_reg_document() {
     data: param,
     success: function (data) {
       if (data.success) {
-        $("#document_id").val(data.document_id);
-        $("#fine-uploader-manual-trigger").fineUploader("uploadStoredFiles");
+        if (fileCount == 0) {
+          location.href = "/sites/";
+          alert("문서등록이 완료되었습니다.");
+        } else {
+          $("#document_id").val(data.document_id);
+          $("#fine-uploader-manual-trigger").fineUploader("uploadStoredFiles");
+        }
       } else {
         alert("문서등록 작업이 정상적으로 이루어 지지 않았습니다-0.");
       }
@@ -145,8 +148,10 @@ $("#submit-btn").click(function (event) {
   event.preventDefault();
   if (fileCount == 0) {
     if (!confirm("첨부 파일이 없습니다. 그대로 진행 하시겠습니까?")) return;
+    else site_reg_document();
+  } else {
+    if (confirm("파일을 업로드하시겠습니까?")) site_reg_document();
   }
-  if (confirm("파일을 업로드하시겠습니까?")) site_reg_document();
 });
 
 $("#fine-uploader-manual-trigger").fineUploader({
