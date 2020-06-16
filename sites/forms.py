@@ -22,11 +22,11 @@ class DocumentForm(forms.ModelForm):
         widgets = {
             'project': forms.Select(attrs={'class': 'selectpicker',  'id': 'project'}),
             'kind': forms.Select(attrs={'class': 'selectpicker',  'id': 'kind'}),
-            'pre_middle_class': forms.Select(attrs={'class': 'selectpicker',  'id': 'pre__middle-class'}),
-            'pro_middle_class': forms.Select(attrs={'class': 'selectpicker',  'id': 'pro__middle-class'}),
-            'exa_middle_class': forms.Select(attrs={'class': 'selectpicker',  'id': 'exa__middle-class'}),
-            'etc_middle_class': forms.Select(attrs={'class': 'selectpicker',  'id': 'etc__middle-class'}),
-            'man_middle_class': forms.Select(attrs={'class': 'selectpicker',  'id': 'man__middle-class'}),
+            'pre_middle_class': forms.Select(attrs={'class': 'selectpicker middle-class',  'id': 'preMiddleClass'}),
+            'pro_middle_class': forms.Select(attrs={'class': 'selectpicker middle-class',  'id': 'proMiddleClass'}),
+            'exa_middle_class': forms.Select(attrs={'class': 'selectpicker middle-class',  'id': 'exaMiddleClass'}),
+            'etc_middle_class': forms.Select(attrs={'class': 'selectpicker middle-class',  'id': 'etcMiddleClass'}),
+            'man_middle_class': forms.Select(attrs={'class': 'selectpicker middle-class',  'id': 'manMiddleClass'}),
         }
 
 
