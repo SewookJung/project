@@ -290,9 +290,7 @@ def document_attach_kind_get_detail(request, project_id):
 
 @login_required
 def document_attach_kind_detail(request, document_id, middle_class, kind):
-
     login_id = request.session['id']
-
     document_all = Document.objects.all()
     document_attach_all = DocumentAttachment.objects.all()
 
@@ -330,10 +328,25 @@ def document_attach_kind_detail(request, document_id, middle_class, kind):
 
 @login_required
 def document_attach_detail_apply(request, document_id):
+    print(request.POST)
     permissions = json.loads(request.POST['permission'])
+    kind = request.POST['kind']
+    middle_class = request.POST['middleClass']
+
     document = Document.objects.get(id=document_id)
     document.kind = request.POST['kind']
     document.auth = permissions
+
+    if kind == "PRE":
+        document.pre_middle_class = middle_class
+    elif kind == "PRO":
+        document.pro_middle_class = middle_class
+    elif kind == "EXA":
+        document.exa_middle_class = middle_class
+    elif kind == "MAN":
+        document.man_middle_class = middle_class
+    else:
+        document.etc_middle_class = middle_class
     document.save()
     return make_response(content=json.dumps({'success': True}))
 
@@ -341,7 +354,6 @@ def document_attach_detail_apply(request, document_id):
 @login_required
 @csrf_exempt
 def document_attach_detail_upload_apply(request):
-    print(request.POST)
     return make_response(content=json.dumps({'success': True}))
 
 
@@ -373,7 +385,6 @@ def document_reg_apply(request):
             project_id=request.POST['project'], member_id=request.session[
                 'id'], kind=request.POST['kind'], auth=permission,
         )
-
         if kind == "PRE":
             document_apply.pre_middle_class = middle_class
         elif kind == "PRO":
@@ -407,7 +418,7 @@ def document_upload_apply(request):
                 document_id=request.POST['document_id'], attach=request.FILES['qqfile'], check_code=request.POST['check_code']
             )
             document_attach_apply.save()
-            return make_response(content=json.dumps({'success': True}))
+            return make_response(content=json.dumps({'success': True, }))
         except:
             return make_response(status=400, content=json.dumps({'success': False, 'error': "file upload error"}))
     else:
