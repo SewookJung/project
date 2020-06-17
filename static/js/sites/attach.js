@@ -1,5 +1,3 @@
-
-
 const csrfToken = document.getElementsByName("csrfmiddlewaretoken")[0].value;
 const maxUploadfile = 7;
 const maxfilesize = 1024 * 1024 * 1024;
@@ -31,6 +29,42 @@ function document_attach_delete(attachment_id) {
   }
 }
 
+$("select").on("change", function () {
+  selecteMiddleClass();
+});
+
+function clearMiddleClass() {
+  const middleClasses = document.querySelectorAll("#middle__class-form");
+  middleClasses.forEach((selectBox) => {
+    selectBox.style.display = "none";
+  });
+}
+
+function selecteMiddleClass() {
+  const documentKind = $("#kind").val();
+  const preMiddleClass = document.querySelector(".pre__middle-class");
+  const proMiddleClass = document.querySelector(".pro__middle-class");
+  const exaMiddleClass = document.querySelector(".exa__middle-class");
+  const manMiddleClass = document.querySelector(".man__middle-class");
+  const etcMiddleClass = document.querySelector(".etc__middle-class");
+  if (documentKind == "PRE") {
+    clearMiddleClass();
+    preMiddleClass.style.display = "block";
+  } else if (documentKind == "PRO") {
+    clearMiddleClass();
+    proMiddleClass.style.display = "block";
+  } else if (documentKind == "EXA") {
+    clearMiddleClass();
+    exaMiddleClass.style.display = "block";
+  } else if (documentKind == "MAN") {
+    clearMiddleClass();
+    manMiddleClass.style.display = "block";
+  } else {
+    clearMiddleClass();
+    etcMiddleClass.style.display = "block";
+  }
+}
+
 $(document).ready(init());
 
 let transfer;
@@ -39,10 +73,27 @@ function init() {
   const projectId = $("input[name=project_id]").val();
   const attachmentId = $("input[name=document_id]").val();
   const documentKind = $("input[name=document_kind]").val();
+  if (documentKind == "PRE") {
+    const middleClass = $("input[name=preMiddleClass]").val();
+    $("select[id=preMiddleClass]").val(middleClass);
+  } else if (documentKind == "PRO") {
+    const middleClass = $("input[name=proMiddleClass]").val();
+    $("select[id=proMiddleClass]").val(middleClass);
+  } else if (documentKind == "EXA") {
+    const middleClass = $("input[name=exaMiddleClass]").val();
+    $("select[id=proMiddleClass]").val(middleClass);
+  } else if (documentKind == "MAN") {
+    const middleClass = $("input[name=manMiddleClass]").val();
+    $("select[id=proMiddleClass]").val(middleClass);
+  } else {
+    const middleClass = $("input[name=etcMiddleClass]").val();
+    $("select[id=etcMiddleClass]").val(middleClass);
+  }
   $("select[name=project]").val(projectId);
   $("select[name=kind]").val(documentKind);
   $("select[name=project]").prop("disabled", true);
   $(".selectpicker").selectpicker("refresh");
+  selecteMiddleClass();
   $.ajax({
     type: "GET",
     url: "/sites/document/" + attachmentId + "/auth/",
@@ -59,9 +110,7 @@ function init() {
         groupArrayName: "groupData",
         itemName: "name",
         valueName: "value",
-        callable: function (items) {
-          console.log(items);
-        },
+        callable: function (items) {},
       };
       transfer = $(".member_permission").transfer(settings);
     },
@@ -72,6 +121,7 @@ function site_reg_document() {
   const acceptPermissionMember = transfer.getSelectedItems();
   const serializeData = JSON.stringify(acceptPermissionMember);
   const documentId = $("input[name=document_id").val();
+  const documentKind = $("#kind").val();
 
   if ($("#project").val() == "") {
     alert("프로젝트를 선택하세요");
@@ -88,6 +138,18 @@ function site_reg_document() {
   param.kind = $("#kind").val();
   param.permission = serializeData;
 
+  if (documentKind == "PRE") {
+    param.middleClass = $("#preMiddleClass").val();
+  } else if (documentKind == "PRO") {
+    param.middleClass = $("#proMiddleClass").val();
+  } else if (documentKind == "EXA") {
+    param.middleClass = $("#exaMiddleClass").val();
+  } else if (documentKind == "MAN") {
+    param.middleClass = $("#etcMiddleClass").val();
+  } else {
+    param.middleClass = $("#manMiddleClass").val();
+  }
+
   $.ajax({
     type: "POST",
     url: "/sites/document/" + documentId + "/detail/apply/",
@@ -96,13 +158,18 @@ function site_reg_document() {
     data: param,
     success: function (data) {
       if (data.success) {
-        $("#fine-uploader-manual-trigger").fineUploader("uploadStoredFiles");
+        if (fileCount == 0) {
+          location.href = "/sites/";
+          alert("문서 수정이 완료 되었습니다.");
+        } else {
+          $("#fine-uploader-manual-trigger").fineUploader("uploadStoredFiles");
+        }
       } else {
-        alert("문서등록 작업이 정상적으로 이루어 지지 않았습니다.");
+        alert("문서등록 혹은 문서 수정이 정상적으로 이루어 지지 않았습니다.");
       }
     },
     error: function (request, status, error) {
-      alert("문서등록 작업이 정상적으로 이루어 지지 않았습니다.");
+      alert("문서등록 혹은 문서 수정이 정상적으로 이루어 지지 않았습니다.");
     },
   });
 }
@@ -118,9 +185,11 @@ function document_modify_cancel() {
 $("#submit-btn").click(function (event) {
   event.preventDefault();
   if (fileCount == 0) {
-    if (!confirm("첨부 파일이 없습니다. 그대로 진행 하시겠습니까?")) return;
+    if (confirm("첨부 파일이 없습니다. 그대로 진행 하시겠습니까?"))
+      site_reg_document();
+  } else {
+    if (confirm("파일을 업로드하시겠습니까?")) site_reg_document();
   }
-  if (confirm("파일을 업로드하시겠습니까?")) site_reg_document();
 });
 
 $("#fine-uploader-manual-trigger").fineUploader({
