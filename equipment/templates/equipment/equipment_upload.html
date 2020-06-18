@@ -1,0 +1,90 @@
+{% extends 'base.html' %} {% block content %} {% load static %}
+
+<div class="container">
+    <div class="card equipment">
+        <div class="card-header document__header">
+            <i class="fa fa-external-link"></i>
+            <h5 class="card-title equipment__title">&nbsp;운영제품 등록 (Excel)</h5>
+        </div>
+        <div class="card-body">
+            <div class="equipment__contents form-row">
+                <div class="form-group col-md-12">
+                    <form class="equipment__add" name="uploadform" id="uploadform" method="POST" enctype="multipart/form-data" action="{% url 'equipment_upload_check' %}">
+                    {% csrf_token %}
+                    <input type="file" name="uploadfile" id="uploadfile" onchange="check_file_ext(this);" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel">
+                    <input type="button" onclick="check_submit(this);" value="제품 업로드"> (일정형식의 엑셀파일만 가능)
+                    </form>
+                    <div>
+                        &nbsp;
+                    </div>
+                    <div class="form-group">
+                        <table class="table table-striped table-bordered table-hover assets_table">
+                            <thead>
+                                <tr>
+                                    <th>고객사</th>
+                                    <th>제조사</th>
+                                    <th>제품명</th>
+                                    <th>모델명</th>
+                                    <th>시리얼</th>
+                                    <th>설치장소</th>
+                                    <th>설치일자</th>
+                                    <th>설치인원</th>
+                                    <th>기 타</th>
+                                </tr>
+                            </thead>
+                            <tr>
+                                <td>&nbsp;</td>
+                                <td>&nbsp;</td>
+                                <td>&nbsp;</td>
+                                <td>&nbsp;</td>
+                                <td>&nbsp;</td>
+                                <td>&nbsp;</td>
+                                <td>&nbsp;</td>
+                                <td>&nbsp;</td>
+                                <td>&nbsp;</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %} {% block title %} 고객사 운용제품현황 {% endblock %}
+{% block css %}
+<link rel="stylesheet" href="{% static 'css/fineuploader/fine-uploader-new.css' %}">
+<link rel="stylesheet" href="{% static 'css/bootstrap/bootstrap.min.css' %}">
+<link rel="stylesheet" href="{% static 'css/bootstrap/bootstrap-multiselect.css' %}">
+<link rel="stylesheet" href="https://cdn.datatables.net/1.10.20/css/dataTables.bootstrap4.min.css">
+<link rel="stylesheet" href="{% static 'css/equipment.css' %}">
+{% endblock %}
+
+
+
+
+{% block js %}
+<script type="text/javascript" language="javascript">
+  function check_file_ext(sender) {
+    var validExts = new Array(".xlsx", ".xls");
+    var fileExt = sender.value;
+    fileExt = fileExt.substring(fileExt.lastIndexOf('.'));
+    if (validExts.indexOf(fileExt) < 0) {
+      alert("엑셀파일만 입력 가능 합니다. " +
+               validExts.toString() + " types.");
+      sender.value = '';
+    }
+  }
+
+  function check_submit(sender) {
+     if ($("#uploadfile").val() == '') alert('파일을 선택하세요');
+     else $("#uploadform").submit();
+  }
+</script>
+
+<script src="{% static 'js/sites/jquery.form.js' %}"></script>
+<script src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.20/js/dataTables.bootstrap4.min.js"></script>
+<script src="{% static 'js/datatable/dataTable.js' %}"></script>
+{% endblock %}

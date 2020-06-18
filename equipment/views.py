@@ -6,6 +6,8 @@ from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
 
 from openpyxl import load_workbook
+from django.db.models import Count
+
 
 from .models import EquipmentAttachment, Equipment
 from common.models import Client, Product, ProductModel, Mnfacture
@@ -17,7 +19,6 @@ from utils.functions import (
 @login_required
 def equipment_main(request):
     equipments = Equipment.objects.all()
-    print(equipments)
     return render(request, 'equipment/equipment_main.html', {'equipments': equipments})
 
 @login_required
@@ -31,80 +32,68 @@ def equipment_input(request):
     return render(request, 'equipment/equipment_main.html', {})
     
 @login_required
-def equipment_bulk(request):
-    return render(request, 'equipment/equipment_bulk.html', {})
-
-@login_required
-def equipment_bulk_check(request):
-    # 입력된 고객 확인, 장비명확인, 동일 Serial 여부 확인
-    return render(request, 'equipment/equipment_bulk.html', {})
-
-
-@login_required
-@csrf_exempt
-def equipment_check(request):
-    if request.method == "POST":
-        file = request.FILES['qqfile']
-        load_wb = load_workbook(file, data_only=True)
-        load_ws = load_wb['Sheet1']
-        iter_rows = iter(load_ws.rows)
-        next(iter_rows)
-        max_rows = load_ws.max_row
-        count = 1
-        err_count = 0
-        for row in iter_rows:
-            try:
-                client = Client.objects.get(name=row[0].value)
-                product = Product.objects.get(name=row[2].value)
-                mnfacture = Mnfacture.objects.get(manafacture=row[1].value)
-                product_model = ProductModel.objects.get(name=row[3].value)
-                equipment = Equipment(client=client, product=product, mnfacture=mnfacture, product_model=product_model,
-                                      serial=row[5].value, location=row[6].value, install_member=row[7].value, install_date=row[8].value, comments=row[9].value)
-                equipment.save()
-                count += 1
-                if count == max_rows-1:
-                    equipment_attach_apply = EquipmentAttachment(
-                        attach=request.FILES['qqfile'], member_id=request.session['id'], attach_name=request.POST['qqfilename'], content_type=request.FILES['qqfile'].content_type, content_size=request.FILES['qqfile'].size)
-                    equipment_attach_apply.save()
-                    return make_response(content=json.dumps({'success': True}))
-
-            except Client.DoesNotExist:
-                return make_response(status=400, content=json.dumps({'success': False, 'error': "error message to display"}))
-
-    else:
-        render(request, 'equipment/equipment_main.html', {})
-
-
-@login_required
-@csrf_exempt
 def equipment_upload(request):
-    if request.method == "POST":
-        file = request.FILES['qqfile']
+    return render(request, 'equipment/equipment_upload.html', {})
+
+
+@login_required
+@csrf_exempt
+def equipment_upload_check(request):
+
+    if request.method == 'POST' and request.FILES['uploadfile']:
+        file = request.FILES['uploadfile']
         load_wb = load_workbook(file, data_only=True)
         load_ws = load_wb['Sheet1']
         iter_rows = iter(load_ws.rows)
         next(iter_rows)
         max_rows = load_ws.max_row
-        count = 1
+        line_num = 1
+        
+        # excel에 오류가 있는 경우 err_equip_list에 append한다.
+        err_equip_list = []
 
         for row in iter_rows:
-            try:
-                client = Client.objects.get(name=row[0].value)
-                product = Product.objects.get(name=row[2].value)
-                mnfacture = Mnfacture.objects.get(manafacture=row[1].value)
-                product_model = ProductModel.objects.get(name=row[3].value)
-                equipment = Equipment(client=client, product=product, mnfacture=mnfacture, product_model=product_model,
-                                      serial=row[5].value, location=row[6].value, install_member=row[7].value, install_date=row[8].value, comments=row[9].value)
-                equipment.save()
-                count += 1
-                if count == max_rows-1:
-                    equipment_attach_apply = EquipmentAttachment(
-                        attach=request.FILES['qqfile'], member_id=request.session['id'], attach_name=request.POST['qqfilename'], content_type=request.FILES['qqfile'].content_type, content_size=request.FILES['qqfile'].size)
-                    equipment_attach_apply.save()
-                    return make_response(content=json.dumps({'success': True}))
+            err_dic = {'no': line_num, 'msg': ''}
+            if not row[0].value:
+                break
+           
+            print(line_num)
+            print(row[0].value)
 
-            except Client.DoesNotExist:
-                return make_response(status=400, content=json.dumps({'success': False, 'error': "error message to display"}))
+            clients = Client.objects.values('name', cnt=Count('name')).get(name=row[0].value)
+            if clients.cnt == 0:
+                err_dic['msg'] = '고객사명을 확인하세요. '
+            products = Product.objects.values('name', cnt=Count('name')).get(name=row[2].value)
+            if  products.cnt == 0:
+                err_dic['msg'] = err_dic['msg'] + '제품명을 확인하세요. '
+            product_models = ProductModel.objects.values('id', cnt=Count('id')).get(name=row[3].value)
+            product_model_id = 0
 
+            if product_models.cnt == 0:
+                err_dic['msg'] = err_dic['msg'] + '모델명을 확인하세요. '
+            else:
+                product_model_id = product_models.id
+
+            if Equipment.objects.filter(product_model=product_model_id, serial=row[4].value).count() > 0:
+                err_dic['msg'] = err_dic['msg'] + '기존 입력된 동일 모델의 serial이 있습니다.'
+
+            if err_dic['msg'] != '':
+                err_equip_list.append(err_dic)
+
+            line_num = line_num + 1
     else:
-        render(request, 'equipment/equipment_main.html', {})
+        err_equip_list.append({'no':1, 'msg': '입력된 파일을 확인하세요'})
+    print(err_equip_list)
+    return render(request, 'equipment/equipment_upload_check.html', {'err_equip_list' : err_equip_list})
+
+
+@login_required
+@csrf_exempt
+def equipment_upload_complete(request):
+    # upload complete
+    return 'aaaa'
+
+def equipment_upload_cancel(request):
+    # upload cancel
+    return 'bbbbb'
+
