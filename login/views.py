@@ -31,9 +31,8 @@ def login_process(request):
             member_info = Member.objects.get(
                 member_id=request.POST['member_id'])
             request.session['id'] = member_info.id
-            request.session['member_id'] = member_info.member_id  # 사용자 계정을 저장
-            request.session['member_name'] = member_info.name  # 사용자 계정의 이름을 저장
-            # 사용자 계정의 부서정보를 저장
+            request.session['member_id'] = member_info.member_id
+            request.session['member_name'] = member_info.name
             request.session['member_dept'] = member_info.dept
             request.session['member_rank'] = member_info.rank
             auth.login(request, user)
@@ -55,9 +54,9 @@ def logout(request):
             return redirect("login")
         else:
             try:
-                del request.session['member_id']  # 사용자 계정 세션값 삭제
-                del request.session['member_name']  # 사용자 이름 삭제
-                del request.session['member_dept']  # 사용자 부서값 삭제
+                del request.session['member_id']
+                del request.session['member_name']
+                del request.session['member_dept']
                 del request.session['member_rank']
                 auth.logout(request)
                 return redirect("login")
