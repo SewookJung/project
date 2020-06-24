@@ -328,7 +328,6 @@ def document_attach_kind_detail(request, document_id, middle_class, kind):
 
 @login_required
 def document_attach_detail_apply(request, document_id):
-    print(request.POST)
     permissions = json.loads(request.POST['permission'])
     kind = request.POST['kind']
     middle_class = request.POST['middleClass']
