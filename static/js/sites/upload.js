@@ -108,15 +108,15 @@ function site_reg_document() {
   param.permission = serializeData;
 
   if (documentKind == "PRE") {
-    param.middleClass = $("#pre__middle-class").val();
+    param.middleClass = $("#preMiddleClass").val();
   } else if (documentKind == "PRO") {
-    param.middleClass = $("#pro__middle-class").val();
+    param.middleClass = $("#proMiddleClass").val();
   } else if (documentKind == "EXA") {
-    param.middleClass = $("#exa__middle-class").val();
+    param.middleClass = $("#exaMiddleClass").val();
   } else if (documentKind == "MAN") {
-    param.middleClass = $("#man__middle-class").val();
+    param.middleClass = $("#manMiddleClass").val();
   } else {
-    param.middleClass = $("#etc__middle-class").val();
+    param.middleClass = $("#etcMiddleClass").val();
   }
 
   $.ajax({
