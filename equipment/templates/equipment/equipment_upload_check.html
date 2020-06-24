@@ -1,4 +1,4 @@
-{% extends 'base.html' %} {% block content %} {% load static %}
+{% extends 'base.html' %} {% block content %} {% load static %} {% load common_tags %}
 
 <div class="container">
     <div class="card equipment">
@@ -7,7 +7,11 @@
             <h5 class="card-title equipment__title">&nbsp;운영제품 등록 (Excel)</h5>
         </div>
         <div class="card-body">
-            <form class="equipment__add" method="POST">{% csrf_token %}
+            <form class="equipment__add" name="ajaxform" id="ajaxform" method="POST"
+                action="{% url 'equipment_upload_complete' %}">
+                {% csrf_token %}
+                <input type="hidden" id="equipment-attach-id" name="equipment-attach-id"
+                    value="{{equipment_attach_id}}">
                 <div class="equipment__contents form-row">
                     <div class="form-group col-md-12">
                         <div class="form-group">
@@ -19,13 +23,27 @@
                                     </tr>
                                 </thead>
                                 {% if err_equip_list|length != 0 %}
-                                {% for equip in err_equip_list %}
+                                {% for err in err_equip_list %}
                                 <tr>
-                                    <td>{{ equip.no }}</td>
-                                    <td>{{ equip.msg }}</td>
+                                    <td>{{err.no}}</td>
+                                    <td>{{err.msg}}</td>
                                 </tr>
                                 {% endfor %}
-                                {% else %}
+                                {% endif %}
+
+                                {% if err_serial_list|length != 0 %}
+                                {% for err_obj in err_serial_list %}
+                                {% for key, value in err_obj.items %}
+                                <tr>
+                                    <td>-</td>
+                                    <td>시리얼 번호 "{{ key }}"가 "{{ value }}"번 중복되었습니다.<br> 엑셀파일 수정 후 다시 업로드하세요.
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                                {% endfor %}
+                                {% endif %}
+
+                                {% if err_serial_list|length == 0 and err_equip_list|length == 0 %}
                                 <tr>
                                     <td rowspan="2">정상적으로 내용들이 입력 되었습니다. 계속 진행 하시려면 등록 버튼을 눌러주세요</td>
                                 </tr>
@@ -34,7 +52,7 @@
                         </div>
                     </div>
                 </div>
-                {% if err_equip_list|length == 0 %}
+                {% if err_equip_list|length == 0 and err_serial_list|length == 0 %}
                 <div class="text-right submit-box">
                     <button type="button" class="btn btn-outline-danger" onclick="equipment_add_cancle()">
                         취소
@@ -52,10 +70,11 @@
 
 {% endblock %} {% block title %} 고객사 운용제품현황 {% endblock %}
 {% block css %}
-<link rel="stylesheet" href="{% static 'css/fineuploader/fine-uploader-new.css' %}">
-<link rel="stylesheet" href="{% static 'css/bootstrap/bootstrap.min.css' %}">
-<link rel="stylesheet" href="{% static 'css/bootstrap/bootstrap-multiselect.css' %}">
 <link rel="stylesheet" href="https://cdn.datatables.net/1.10.20/css/dataTables.bootstrap4.min.css">
-<link rel="stylesheet" href="{% static 'css/equipment.css' %}">
 {% endblock %}
 
+
+{% block js %}
+<script src="{% static 'js/equipment/uploadCheck.js' %}"></script>
+<script src="{% static 'js/sites/jquery.form.js' %}"></script>
+{% endblock %}
