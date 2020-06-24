@@ -1,4 +1,5 @@
 import json
+from collections import Counter
 
 from django.shortcuts import render
 from django.http import HttpResponse
@@ -16,21 +17,25 @@ from utils.functions import (
     make_response,
 )
 
+
 @login_required
 def equipment_main(request):
     equipments = Equipment.objects.all()
     return render(request, 'equipment/equipment_main.html', {'equipments': equipments})
+
 
 @login_required
 def equipment_form(request):
     # 1개씩 제품 등록을 하는 경우에 사용하는 폼
     return render(request, 'equipment/equipment_main.html', {})
 
+
 @login_required
 def equipment_input(request):
     # 상품 입력
     return render(request, 'equipment/equipment_main.html', {})
-    
+
+
 @login_required
 def equipment_upload(request):
     return render(request, 'equipment/equipment_upload.html', {})
@@ -39,61 +44,118 @@ def equipment_upload(request):
 @login_required
 @csrf_exempt
 def equipment_upload_check(request):
-
+    # excel에 오류가 있는 경우 err_equip_list에 append한다.
     if request.method == 'POST' and request.FILES['uploadfile']:
         file = request.FILES['uploadfile']
         load_wb = load_workbook(file, data_only=True)
         load_ws = load_wb['Sheet1']
+
         iter_rows = iter(load_ws.rows)
         next(iter_rows)
+
         max_rows = load_ws.max_row
-        line_num = 1
-        
-        # excel에 오류가 있는 경우 err_equip_list에 append한다.
+        line_num = 2
+
         err_equip_list = []
+        err_serial_list = []
+        serial_list = []
 
         for row in iter_rows:
+            client_name = row[0].value
+            mnfacture_name = row[1].value
+            product_name = row[2].value
+            model_name = row[3].value
+            serial = row[5].value
+
             err_dic = {'no': line_num, 'msg': ''}
-            if not row[0].value:
+
+            if not client_name:
+                err_dic['msg'] = '고객사 이름이 존재하지 않습니다.'
                 break
-           
-            print(line_num)
-            print(row[0].value)
 
-            clients = Client.objects.values('name', cnt=Count('name')).get(name=row[0].value)
-            if clients.cnt == 0:
-                err_dic['msg'] = '고객사명을 확인하세요. '
-            products = Product.objects.values('name', cnt=Count('name')).get(name=row[2].value)
-            if  products.cnt == 0:
-                err_dic['msg'] = err_dic['msg'] + '제품명을 확인하세요. '
-            product_models = ProductModel.objects.values('id', cnt=Count('id')).get(name=row[3].value)
-            product_model_id = 0
+            try:
+                client = Client.objects.get(name=client_name)
 
-            if product_models.cnt == 0:
-                err_dic['msg'] = err_dic['msg'] + '모델명을 확인하세요. '
-            else:
-                product_model_id = product_models.id
+            except Client.DoesNotExist:
+                err_dic['msg'] = '고객사명을 확인하세요.'
+                err_equip_list.append(err_dic)
 
-            if Equipment.objects.filter(product_model=product_model_id, serial=row[4].value).count() > 0:
-                err_dic['msg'] = err_dic['msg'] + '기존 입력된 동일 모델의 serial이 있습니다.'
+            try:
+                mnfacture = Mnfacture.objects.get(manafacture=mnfacture_name)
 
-            if err_dic['msg'] != '':
+            except Mnfacture.DoesNotExist:
+                err_dic['msg'] = '제조사를 확인하세요.'
+                err_equip_list.append(err_dic)
+
+            try:
+                product = Product.objects.get(name=product_name)
+
+            except Product.DoesNotExist:
+                err_dic['msg'] = '제품명을 확인하세요. '
+                err_equip_list.append(err_dic)
+
+            try:
+                product_model = ProductModel.objects.get(name=model_name)
+
+            except ProductModel.DoesNotExist:
+                err_dic['msg'] = '모델명을 확인하세요.'
+                err_equip_list.append(err_dic)
+
+            try:
+                equipment = Equipment.objects.get(
+                    product_model=product_model.id, serial=serial)
+                raise
+
+            except Equipment.DoesNotExist:
+                serial_list.append(serial)
+
+            except:
+                err_dic['msg'] = '기존 입력된 동일 모델의 serial이 있습니다.'
                 err_equip_list.append(err_dic)
 
             line_num = line_num + 1
+
+        serial_obj = dict(Counter(serial_list))
+        for key, value in list(serial_obj.items()):
+            if value < 2:
+                del serial_obj[key]
+        err_serial_list.append(serial_obj)
+
+        if len(err_equip_list) == 0 and len(err_serial_list) == 0:
+            equipment_attach = EquipmentAttachment(member_id=request.session['id'],
+                                                   attach=file, attach_name=file.name, content_size=file.size, content_type=file.content_type)
+            equipment_attach.save()
+        else:
+            return render(request, 'equipment/equipment_upload_check.html', {'err_equip_list': err_equip_list, 'err_serial_list': err_serial_list})
+
     else:
-        err_equip_list.append({'no':1, 'msg': '입력된 파일을 확인하세요'})
-    print(err_equip_list)
-    return render(request, 'equipment/equipment_upload_check.html', {'err_equip_list' : err_equip_list})
+        err_equip_list.append({'no': 1, 'msg': '입력된 파일을 확인하세요'})
+    return render(request, 'equipment/equipment_upload_check.html', {'err_equip_list': err_equip_list, 'equipment_attach_id': equipment_attach.id})
 
 
 @login_required
 @csrf_exempt
 def equipment_upload_complete(request):
-    # upload complete
-    return 'aaaa'
+    equipment_attach_id = request.POST['equipment-attach-id']
+    equipment_attach = EquipmentAttachment.objects.get(id=equipment_attach_id)
+    load_wb = load_workbook(equipment_attach.attach, data_only=True)
+    load_ws = load_wb['Sheet1']
+
+    iter_rows = iter(load_ws.rows)
+    next(iter_rows)
+
+    all_values = []
+    for row in iter_rows:
+        cell_values = []
+        for cell in row:
+            cell_values.append(cell.value)
+        all_values.append(cell_values)
+
+    print(all_values)
+
+    return render(request, 'equipment/equipment_upload_check.html', {})
+
 
 def equipment_upload_cancel(request):
     # upload cancel
     return 'bbbbb'
-
