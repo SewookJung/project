@@ -7,7 +7,6 @@
             <h5 class="card-title equipment__title">&nbsp;운영장비 현황</h5>
         </div>
         <div class="card-body">
-
             <div class="equipment__contents form-row">
                 <div class="form-group col-md-12">
                     <div class="form-group">
@@ -21,20 +20,24 @@
                                     <th>시리얼</th>
                                     <th>설치장소</th>
                                     <th>설치일자</th>
-                                    <th>설치인원</th>
+                                    <th>담당 엔지니어</th>
                                     <th>기 타</th>
                                 </tr>
                             </thead>
                             {% for equipment in equipments %}
                             <tr>
-                                <td>{{ equipment.client }}</td>
+                                <td>
+                                    <a href="{% url 'equipment_detail' equipment_id=equipment.id %}">
+                                        {{ equipment.client }}
+                                    </a>
+                                </td>
                                 <td>{{ equipment.mnfacture }}</td>
                                 <td>{{ equipment.product }}</td>
                                 <td>{{ equipment.product_model }}</td>
                                 <td>{{ equipment.serial }}</td>
                                 <td>{{ equipment.location }}</td>
                                 <td>{{ equipment.install_date }}</td>
-                                <td>{{ equipment.install_member }}</td>
+                                <td>{{ equipment.manager }}</td>
                                 <td>{{ equipment.comments }}</td>
                             </tr>
                             {% endfor %}
