@@ -15,19 +15,21 @@ def _equipmentattachment_upload_path(instance, filename):
 
 class Equipment(models.Model):
     client = models.ForeignKey(
-        to=Client, null=True, blank=True, on_delete=models.SET_NULL)
+        to=Client, null=True, on_delete=models.SET_NULL)
+    creator = models.ForeignKey(
+        to=Member, on_delete=models.SET_NULL, null=True)
     product = models.ForeignKey(
-        to=Product, null=True, blank=True, on_delete=models.SET_NULL)
+        to=Product, null=True, on_delete=models.SET_NULL)
     product_model = models.ForeignKey(
-        to=ProductModel, null=True, blank=True, on_delete=models.SET_NULL)
+        to=ProductModel, null=True, on_delete=models.SET_NULL)
     mnfacture = models.ForeignKey(
-        to=Mnfacture, null=True, blank=True, on_delete=models.SET_NULL)
+        to=Mnfacture, null=True, on_delete=models.SET_NULL)
 
     serial = models.CharField(max_length=50, default="")
     location = models.CharField(max_length=100, default="")
-    comments = models.CharField(max_length=200, default='', blank=True)
     install_date = models.DateField(max_length=20, blank=True)
-    install_member = models.CharField(max_length=50, default="")
+    manager = models.CharField(max_length=50, default="")
+    comments = models.CharField(max_length=200, default='', blank=True)
     created_at = models.DateTimeField(auto_now_add=True, editable=False)
 
 

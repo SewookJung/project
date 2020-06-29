@@ -1,4 +1,4 @@
-{% extends 'base.html' %} {% block content %} {% load static %} {% load common_tags %}
+{% extends 'base.html' %} {% block content %} {% load static %}
 
 <div class="container">
     <div class="card equipment">
@@ -31,19 +31,7 @@
                                 {% endfor %}
                                 {% endif %}
 
-                                {% if err_serial_list|length != 0 %}
-                                {% for err_obj in err_serial_list %}
-                                {% for key, value in err_obj.items %}
-                                <tr>
-                                    <td>-</td>
-                                    <td>시리얼 번호 "{{ key }}"가 "{{ value }}"번 중복되었습니다.<br> 엑셀파일 수정 후 다시 업로드하세요.
-                                    </td>
-                                </tr>
-                                {% endfor %}
-                                {% endfor %}
-                                {% endif %}
-
-                                {% if err_serial_list|length == 0 and err_equip_list|length == 0 %}
+                                {% if err_equip_list|length == 0 %}
                                 <tr>
                                     <td rowspan="2">정상적으로 내용들이 입력 되었습니다. 계속 진행 하시려면 등록 버튼을 눌러주세요</td>
                                 </tr>
@@ -52,9 +40,9 @@
                         </div>
                     </div>
                 </div>
-                {% if err_equip_list|length == 0 and err_serial_list|length == 0 %}
+                {% if err_equip_list|length == 0 %}
                 <div class="text-right submit-box">
-                    <button type="button" class="btn btn-outline-danger" onclick="equipment_add_cancle()">
+                    <button type="button" class="btn btn-outline-danger" onclick="equipment_add_cancel()">
                         취소
                     </button>
                     <button type="submit" class="btn btn-outline-secondary" id="submit-btn">

@@ -1,0 +1,120 @@
+{% extends 'base.html' %} {% block content %} {% load static %} {% load common_tags %}
+<div class="container">
+    <div class="card sites">
+        <div class="card-header sites__header">
+            <i class="fa fa-tasks"></i>
+            <h5 class="card-title sites__title">&nbsp; {{ equipment.client }}[{{ equipment.mnfacture }} /
+                {{ equipment.product_model }}] 제품 정보</h5>
+        </div>
+        <div class="card-body">
+            <form class="equipment__form" name="ajaxForm" id="ajaxForm" method="POST">
+
+                {% csrf_token %}
+                <div class="equipment__contents form-row">
+                    <input type="hidden" value="{{ login_id }}" id=login_id name=login_id>
+                    <input type="hidden" value="{{ equipment.id }}" id=equipment_id name=equipment_id>
+                    <input type="hidden" value="{{ equipment.creator.id }}" id="creator" name="creator">
+                    <input type="hidden" value="{{ equipment.client.id }}" id="equip-client-id" name="equip-client-id">
+                    <input type="hidden" value="{{ equipment.product.id }}" id="equip-product-id"
+                        name="equip-product-id">
+                    <input type="hidden" value="{{ equipment.product_model.id }}" id="equip-model-id"
+                        name="equip-model-id">
+                    <input type="hidden" value="{{ equipment.mnfacture.id }}" id="equip-mnfacture-id"
+                        name="equip-mnfacture-id">
+                    <div class="form-group col-md-12">
+                        <div class="form-group">
+                            <label>고객사 </label>
+                            {{ equipment_form.client }}
+                        </div>
+                        <div class="form-group">
+                            <label>제조사</label>
+                            {{ equipment_form.mnfacture }}
+                        </div>
+                        <div class="form-group">
+                            <label>제품명</label>
+                            <select class="selectpicker" title="제품 선택" id="product_id" name="product_id"
+                                data-live-search="true">
+                                {% with current_makers='' %}
+                                {% for product in products %}
+                                {% if product.level == 0 %}
+                                {% assign_value product.makers as current_makers %}
+                                <optgroup label="{{product.makers}}">
+                                    {% endif %}
+                                    <option value="{{product.id}}" data-tokens="{{product.makers}}">{{product.name}}
+                                    </option>
+                                    {% if current_makers != product.makers %}
+                                </optgroup>
+                                {% endif %}
+                                {% endfor %}
+                                {% endwith %}
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>모델명</label>
+                            {{ equipment_form.product_model }}
+                        </div>
+                        <div class="form-group">
+                            <label>시리얼 </label>
+                            <input type="text" class="form-control" id="serial" name="serial"
+                                value="{{ equipment.serial }}" autocomplete="off">
+                        </div>
+                        <div class="form-group">
+                            <label>담당 엔지니어</label>
+                            <input type="text" class="form-control" id="manager" name="manager"
+                                value="{{ equipment.manager }}" autocomplete="off">
+                        </div>
+                        <div class="form-group ">
+                            <label>설치장소</label>
+                            <input type="text" class="form-control" id="location" name="location"
+                                value="{{ equipment.location }}" autocomplete="off">
+                        </div>
+                        <div class="form-group ">
+                            <label>설치 일자</label>
+                            <input type="text" name="install-date" id="equipment-install-date"
+                                class="form-control calendar__start hasDatepicker" autocomplete="off"
+                                data-provide="datepicker" placeholder="&#xf073;"
+                                value="{{ equipment.install_date | date:"Y-m-d"}}">
+                        </div>
+                        <div class="form-group">
+                            <label>기 타</label>
+                            <textarea class="form-control col-sm-12" rows="5" id="comments"
+                                name="comments">{{ equipment.comments | linebreaksbr }}</textarea>
+                        </div>
+                    </div>
+                </div>
+                {% if equipment.creator.id == login_id %}
+                <div class="d-flex">
+                    <div class="mr-auto p-2">
+                        <button type="button" class="btn btn-danger" id="equipment_delete"
+                            onclick="delete_equipment()">삭제</button>
+                    </div>
+                    <div class="p-2">
+                        <button type="button" class="btn btn-outline-danger" onclick="equipment_edit_cancel()">
+                            취소
+                        </button>
+                        <button type="button" class="btn btn-outline-secondary" id="submit-btn" onclick="checkValues()">
+                            수정
+                        </button>
+                    </div>
+                </div>
+                {% endif %}
+            </form>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %} {% block title %} 고객사 등록 {% endblock %}
+{% block css %}
+<link rel="stylesheet" href="{% static 'css/selectpicker/bootstrap-select.css' %}">
+<link rel="stylesheet" href="{% static 'css/datepicker/datepicker3.css' %}">
+{% endblock %}
+
+{% block js %}
+<script src="{% static 'js/selectpicker/bootstrap-select.js' %}"></script>
+<script src="{% static 'js/datepicker/bootstrap-datepicker.js' %}"></script>
+<script src="{% static 'js/datepicker/bootstrap-datepicker.kr.js' %}"></script>
+<script src="{% static 'js/datepicker/datepicker.js' %}"></script>
+<script src="{% static 'js/equipment/detail.js' %}"></script>
+<script src="{% static 'js/sites/jquery.form.js' %}"></script>
+{% endblock %}
