@@ -13,7 +13,8 @@
                         {% csrf_token %}
                         <input type="file" name="uploadfile" id="uploadfile" onchange="check_file_ext(this);"
                             accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel">
-                        <input type="button" onclick="check_submit(this);" value="제품 업로드"> (일정형식의 엑셀파일만 가능)
+                        <button type="button" class="btn btn-outline-primary" onclick="check_submit(this);">제품
+                            업로드</button> (일정형식의 엑셀파일만 가능)
                     </form>
                     <div>
                         &nbsp;
