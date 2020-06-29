@@ -4,7 +4,7 @@ from .models import Equipment, EquipmentAttachment
 
 class EquipmentAdmin(admin.ModelAdmin):
     list_display = ['id', 'client', 'mnfacture', 'product',
-                    'product_model', 'serial', 'install_member', 'location', 'install_date', 'comments']
+                    'product_model', 'serial', 'manager', 'location', 'install_date', 'comments']
     list_display_links = ['id', 'client']
 
 
