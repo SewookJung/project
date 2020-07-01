@@ -86,7 +86,7 @@ DATABASES = {
         'NAME': 'project',
         'USER': 'admin',
         'PASSWORD': 'Glow1320!',
-        'HOST': '172.26.1.51',
+        'HOST': '172.26.0.122',
     }
 }
 
