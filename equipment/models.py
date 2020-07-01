@@ -29,7 +29,7 @@ class Equipment(models.Model):
     location = models.CharField(max_length=100, default="")
     install_date = models.DateField(max_length=20, blank=True)
     manager = models.CharField(max_length=50, default="")
-    comments = models.CharField(max_length=200, default='', blank=True)
+    comments = models.CharField(max_length=200, default='')
     created_at = models.DateTimeField(auto_now_add=True, editable=False)
 
 
