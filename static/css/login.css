@@ -93,6 +93,10 @@ html {
   margin-right: 10px;
 }
 
+.login__main button {
+  margin-top: 25px;
+}
+
 @media (min-width: 320px) and (max-width: 480px) {
   .container.login-size {
     width: 100%;
