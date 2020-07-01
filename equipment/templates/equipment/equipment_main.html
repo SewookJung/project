@@ -38,7 +38,13 @@
                                 <td>{{ equipment.location }}</td>
                                 <td>{{ equipment.install_date }}</td>
                                 <td>{{ equipment.manager }}</td>
-                                <td>{{ equipment.comments }}</td>
+                                <td>
+                                    {% if equipment.comments == "" %}
+                                    -
+                                    {% else %}
+                                    {{ equipment.comments }}
+                                    {% endif %}
+                                </td>
                             </tr>
                             {% endfor %}
                         </table>

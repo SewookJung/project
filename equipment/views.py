@@ -211,7 +211,7 @@ def equipment_upload_complete(request):
     product_objects = Product.objects.all()
     product_model_objects = ProductModel.objects.all()
     equipment_attach_id = request.POST['equipment-attach-id']
-    
+
     equipment_attach = EquipmentAttachment.objects.get(id=equipment_attach_id)
     load_wb = load_workbook(equipment_attach.attach, data_only=True)
     load_ws = load_wb['장비운용현황']
@@ -234,7 +234,11 @@ def equipment_upload_complete(request):
         location = item[5]
         manager = item[6]
         install_date = item[7]
-        comments = item[8]
+
+        if item[8] == None:
+            comments = ""
+        else:
+            comments = item[8]
 
         equipment = Equipment(client_id=client['id'], product_id=product['id'], product_model_id=product_model['id'], mnfacture_id=mnfacture['id'],
                               serial=serial, location=location, manager=manager, install_date=install_date, comments=comments, creator_id=request.session['id'])
