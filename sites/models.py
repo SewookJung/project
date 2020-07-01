@@ -63,31 +63,22 @@ class Document(models.Model):
     )
 
     PRO_MIDDLE_CLASS_CHOICE = (
-        ("고객사 요구사항", "고객사 요구사항"),
-        (B, "PRO: B"),
-        (C, "PRO: C"),
-        (D, "PRO: D")
+        ("견적서", "견적서"),
+        ("발주서", "발주서"),
+        ("고객사 요구사항", "고객사 요구사항")
     )
 
     EXA_MIDDLE_CLASS_CHOICE = (
         ("검수확인서", "검수확인서"),
-        (B, "EXA: B"),
-        (C, "EXA: C"),
-        (D, "EXA: D")
+        ("세금계산서", "세금계산서"),
     )
 
     ETC_MIDDLE_CLASS_CHOICE = (
-        (A, "ETC: A"),
-        (B, "ETC: B"),
-        (C, "ETC: C"),
-        (D, "ETC: D")
+        ("기타", "기타"),
     )
 
     MAN_MIDDLE_CLASS_CHOICE = (
         ("유지보수 계약서", "유지보수 계약서"),
-        (B, "MAN: B"),
-        (C, "MAN: C"),
-        (D, "MAN: D")
     )
 
     project = models.ForeignKey(
