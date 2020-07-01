@@ -7,8 +7,8 @@
                 {{ equipment.product_model }}] 제품 정보</h5>
         </div>
         <div class="card-body">
-            <form class="equipment__form" name="ajaxForm" id="ajaxForm" method="POST">
-
+            <form class="equipment__form" name="ajaxForm" id="ajaxForm" method="POST"
+                action="{% url 'equipment_detail_apply' equipment_id=equipment.id %}">
                 {% csrf_token %}
                 <div class="equipment__contents form-row">
                     <input type="hidden" value="{{ login_id }}" id=login_id name=login_id>
@@ -86,13 +86,13 @@
                 <div class="d-flex">
                     <div class="mr-auto p-2">
                         <button type="button" class="btn btn-danger" id="equipment_delete"
-                            onclick="delete_equipment()">삭제</button>
+                            onclick="deleteEquipment()">삭제</button>
                     </div>
                     <div class="p-2">
-                        <button type="button" class="btn btn-outline-danger" onclick="equipment_edit_cancel()">
+                        <button type="button" class="btn btn-outline-danger" onclick="equipmentEditCancel()">
                             취소
                         </button>
-                        <button type="button" class="btn btn-outline-secondary" id="submit-btn" onclick="checkValues()">
+                        <button type="submit" class="btn btn-outline-secondary" id="submit-btn"">
                             수정
                         </button>
                     </div>
@@ -106,15 +106,15 @@
 
 {% endblock %} {% block title %} 고객사 등록 {% endblock %}
 {% block css %}
-<link rel="stylesheet" href="{% static 'css/selectpicker/bootstrap-select.css' %}">
-<link rel="stylesheet" href="{% static 'css/datepicker/datepicker3.css' %}">
-{% endblock %}
+<link rel=" stylesheet" href="{% static 'css/selectpicker/bootstrap-select.css' %}">
+                            <link rel="stylesheet" href="{% static 'css/datepicker/datepicker3.css' %}">
+                            {% endblock %}
 
-{% block js %}
-<script src="{% static 'js/selectpicker/bootstrap-select.js' %}"></script>
-<script src="{% static 'js/datepicker/bootstrap-datepicker.js' %}"></script>
-<script src="{% static 'js/datepicker/bootstrap-datepicker.kr.js' %}"></script>
-<script src="{% static 'js/datepicker/datepicker.js' %}"></script>
-<script src="{% static 'js/equipment/detail.js' %}"></script>
-<script src="{% static 'js/sites/jquery.form.js' %}"></script>
-{% endblock %}
+                            {% block js %}
+                            <script src="{% static 'js/selectpicker/bootstrap-select.js' %}"></script>
+                            <script src="{% static 'js/datepicker/bootstrap-datepicker.js' %}"></script>
+                            <script src="{% static 'js/datepicker/bootstrap-datepicker.kr.js' %}"></script>
+                            <script src="{% static 'js/datepicker/datepicker.js' %}"></script>
+                            <script src="{% static 'js/equipment/detail.js' %}"></script>
+                            <script src="{% static 'js/sites/jquery.form.js' %}"></script>
+                            {% endblock %}

@@ -63,24 +63,44 @@ def equipment_form_apply(request):
 
 
 @login_required
-def equipment_edit_apply(request, equipment_id):
+def equipment_detail_apply(request, equipment_id):
     if request.method == "POST":
-        print(request.POST)
-        try:
-            client = request.POST['client']
-            product = request.POST['product_id']
-            mnfacture = request.POST['mnfacture']
-            product_model = request.POST['product_model']
-            serial = request.POST['serial']
-            manager = request.POST['manager']
-            location = request.POST['location']
-            install_date = request.POST['install-date']
-            comments = request.POST['comments']
-            return make_response(status=200, content=json.dumps({'success': True, 'msg': "제품수정을 완료하였습니다."}))
-        except:
-            return make_response(status=200, content=json.dumps({'success': True, 'msg': "제품수정에 실패하였습니다. \n 다시 시도하시기 바랍니다."}))
+        client = request.POST['client']
+        product = request.POST['product_id']
+        mnfacture = request.POST['mnfacture']
+        product_model = request.POST['product_model']
+        manager = request.POST['manager']
+        serial = request.POST['serial']
+        location = request.POST['location']
+        install_date = request.POST['install-date']
+        comments = request.POST['comments']
+        creator = request.session['id']
 
-    return redirect("equipment_main")
+        try:
+            equipment = Equipment.objects.get(serial=serial)
+            raise
+
+        except Equipment.DoesNotExist:
+            try:
+                modify_equipment = Equipment.objects.get(id=int(equipment_id))
+                modify_equipment.client_id = client
+                modify_equipment.product_id = product
+                modify_equipment.mnfactureauclf_id = mnfacture
+                modify_equipment.product_model_id = product_model
+                modify_equipment.manager_id = manager
+                modify_equipment.serial = serial
+                modify_equipment.location = location
+                modify_equipment.install_date = install_date
+                modify_equipment.comments = comments
+                modify_equipment.save()
+                return make_response(status=200, content=json.dumps({'success': True, 'msg': "제품수정을 완료하였습니다."}))
+            except:
+                return make_response(status=400, content=json.dumps({'success': False, 'msg': "제품수정에 실패하였습니다. \n다시 시도하시기 바랍니다.", 'error': 'upload_error'}))
+
+        except:
+            return make_response(status=400, content=json.dumps({'success': False, 'msg': "작성된 시리얼 번호가 존재합니다. \n시리얼번호 확인 후 다시 시도하시기 바랍니다.", 'error': 'serial_error'}))
+    else:
+        return make_response(status=400, content=json.dumps({'success': False, 'msg': "제품수정에 실패하였습니다. \n다시 시도하시기 바랍니다.", 'error': 'upload_error'}))
 
 
 @login_required
@@ -109,18 +129,20 @@ def equipment_upload_check(request):
     if request.method == 'POST' and request.FILES['uploadfile']:
         file = request.FILES['uploadfile']
         load_wb = load_workbook(file, data_only=True)
+        line_num = 2
+        err_equip_list = []
+        serial_list = []
 
-        # sheet 명 체크 또는 load 여부 check try... catch..  except
-        load_ws = load_wb['Sheet1']
+        try:
+            load_ws = load_wb['장비운용현황']
+        except:
+            err_equip_list.append(
+                {'no': '-', 'msg': '시트명을 확인하세요.\n 기본 시트명은 "장비운용현황" 입니다.'})
+            return render(request, 'equipment/equipment_upload_check.html', {'err_equip_list': err_equip_list})
 
         iter_rows = iter(load_ws.rows)
         next(iter_rows)
-
         max_rows = load_ws.max_row
-        line_num = 2
-
-        err_equip_list = []
-        serial_list = []
 
         for row in iter_rows:
             client_name = row[0].value
@@ -188,13 +210,11 @@ def equipment_upload_complete(request):
     mnfacture_objects = Mnfacture.objects.all()
     product_objects = Product.objects.all()
     product_model_objects = ProductModel.objects.all()
-
     equipment_attach_id = request.POST['equipment-attach-id']
+    
     equipment_attach = EquipmentAttachment.objects.get(id=equipment_attach_id)
     load_wb = load_workbook(equipment_attach.attach, data_only=True)
-
-    load_ws = load_wb['Sheet1']
-
+    load_ws = load_wb['장비운용현황']
     iter_rows = iter(load_ws.rows)
     next(iter_rows)
 
@@ -210,11 +230,11 @@ def equipment_upload_complete(request):
         mnfacture = mnfacture_objects.values('id').get(manafacture=item[1])
         product = product_objects.values('id').get(name=item[2])
         product_model = product_model_objects.values('id').get(name=item[3])
-        serial = item[5]
-        location = item[6]
-        manager = item[7]
-        install_date = item[8]
-        comments = item[9]
+        serial = item[4]
+        location = item[5]
+        manager = item[6]
+        install_date = item[7]
+        comments = item[8]
 
         equipment = Equipment(client_id=client['id'], product_id=product['id'], product_model_id=product_model['id'], mnfacture_id=mnfacture['id'],
                               serial=serial, location=location, manager=manager, install_date=install_date, comments=comments, creator_id=request.session['id'])
@@ -231,6 +251,8 @@ def equipment_upload_cancel(request):
             return make_response(status=200, content=json.dumps({'success': True, 'msg': "장비현황 등록을 취소하였습니다."}))
         except:
             return make_response(status=400, content=json.dumps({'success': False, 'error': "장비현황 등록을 취소하는데 실패하였습니다. \n 파일을 다시 업로드 해주시길 바랍니다."}))
+    else:
+        return make_response(status=400, content=json.dumps({'success': False, 'error': "장비현황 등록을 취소하는데 실패하였습니다. \n 파일을 다시 업로드 해주시길 바랍니다."}))
 
 
 def equipment_delete(request, equipment_id):
@@ -240,3 +262,5 @@ def equipment_delete(request, equipment_id):
             return make_response(status=200, content=json.dumps({'success': True, 'msg': "해당 제품정보를 삭제하였습니다."}))
         except:
             return make_response(status=400, content=json.dumps({'success': True, 'msg': "해당 제품정보를 삭제하는데 실패 하였습니다."}))
+    else:
+        return make_response(status=400, content=json.dumps({'success': True, 'msg': "해당 제품정보를 삭제하는데 실패 하였습니다."}))

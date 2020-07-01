@@ -24,28 +24,41 @@ def login(request):
 
 def login_process(request):
     if request.method == "POST":
-        username = request.POST['member_id']
-        password = request.POST['member_pw']
-        user = auth.authenticate(request, username=username, password=password)
-        if user is not None:
-            member_info = Member.objects.get(
-                member_id=request.POST['member_id'])
-            request.session['id'] = member_info.id
-            request.session['member_id'] = member_info.member_id
-            request.session['member_name'] = member_info.name
-            request.session['member_dept'] = member_info.dept
-            request.session['member_rank'] = member_info.rank
-            auth.login(request, user)
-            if request.session['member_dept'] in REPORT_PERMISSION_DEFAULT:
-                return redirect("weekly_main")
+        try:
+            member_id = request.POST['member_id']
+            member_pw = request.POST['member_pw']
+            member = Member.objects.get(member_id=member_id)
+            member_status = member.status
+
+            if member_status == "Passive":
+                raise
             else:
-                return redirect("assets_main")
-        else:
+                user = auth.authenticate(
+                    request, username=member_id, password=member_pw)
+                if user is not None:
+                    member_info = Member.objects.get(
+                        member_id=member_id)
+                    request.session['id'] = member_info.id
+                    request.session['member_id'] = member_info.member_id
+                    request.session['member_name'] = member_info.name
+                    request.session['member_dept'] = member_info.dept
+                    request.session['member_rank'] = member_info.rank
+                    auth.login(request, user)
+                    if request.session['member_dept'] in REPORT_PERMISSION_DEFAULT:
+                        return redirect("weekly_main")
+                    else:
+                        return redirect("assets_main")
+                else:
+                    msg = "계정 또는 비밀번호가 일치하지 않습니다."
+                    return render(request, "login/login.html", {"message": msg})
+
+        except Member.DoesNotExist:
             msg = "계정 또는 비밀번호가 일치하지 않습니다."
             return render(request, "login/login.html", {"message": msg})
-    else:
-        msg = "계정 또는 비밀번호가 일치하지 않습니다."
-        return render(request, "login/login.html", {"message": msg})
+
+        except:
+            msg = "해당 계정은 비활성화 되었습니다.\n관리자에게 연락하세요"
+            return render(request, "login/login.html", {"message": msg})
 
 
 def logout(request):

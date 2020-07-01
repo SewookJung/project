@@ -11,14 +11,16 @@
                     <form class="equipment__add" name="uploadform" id="uploadform" method="POST"
                         enctype="multipart/form-data" action="{% url 'equipment_upload_check' %}">
                         {% csrf_token %}
-                        <input type="file" name="uploadfile" id="uploadfile" onchange="check_file_ext(this);"
-                            accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel">
-                        <button type="button" class="btn btn-outline-primary" onclick="check_submit(this);">제품
-                            업로드</button> (일정형식의 엑셀파일만 가능)
+                        <div class="form-group file-upload">
+                            <input class="upload-name" disabled="disabled">
+                            <label for="uploadfile">파일선택</label>
+                            <button type="button" class="btn btn-outline-primary" onclick="checkSubmit();">제품
+                                업로드</button> (일정형식의 엑셀파일만 가능)
+                            <input type="file" class="upload-hidden" name="uploadfile" id="uploadfile"
+                                onchange="checkFileExt(this);"
+                                accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel">
+                        </div>
                     </form>
-                    <div>
-                        &nbsp;
-                    </div>
                     <div class="form-group">
                         <table class="table table-striped table-bordered table-hover assets_table">
                             <thead>

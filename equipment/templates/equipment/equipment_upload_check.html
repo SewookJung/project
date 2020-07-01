@@ -26,7 +26,7 @@
                                 {% for err in err_equip_list %}
                                 <tr>
                                     <td>{{err.no}}</td>
-                                    <td>{{err.msg}}</td>
+                                    <td>{{err.msg | linebreaksbr}}</td>
                                 </tr>
                                 {% endfor %}
                                 {% endif %}

@@ -100,6 +100,7 @@ def weekly_detail(request, **kwargs):
 
 @login_required
 def weekly_detail_apply(request, client_id):
+
     report = Report(client_id=client_id, member_id=request.session['id'], product_id=request.POST['product'], client_manager=request.POST['client_manager'],
                     sales_type=request.POST['sales_type'], support_comment=request.POST['weekly_comments'], support_date=request.POST['report_date'], comments=request.POST['etc_comments'])
     report.save()
