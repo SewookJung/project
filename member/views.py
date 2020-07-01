@@ -38,6 +38,7 @@ def member_password_apply(request):
                     user.save()
                     auth.login(request, user)
                     member_info = Member.objects.get(member_id=user)
+                    request.session['id'] = member_info.id
                     request.session['member_id'] = member_info.member_id
                     request.session['member_name'] = member_info.name
                     request.session['member_dept'] = member_info.dept
