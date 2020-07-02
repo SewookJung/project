@@ -19,7 +19,7 @@ from utils.constant import REPORT_PERMISSION_DEFAULT, REPORT_PERMISSION_EXCEPT, 
 @login_required
 def weekly_main(request, **kwargs):
     if not request.session['member_dept'] in REPORT_PERMISSION_DEFAULT:
-        return HttpResponse("메뉴에 대한 권한이 없음")
+        return redirect('weekly_permission')
 
     else:
         sales = Member.objects.filter(dept__regex=r"^사업")
@@ -57,7 +57,7 @@ def weekly_main(request, **kwargs):
             rework_client = {'client_id': report['client_id'], 'client_name': client_reports[0].client_name, 'product_name': client_reports[0].product_name, 'product_id': report['product_id'],
                              'support_items': support_items}
             clinets_reports_array.append(rework_client)
-        return render(request, 'weekly/weekly_main.html', {"sales": sales, "selected_all": selected_all, "selected_id": selected_id, "last_monday": last_monday, "reports": clinets_reports_array})
+        return render(request, 'weekly/weekly_main.html', {"sales": sales, "selected_all": selected_all, "selected_id": selected_id, "last_monday": last_monday, "reports": clinets_reports_array, 'permission': REPORT_PERMISSION_DEFAULT})
 
 
 @login_required
@@ -65,7 +65,7 @@ def weekly_add(request):
     form = ReportForm()
     products = Product.objects.values('id',
                                       'name', 'makers', 'level').order_by('makers', 'level')
-    return render(request, 'weekly/weekly_add.html', {"products": products, 'form': form})
+    return render(request, 'weekly/weekly_add.html', {"products": products, 'form': form, 'permission': REPORT_PERMISSION_DEFAULT})
 
 
 @login_required
@@ -95,7 +95,7 @@ def weekly_detail(request, **kwargs):
     products = Product.objects.values(
         'id', 'name', 'makers', 'level').order_by('makers', 'level')
     reporter = Member.objects.get(id=selected_id)
-    return render(request, 'weekly/weekly_detail.html', {"report": rework_client, "form": form, 'login_id': request.session['id'], 'products': products, 'reporter': reporter})
+    return render(request, 'weekly/weekly_detail.html', {"report": rework_client, "form": form, 'login_id': request.session['id'], 'products': products, 'reporter': reporter, 'permission': REPORT_PERMISSION_DEFAULT})
 
 
 @login_required
@@ -114,7 +114,7 @@ def weekly_report_detail(request, report_id):
         'id', 'name', 'makers', 'level').order_by('makers', 'level')
     form = ReportForm()
     reporter = Member.objects.get(id=report.member_id)
-    return render(request, 'weekly/weekly_report_detail.html', {"report": report, "form": form, 'login_id': request.session['id'], 'products': products, 'reporter': reporter})
+    return render(request, 'weekly/weekly_report_detail.html', {"report": report, "form": form, 'login_id': request.session['id'], 'products': products, 'reporter': reporter, 'permission': REPORT_PERMISSION_DEFAULT})
 
 
 @login_required
