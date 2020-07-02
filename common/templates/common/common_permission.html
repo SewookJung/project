@@ -1,0 +1,26 @@
+{% extends 'base.html' %} {% block content %} {% load static %}
+
+<div class="container permission">
+    <div class="permission__contents contents">
+        <div class="contents-icon">
+            <i class="fa fa-user-times"></i>
+        </div>
+        <div class="contents-comment">
+            <h2>Permission Denied</h2>
+            <h6>접속하신 유저는 현재 메뉴에 대해서 권한이 없습니다. 관리자에게 문의하세요</h6>
+        </div>
+        <div class="contents-button">
+            <a href="{% url 'assets_main' %}" class="btn btn-primary btn-lg active" role="button"
+                aria-pressed="true">돌아가기</a>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %} {% block title %} 메뉴 권한없음 {% endblock %}
+{% block css %}
+<link rel="stylesheet" href="{% static 'css/common.css' %}">
+{% endblock %}
+
+{% block js %}
+{% endblock %}

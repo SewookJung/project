@@ -5,6 +5,7 @@ from django.shortcuts import render, HttpResponse
 from django.contrib.auth.decorators import login_required
 
 from member.models import Member
+from utils.constant import REPORT_PERMISSION_DEFAULT
 from utils.functions import make_response
 
 
@@ -46,3 +47,8 @@ def member_info_all(request):
                 {'name': member.name + " " + member.rank, 'value': member.id})
         members_data.append(data_format)
     return members_data
+
+
+@login_required
+def weekly_permission(request):
+    return render(request, 'common/common_permission.html', {'permission': REPORT_PERMISSION_DEFAULT})
