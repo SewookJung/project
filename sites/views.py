@@ -23,6 +23,7 @@ from common.models import Product
 from common.views import member_info, member_info_all
 
 from utils.functions import make_response
+from utils.constant import REPORT_PERMISSION_DEFAULT
 
 
 @login_required
@@ -33,7 +34,7 @@ def sites_main_test(request):
     page = request.GET.get('page', 1)
     posts = paginator.get_page(page)
     print(posts)
-    return render(request, 'sites/sites_main_test.html', {'documents': documents, 'posts': posts})
+    return render(request, 'sites/sites_main_test.html', {'documents': documents, 'posts': posts, 'permission': REPORT_PERMISSION_DEFAULT})
 
 
 @login_required
@@ -128,7 +129,7 @@ def sites_main(request):
             document_id = {'document_id': document.id}
             rework_reports.update(document_id)
         project_lists.append(rework_reports)
-    return render(request, 'sites/sites_main.html', {"projects": project_lists})
+    return render(request, 'sites/sites_main.html', {"projects": project_lists, 'permission': REPORT_PERMISSION_DEFAULT})
 
 
 @login_required
@@ -140,7 +141,7 @@ def sites_detail(request, pk):
     products = Product.objects.values(
         'id', 'name', 'makers', 'level').order_by('makers', 'level')
     project_creator = Member.objects.get(id=project.member_id)
-    return render(request, 'sites/sites_detail.html', {"project": project, "asset_form": asset_form, "project_form": project_form,  "document_form": document_form, "products": products, "project_creator": project_creator.id, 'login_id': request.session['id']})
+    return render(request, 'sites/sites_detail.html', {"project": project, "asset_form": asset_form, "project_form": project_form,  "document_form": document_form, "products": products, "project_creator": project_creator.id, 'login_id': request.session['id'], 'permission': REPORT_PERMISSION_DEFAULT})
 
 
 @login_required
@@ -179,7 +180,7 @@ def sites_add(request):
     document_form = DocumentAttachmentForm()
     products = Product.objects.values('id',
                                       'name', 'makers', 'level').order_by('makers', 'level')
-    return render(request, "sites/sites_add.html", {'asset_form': asset_form, 'project_form': project_form, 'document_form': document_form, "products": products})
+    return render(request, "sites/sites_add.html", {'asset_form': asset_form, 'project_form': project_form, 'document_form': document_form, "products": products, 'permission': REPORT_PERMISSION_DEFAULT})
 
 
 @login_required
@@ -209,7 +210,7 @@ def document_upload(request):
     dt = datetime.datetime.now()
     check_code = "{0}-{1}-{2}".format(dt.strftime('%Y%m%d'),
                                       uuid.uuid4().hex, request.session['id'])
-    return render(request, "sites/sites_upload.html", {'document_form': document_form,  'check_code': check_code})
+    return render(request, "sites/sites_upload.html", {'document_form': document_form,  'check_code': check_code, 'permission': REPORT_PERMISSION_DEFAULT})
 
 
 @login_required
@@ -221,7 +222,7 @@ def document_default_auth(request):
         for item in group_data:
             if item['value'] == request.session['id']:
                 item.update(selected)
-    return make_response(content=json.dumps({'success': True, 'member_info': member_info}))
+    return make_response(content=json.dumps({'success': True, 'member_info': member_info, 'permission': REPORT_PERMISSION_DEFAULT}))
 
 
 @login_required
@@ -242,7 +243,7 @@ def document_detail(request, project_id):
             rework_document_attached = {'id': attach.id, 'attach_name': attach.attach_name, 'document_id': attach.document_id,
                                         'created_at': attach.created_at, 'permission': document.auth, 'kind': document.kind, 'member': document.member, 'auth_value': document_auth_value}
             documents_attach_list.append(rework_document_attached)
-    return render(request, "sites/document_detail.html", {"documents_attach_list": documents_attach_list, 'project_name': project_name, 'login_id': login_id, })
+    return render(request, "sites/document_detail.html", {"documents_attach_list": documents_attach_list, 'project_name': project_name, 'login_id': login_id, 'permission': REPORT_PERMISSION_DEFAULT })
 
 
 @login_required
@@ -255,7 +256,7 @@ def document_attach_detail(request, document_id):
     dt = datetime.datetime.now()
     check_code = "{0}-{1}-{2}".format(dt.strftime('%Y%m%d'),
                                       uuid.uuid4().hex, request.session['id'])
-    return render(request, "sites/document_attach_detail.html", {'document_form': document_form, 'document': document, 'document_attach_list': document_attach_list, 'check_code': check_code})
+    return render(request, "sites/document_attach_detail.html", {'document_form': document_form, 'document': document, 'document_attach_list': document_attach_list, 'check_code': check_code, 'permission': REPORT_PERMISSION_DEFAULT})
 
 
 @login_required
@@ -285,7 +286,7 @@ def document_attach_kind_get_detail(request, project_id):
             document=document.id)
         for document_attach in document_attachs:
             document_attach_names.append(document_attach.attach_name)
-    return make_response(content=json.dumps({'success': True, 'document_attach_names': document_attach_names}))
+    return make_response(content=json.dumps({'success': True, 'document_attach_names': document_attach_names, 'permission': REPORT_PERMISSION_DEFAULT}))
 
 
 @login_required
@@ -323,7 +324,7 @@ def document_attach_kind_detail(request, document_id, middle_class, kind):
             rework_document_attached = {'id': attach.id, 'attach_name': attach.attach_name, 'document_id': attach.document_id,
                                         'created_at': attach.created_at, 'permission': document.auth, 'kind': document.kind, 'member': document.member, 'auth_value': document_auth_value}
             documents_attach_list.append(rework_document_attached)
-    return render(request, "sites/document_attach_kind_detail.html", {"documents_attach_list": documents_attach_list, 'project_name': project_name, 'login_id': login_id})
+    return render(request, "sites/document_attach_kind_detail.html", {"documents_attach_list": documents_attach_list, 'project_name': project_name, 'login_id': login_id, 'permission': REPORT_PERMISSION_DEFAULT})
 
 
 @login_required
