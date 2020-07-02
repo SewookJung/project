@@ -1,18 +1,19 @@
 import json
 from collections import Counter
 
+from django.contrib.auth.decorators import login_required
+from django.db.models import Q
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
-from django.contrib.auth.decorators import login_required
 
 from openpyxl import load_workbook
 from django.db.models import Count
 
-
-from .models import EquipmentAttachment, Equipment
 from common.models import Client, Product, ProductModel, Mnfacture
+from .models import EquipmentAttachment, Equipment
 from .forms import EquipmentForm
+from utils.constant import REPORT_PERMISSION_DEFAULT
 
 from utils.functions import (
     make_response,
@@ -22,7 +23,7 @@ from utils.functions import (
 @login_required
 def equipment_main(request):
     equipments = Equipment.objects.all()
-    return render(request, 'equipment/equipment_main.html', {'equipments': equipments})
+    return render(request, 'equipment/equipment_main.html', {'equipments': equipments, 'permission': REPORT_PERMISSION_DEFAULT})
 
 
 @login_required
@@ -30,7 +31,7 @@ def equipment_form(request):
     equipment_form = EquipmentForm()
     products = Product.objects.values('id',
                                       'name', 'makers', 'level').order_by('makers', 'level')
-    return render(request, 'equipment/equipment_form.html', {"products": products, "equipment_form": equipment_form, })
+    return render(request, 'equipment/equipment_form.html', {"products": products, "equipment_form": equipment_form, 'permission': REPORT_PERMISSION_DEFAULT})
 
 
 @login_required
@@ -70,35 +71,66 @@ def equipment_detail_apply(request, equipment_id):
         mnfacture = request.POST['mnfacture']
         product_model = request.POST['product_model']
         manager = request.POST['manager']
-        serial = request.POST['serial']
+        serial = request.POST['serial'].replace(" ", "")
         location = request.POST['location']
         install_date = request.POST['install-date']
         comments = request.POST['comments']
         creator = request.session['id']
 
         try:
-            equipment = Equipment.objects.get(serial=serial)
-            raise
+            equipment = Equipment.objects.get(id=int(equipment_id))
+
+            if serial == equipment.serial:
+                equipment.client_id = client
+                equipment.product_id = product
+                equipment.mnfactureauclf_id = mnfacture
+                equipment.product_model_id = product_model
+                equipment.manager_id = manager
+                equipment.serial = serial
+                equipment.location = location
+                equipment.install_date = install_date
+                equipment.comments = comments
+                equipment.save()
+                return make_response(status=200, content=json.dumps({'success': True, 'msg': "제품수정을 완료하였습니다."}))
+
+            else:
+                try:
+                    exists_check_equipment = Equipment.objects.get(
+                        serial=serial)
+
+                    if exists_check_equipment.id == int(equipment_id):
+                        exists_check_equipment.client_id = client
+                        exists_check_equipment.product_id = product
+                        exists_check_equipment.mnfactureauclf_id = mnfacture
+                        exists_check_equipment.product_model_id = product_model
+                        exists_check_equipment.manager_id = manager
+                        exists_check_equipment.serial = serial
+                        exists_check_equipment.location = location
+                        exists_check_equipment.install_date = install_date
+                        exists_check_equipment.comments = comments
+                        exists_check_equipment.save()
+                    else:
+                        raise
+
+                except Equipment.DoesNotExist:
+                    equipment.client_id = client
+                    equipment.product_id = product
+                    equipment.mnfactureauclf_id = mnfacture
+                    equipment.product_model_id = product_model
+                    equipment.manager_id = manager
+                    equipment.serial = serial
+                    equipment.location = location
+                    equipment.install_date = install_date
+                    equipment.comments = comments
+                    equipment.save()
+                    return make_response(status=200, content=json.dumps({'success': True, 'msg': "제품수정을 완료하였습니다."}))
+                except:
+                    return make_response(status=400, content=json.dumps({'success': False, 'msg': "작성된 시리얼 번호가 존재합니다. \n시리얼번호 확인 후 다시 시도하시기 바랍니다.", 'error': 'serial_error'}))
 
         except Equipment.DoesNotExist:
-            try:
-                modify_equipment = Equipment.objects.get(id=int(equipment_id))
-                modify_equipment.client_id = client
-                modify_equipment.product_id = product
-                modify_equipment.mnfactureauclf_id = mnfacture
-                modify_equipment.product_model_id = product_model
-                modify_equipment.manager_id = manager
-                modify_equipment.serial = serial
-                modify_equipment.location = location
-                modify_equipment.install_date = install_date
-                modify_equipment.comments = comments
-                modify_equipment.save()
-                return make_response(status=200, content=json.dumps({'success': True, 'msg': "제품수정을 완료하였습니다."}))
-            except:
-                return make_response(status=400, content=json.dumps({'success': False, 'msg': "제품수정에 실패하였습니다. \n다시 시도하시기 바랍니다.", 'error': 'upload_error'}))
-
+            return make_response(status=400, content=json.dumps({'success': False, 'msg': "제품정보를 가지고 오는데 실패하였습니다. \n다시 시도하시기 바랍니다.", 'error': 'upload_error'}))
         except:
-            return make_response(status=400, content=json.dumps({'success': False, 'msg': "작성된 시리얼 번호가 존재합니다. \n시리얼번호 확인 후 다시 시도하시기 바랍니다.", 'error': 'serial_error'}))
+            return make_response(status=400, content=json.dumps({'success': False, 'msg': "제품수정에 실패하였습니다. \n다시 시도하시기 바랍니다.", 'error': 'upload_error'}))
     else:
         return make_response(status=400, content=json.dumps({'success': False, 'msg': "제품수정에 실패하였습니다. \n다시 시도하시기 바랍니다.", 'error': 'upload_error'}))
 
@@ -110,7 +142,7 @@ def equipment_detail(request, equipment_id):
         products = Product.objects.values('id',
                                           'name', 'makers', 'level').order_by('makers', 'level')
         equipment = Equipment.objects.get(id=equipment_id)
-    return render(request, 'equipment/equipment_detail.html', {"equipment": equipment, "products": products, "equipment_form": equipment_form, 'login_id': request.session['id']})
+    return render(request, 'equipment/equipment_detail.html', {"equipment": equipment, "products": products, "equipment_form": equipment_form, 'login_id': request.session['id'], 'permission': REPORT_PERMISSION_DEFAULT})
 
 
 @login_required
@@ -120,7 +152,7 @@ def equipment_input(request):
 
 @login_required
 def equipment_upload(request):
-    return render(request, 'equipment/equipment_upload.html', {})
+    return render(request, 'equipment/equipment_upload.html', {'permission': REPORT_PERMISSION_DEFAULT})
 
 
 @login_required
@@ -138,7 +170,7 @@ def equipment_upload_check(request):
         except:
             err_equip_list.append(
                 {'no': '-', 'msg': '시트명을 확인하세요.\n 기본 시트명은 "장비운용현황" 입니다.'})
-            return render(request, 'equipment/equipment_upload_check.html', {'err_equip_list': err_equip_list})
+            return render(request, 'equipment/equipment_upload_check.html', {'err_equip_list': err_equip_list, 'permission': REPORT_PERMISSION_DEFAULT})
 
         iter_rows = iter(load_ws.rows)
         next(iter_rows)
@@ -196,11 +228,11 @@ def equipment_upload_check(request):
                                                    attach=file, attach_name=file.name, content_size=file.size, content_type=file.content_type)
             equipment_attach.save()
         else:
-            return render(request, 'equipment/equipment_upload_check.html', {'err_equip_list': err_equip_list})
+            return render(request, 'equipment/equipment_upload_check.html', {'err_equip_list': err_equip_list, 'permission': REPORT_PERMISSION_DEFAULT})
 
     else:
         err_equip_list.append({'no': 1, 'msg': '입력된 파일을 확인하세요'})
-    return render(request, 'equipment/equipment_upload_check.html', {'err_equip_list': err_equip_list, 'equipment_attach_id': equipment_attach.id})
+    return render(request, 'equipment/equipment_upload_check.html', {'err_equip_list': err_equip_list, 'equipment_attach_id': equipment_attach.id, 'permission': REPORT_PERMISSION_DEFAULT})
 
 
 @login_required
