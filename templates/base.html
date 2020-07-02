@@ -71,6 +71,7 @@
             <a class="dropdown-item" href="{% url 'equipment_upload' %}">제품등록(대량)</a>
           </div>
         </li>
+        {% if request.session.member_dept in permission %}
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
             aria-haspopup="true" aria-expanded="false">
@@ -82,6 +83,7 @@
             <a class="dropdown-item" href="{% url 'weekly_add' %}">주간업무보고 신규 등록</a>
           </div>
         </li>
+        {% endif %}
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
             aria-haspopup="true" aria-expanded="false">
