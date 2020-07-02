@@ -8,17 +8,18 @@ from django.contrib.auth.decorators import login_required
 from member.models import Member
 
 from utils.functions import make_response
+from utils.constant import REPORT_PERMISSION_DEFAULT
 
 
 @login_required
 def member_profile(request):
     member = Member.objects.get(id=request.session['id'])
-    return render(request, "member/member_profile.html", {'member': member})
+    return render(request, "member/member_profile.html", {'member': member, 'permission': REPORT_PERMISSION_DEFAULT})
 
 
 @login_required
 def member_password(request):
-    return render(request, "member/member_password.html", {})
+    return render(request, "member/member_password.html", {'permission': REPORT_PERMISSION_DEFAULT})
 
 
 @login_required
