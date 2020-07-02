@@ -5,20 +5,20 @@ from datetime import datetime
 
 from assets.models import Asset, Assetrent
 from .forms import AssetForm, AssetrentForm
-from utils.constant import STATUS_PERSONAL, STATUS_TEST, STATUS_RENTAL, STATUS_DISPOSAL, STATUS_KEEP
+from utils.constant import STATUS_PERSONAL, STATUS_TEST, STATUS_RENTAL, STATUS_DISPOSAL, STATUS_KEEP, REPORT_PERMISSION_DEFAULT
 
 
 @login_required
 def assets_main(request):
     assets = Asset.objects.exclude(
         is_state=STATUS_RENTAL) & Asset.objects.exclude(is_state=STATUS_DISPOSAL) & Asset.objects.exclude(is_state=STATUS_KEEP)
-    return render(request, 'assets_main/assets_main.html', {'assets': assets})
+    return render(request, 'assets_main/assets_main.html', {'assets': assets, 'permission': REPORT_PERMISSION_DEFAULT})
 
 
 @login_required
 def assets_add(request):
     form = AssetForm()
-    return render(request, 'assets_main/assets_add.html', {'form': form})
+    return render(request, 'assets_main/assets_add.html', {'form': form, 'permission': REPORT_PERMISSION_DEFAULT})
 
 
 @login_required
@@ -28,7 +28,7 @@ def assets_status(request):
         Q(is_state=STATUS_KEEP)
     )
     rent_form = AssetForm()
-    return render(request, 'assets_main/assets_status.html', {'assets': assets, 'rent_form': rent_form, 'STATUS_RENTAL': STATUS_RENTAL})
+    return render(request, 'assets_main/assets_status.html', {'assets': assets, 'rent_form': rent_form, 'STATUS_RENTAL': STATUS_RENTAL, 'permission': REPORT_PERMISSION_DEFAULT})
 
 
 @login_required
@@ -42,7 +42,7 @@ def assets_rent(request):
         asset_rent.save()
         return redirect('assets_status')
     else:
-        return render(request, 'assets_main/assets_rent.html', {})
+        return render(request, 'assets_main/assets_rent.html', {'permission': REPORT_PERMISSION_DEFAULT})
 
 
 @login_required
@@ -58,7 +58,7 @@ def assets_return(request):
         asset.save()
         return redirect('assets_status')
     else:
-        return render(request, 'assets_main/assets_status.html', {})
+        return render(request, 'assets_main/assets_status.html', {'permission': REPORT_PERMISSION_DEFAULT})
 
 
 @login_required
@@ -75,4 +75,4 @@ def assets_add_apply(request):
             asset_rent.save()
         return redirect("assets_main")
     else:
-        return render(request, 'assets_main/assets.html', {})
+        return render(request, 'assets_main/assets.html', {'permission': REPORT_PERMISSION_DEFAULT})
