@@ -1,0 +1,38 @@
+.permission {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 70%;
+}
+
+.contents div {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.contents-icon i {
+  font-size: 100px;
+  margin-bottom: 30px;
+}
+
+.contents-comment h2 {
+  color: #eb4d4b;
+  margin-bottom: 15px;
+}
+
+.contents-comment h6 {
+  font-weight: 700;
+  margin-bottom: 30px;
+}
+
+.contents .contents-comment {
+  margin-bottom: 20px;
+}
+
+.contents .btn-primary {
+  background-color: #686de0 !important;
+  border-color: #95afc0 !important;
+  font-weight: 500;
+}
