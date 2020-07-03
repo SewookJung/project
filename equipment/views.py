@@ -85,7 +85,7 @@ def equipment_detail_apply(request, equipment_id):
                 equipment.product_id = product
                 equipment.mnfactureauclf_id = mnfacture
                 equipment.product_model_id = product_model
-                equipment.manager_id = manager
+                equipment.manager = manager
                 equipment.serial = serial
                 equipment.location = location
                 equipment.install_date = install_date
@@ -103,7 +103,7 @@ def equipment_detail_apply(request, equipment_id):
                         exists_check_equipment.product_id = product
                         exists_check_equipment.mnfactureauclf_id = mnfacture
                         exists_check_equipment.product_model_id = product_model
-                        exists_check_equipment.manager_id = manager
+                        exists_check_equipment.manager = manager
                         exists_check_equipment.serial = serial
                         exists_check_equipment.location = location
                         exists_check_equipment.install_date = install_date
@@ -117,7 +117,7 @@ def equipment_detail_apply(request, equipment_id):
                     equipment.product_id = product
                     equipment.mnfactureauclf_id = mnfacture
                     equipment.product_model_id = product_model
-                    equipment.manager_id = manager
+                    equipment.manager = manager
                     equipment.serial = serial
                     equipment.location = location
                     equipment.install_date = install_date
