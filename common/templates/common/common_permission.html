@@ -10,8 +10,9 @@
             <h6>접속하신 유저는 현재 메뉴에 대해서 권한이 없습니다. 관리자에게 문의하세요</h6>
         </div>
         <div class="contents-button">
-            <a href="{% url 'assets_main' %}" class="btn btn-primary btn-lg active" role="button"
-                aria-pressed="true">돌아가기</a>
+            <button type="button" class="btn btn-outline-primary" id="home-button" onclick="redirectHome();"><i
+                    class="fa fa-home"></i> 돌아가기</button>
+
         </div>
     </div>
 </div>
@@ -23,4 +24,5 @@
 {% endblock %}
 
 {% block js %}
+<script src="{% static 'js/common/common.js' %}"></script>
 {% endblock %}
