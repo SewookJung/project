@@ -1,3 +1,5 @@
+@import url("https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap");
+
 .file-upload input[type="file"] {
   position: absolute;
   width: 1px;
@@ -36,4 +38,45 @@
   padding: 0.5em 0.75em;
   font-size: inherit;
   vertical-align: top;
+}
+
+.media .fa-exclamation {
+  color: #e2574c;
+  border: 4px solid #e2574c;
+  padding: 10px 20px;
+  border-radius: 80%;
+  font-size: 30px;
+  margin-right: 10px;
+}
+
+.media-body h4 {
+  font-family: "Noto Sans KR", sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 13px;
+  margin-left: 5px;
+}
+
+.media-body li {
+  font-family: "Noto Sans KR", sans-serif;
+  font-size: 15px;
+  font-weight: 400;
+  margin-bottom: 10px;
+}
+
+.media-body ul {
+  margin-left: 35px;
+}
+
+.media-body li:nth-child(3) ul {
+  margin-left: 15px;
+  margin-top: 5px;
+}
+
+.media-body li:nth-child(3) ul li:not(:last-child) {
+  margin-bottom: 0px;
+}
+
+.media-body li:nth-child(3) ul li:nth-child(2) {
+  margin-bottom: 2px;
 }
