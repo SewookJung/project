@@ -44,6 +44,9 @@ class ProductModel(models.Model):
     def __str__(self):
         return self.name
 
+    class Meta:
+        ordering = ['name']
+
 
 class Mnfacture(models.Model):
     manafacture = models.CharField(max_length=40, default='',)
