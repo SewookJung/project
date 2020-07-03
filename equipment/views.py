@@ -177,52 +177,56 @@ def equipment_upload_check(request):
         max_rows = load_ws.max_row
 
         for row in iter_rows:
-            client_name = row[0].value
-            mnfacture_name = row[1].value
-            product_name = row[2].value
-            model_name = row[3].value
-            serial = row[4].value
-            err_dic = {'no': line_num, 'msg': ''}
+            if row[0].value == None and row[1].value == None and row[2].value == None and row[3].value == None and row[4].value == None and row[5].value == None and row[6].value == None and row[7].value == None and row[8].value == None:
+                pass
+            else:
+                client_name = row[0].value
+                mnfacture_name = row[1].value
+                product_name = row[2].value
+                model_name = row[3].value
+                serial = row[4].value
+                err_dic = {'no': line_num, 'msg': ''}
 
-            try:
-                client = Client.objects.get(name=client_name)
-            except Client.DoesNotExist:
-                err_dic['msg'] = '고객사명을 확인하세요.'
-
-            try:
-                mnfacture = Mnfacture.objects.get(manafacture=mnfacture_name)
-            except Mnfacture.DoesNotExist:
-                err_dic['msg'] = err_dic['msg'] + ' 제조사를 확인하세요.'
-
-            try:
-                product = Product.objects.get(name=product_name)
-            except Product.DoesNotExist:
-                err_dic['msg'] = err_dic['msg'] + ' 제품명을 확인하세요. '
-
-            try:
-                product_model = ProductModel.objects.get(name=model_name)
-            except ProductModel.DoesNotExist:
-                err_dic['msg'] = err_dic['msg'] + ' 모델명을 확인하세요.'
-
-            try:
-                equipment = Equipment.objects.get(
-                    product_model=product_model.id, serial=serial)
-                raise
-            except Equipment.DoesNotExist:
                 try:
-                    serial_list.index(serial)
+                    client = Client.objects.get(name=client_name)
+                except Client.DoesNotExist:
+                    err_dic['msg'] = '고객사명을 확인하세요.'
+
+                try:
+                    mnfacture = Mnfacture.objects.get(
+                        manafacture=mnfacture_name)
+                except Mnfacture.DoesNotExist:
+                    err_dic['msg'] = err_dic['msg'] + ' 제조사를 확인하세요.'
+
+                try:
+                    product = Product.objects.get(name=product_name)
+                except Product.DoesNotExist:
+                    err_dic['msg'] = err_dic['msg'] + ' 제품명을 확인하세요. '
+
+                try:
+                    product_model = ProductModel.objects.get(name=model_name)
+                except ProductModel.DoesNotExist:
+                    err_dic['msg'] = err_dic['msg'] + ' 모델명을 확인하세요.'
+
+                try:
+                    equipment = Equipment.objects.get(
+                        product_model=product_model.id, serial=serial)
+                    raise
+                except Equipment.DoesNotExist:
+                    try:
+                        serial_list.index(serial)
+                        err_dic['msg'] = err_dic['msg'] + \
+                            ' 엑셀파일에 중복되는 serail이 있습니다.'
+                    except ValueError:
+                        serial_list.append(serial)
+                except:
                     err_dic['msg'] = err_dic['msg'] + \
-                        ' 엑셀파일에 중복되는 serail이 있습니다.'
-                except ValueError:
-                    serial_list.append(serial)
-            except:
-                err_dic['msg'] = err_dic['msg'] + \
-                    ' 기존 입력된 동일 모델의 serial이 있습니다.'
+                        ' 기존 입력된 동일 모델의 serial이 있습니다.'
 
-            if len(err_dic['msg']) != 0:
-                err_equip_list.append(err_dic)
+                if len(err_dic['msg']) != 0:
+                    err_equip_list.append(err_dic)
 
-            line_num = line_num + 1
+                line_num = line_num + 1
         if len(err_equip_list) == 0:
             equipment_attach = EquipmentAttachment(member_id=request.session['id'],
                                                    attach=file, attach_name=file.name, content_size=file.size, content_type=file.content_type)
@@ -255,7 +259,10 @@ def equipment_upload_complete(request):
         cell_values = []
         for cell in row:
             cell_values.append(cell.value)
-        all_values.append(cell_values)
+        if cell_values[0] == None:
+            pass
+        else:
+            all_values.append(cell_values)
 
     for item in all_values:
         client = client_objects.values('id').get(name=item[0])
