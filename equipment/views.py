@@ -184,7 +184,7 @@ def equipment_upload_check(request):
                 mnfacture_name = row[1].value
                 product_name = row[2].value
                 model_name = row[3].value
-                serial = row[4].value
+                serial = row[4].value.replace(" ", "")
                 err_dic = {'no': line_num, 'msg': ''}
 
                 try:
@@ -269,7 +269,7 @@ def equipment_upload_complete(request):
         mnfacture = mnfacture_objects.values('id').get(manafacture=item[1])
         product = product_objects.values('id').get(name=item[2])
         product_model = product_model_objects.values('id').get(name=item[3])
-        serial = item[4]
+        serial = item[4].replace(" ", "")
         location = item[5]
         manager = item[6]
         install_date = item[7]
