@@ -1,6 +1,6 @@
 {% extends 'base.html' %} {% block content %} {% load static %}
 <div class="container">
-    <div class="card equipment">
+    <div class="card equipment ">
         <div class="card-header document__header">
             <i class="fa fa-external-link"></i>
             <h5 class="card-title equipment__title">&nbsp;운영제품 등록 (Excel)</h5>
@@ -15,39 +15,35 @@
                             <input class="upload-name" disabled="disabled">
                             <label for="uploadfile">파일선택</label>
                             <button type="button" class="btn btn-outline-primary" onclick="checkSubmit();">제품
-                                업로드</button> (일정형식의 엑셀파일만 가능)
-                            <input type="file" class="upload-hidden" name="uploadfile" id="uploadfile"
+                                업로드</button>
+                            <input type="file" class="upload-hidden " name="uploadfile" id="uploadfile"
                                 onchange="checkFileExt(this);"
                                 accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel">
                         </div>
                     </form>
-                    <div class="form-group">
-                        <table class="table table-striped table-bordered table-hover assets_table">
-                            <thead>
-                                <tr>
-                                    <th>고객사</th>
-                                    <th>제조사</th>
-                                    <th>제품명</th>
-                                    <th>모델명</th>
-                                    <th>시리얼</th>
-                                    <th>설치장소</th>
-                                    <th>설치일자</th>
-                                    <th>설치인원</th>
-                                    <th>기 타</th>
-                                </tr>
-                            </thead>
-                            <tr>
-                                <td>&nbsp;</td>
-                                <td>&nbsp;</td>
-                                <td>&nbsp;</td>
-                                <td>&nbsp;</td>
-                                <td>&nbsp;</td>
-                                <td>&nbsp;</td>
-                                <td>&nbsp;</td>
-                                <td>&nbsp;</td>
-                                <td>&nbsp;</td>
-                            </tr>
-                        </table>
+                    <div class="form-group equipment__comment">
+                        <div class="media border p-3">
+                            <i class="fa fa-exclamation"></i>
+                            <div class="media-body">
+                                <h4>파일 업로드 시 주의사항</h4>
+                                <ul>
+                                    <li>기본양식을 임의로 수정하여 업로드 하지 마세요.</li>
+                                    <li>시트의 이름은 "장비운용장비" 의 이름을 사용해야 합니다.</li>
+                                    <li>정보기입 중 아래의 4개 항목은 정확히 입력해야 합니다. (추후, 유의어를 등록하여 정상적으로 등록이 가능하게 개발할 예정)
+                                        <ul>
+                                            <li>고객사, 제조사, 제품명, 모델명</li>
+                                            <li>예 시<br>
+                                                <i class="fa fa-arrow-circle-right"></i> "현대해상화재보험" 을 "현대해상" 으로 기입 시
+                                                정상적으로 등록이 되지 않습니다.</li>
+                                            <li>정보 확인<br>
+                                                <i class="fa fa-arrow-circle-right"></i> 위의 4개 항목은 2번째 시트인 "DB 정보" 에
+                                                있습니다. </li>
+                                        </ul>
+                                    </li>
+                                    <li>일정형식의 엑셀파일만 업로드가 가능합니다.</li>
+                                </ul>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
