@@ -20,3 +20,7 @@ function equipment_add_cancel() {
     },
   });
 }
+
+function returnEquipmentUpload() {
+  window.location = "/equipment/upload/";
+}
