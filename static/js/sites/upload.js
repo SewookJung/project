@@ -204,10 +204,25 @@ $("#fine-uploader-manual-trigger").fineUploader({
           location.href = "/sites/";
         }
       } else {
-        alert(
-          "파일 업로드에 실패하였습니다. 다시 시도하여주세요." +
-            responseJSON.error
-        );
+        $.ajax({
+          type: "POST",
+          url: "/sites/document/reg/delete/",
+          headers: { "X-CSRFToken": csrfToken },
+          dataType: "json",
+          data: { document_id: getDocumentId },
+          success: function (data) {
+            console.log(data.success);
+            if (data.success) {
+              alert(responseJSON.error);
+              window.location = "/sites/document/upload/";
+            }
+          },
+          error: function (request, status, error) {
+            alert(
+              "문서삭제가 정상적으로 이루어지지 않았습니다.\n다시 시도해주시기 바랍니다."
+            );
+          },
+        });
       }
     },
     onSubmit: function (id, fileName, responseJSON) {
