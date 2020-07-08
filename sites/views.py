@@ -243,7 +243,7 @@ def document_detail(request, project_id):
             rework_document_attached = {'id': attach.id, 'attach_name': attach.attach_name, 'document_id': attach.document_id,
                                         'created_at': attach.created_at, 'permission': document.auth, 'kind': document.kind, 'member': document.member, 'auth_value': document_auth_value}
             documents_attach_list.append(rework_document_attached)
-    return render(request, "sites/document_detail.html", {"documents_attach_list": documents_attach_list, 'project_name': project_name, 'login_id': login_id, 'permission': REPORT_PERMISSION_DEFAULT })
+    return render(request, "sites/document_detail.html", {"documents_attach_list": documents_attach_list, 'project_name': project_name, 'login_id': login_id, 'permission': REPORT_PERMISSION_DEFAULT})
 
 
 @login_required
@@ -412,6 +412,9 @@ def document_upload_apply(request):
     """
     if not request.POST['document_id'] == "":
         try:
+            if not os.path.exists(settings.MEDIA_ROOT):
+                return make_response(status=400, content=json.dumps({'success': False, 'error': "NAS서버와 연결이 해제되어 파일 업로드가 불가능합니다.\n관리자에게 문의 바랍니다."}))
+
             document_attach_apply = DocumentAttachment(
                 attach_name=request.POST['qqfilename'], content_size=request.FILES[
                     'qqfile'].size, content_type=request.FILES['qqfile'].content_type,
@@ -420,9 +423,9 @@ def document_upload_apply(request):
             document_attach_apply.save()
             return make_response(content=json.dumps({'success': True, }))
         except:
-            return make_response(status=400, content=json.dumps({'success': False, 'error': "file upload error"}))
+            return make_response(status=400, content=json.dumps({'success': False, 'error': "파일 업로드에 실패하였습니다. 다시 시도하여주세요."}))
     else:
-        return make_response(status=400, content=json.dumps({'success': False, 'error': "file upload error"}))
+        return make_response(status=400, content=json.dumps({'success': False, 'error': "파일 업로드에 실패하였습니다. 다시 시도하여주세요."}))
 
 
 @login_required
@@ -430,10 +433,8 @@ def document_upload_apply(request):
 def document_reg_delete(request):
     # 파일업로드 과정에서 실패한 경우 신규의 경우 document삭제 및 documentattach를 삭제한다. 파일은 documentattach를 삭제 되는 경우 자동 삭제 된다.
     try:
-        Document.objects.get(id=request.POST['document_id']).delete()
-        DocumentAttachment.objects.get(
-            document=request.POST['document_id'], check_code=request.POST['check_code']).delete()
-        return make_response(status=400, content=json.dumps({'success': True}))
+        Document.objects.get(id=int(request.POST['document_id'])).delete()
+        return make_response(status=200, content=json.dumps({'success': True}))
     except:
         return make_response(status=400, content=json.dumps({'success': False, 'error': "document delete fail"}))
 
