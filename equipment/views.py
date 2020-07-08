@@ -1,4 +1,5 @@
 import json
+import os
 from collections import Counter
 
 from django.contrib.auth.decorators import login_required
@@ -6,9 +7,10 @@ from django.db.models import Q
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
+from django.conf import settings
+from django.db.models import Count
 
 from openpyxl import load_workbook
-from django.db.models import Count
 
 from common.models import Client, Product, ProductModel, Mnfacture
 from .models import EquipmentAttachment, Equipment
@@ -164,6 +166,12 @@ def equipment_upload_check(request):
         line_num = 2
         err_equip_list = []
         serial_list = []
+        
+        if not os.path.exists(settings.MEDIA_ROOT):
+            err_equip_list.append(
+                {'no': '-', 'msg': 'NAS서버와 연결이 해제되어 파일 업로드가 불가능합니다.\n 관리자에게 문의 바랍니다.'})
+            return render(request, 'equipment/equipment_upload_check.html', {'err_equip_list': err_equip_list, 'permission': REPORT_PERMISSION_DEFAULT})
+        
 
         try:
             load_ws = load_wb['장비운용현황']
