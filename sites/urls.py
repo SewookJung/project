@@ -34,6 +34,8 @@ urlpatterns = [
             views.document_default_auth, name="document_default_auth"),
     re_path(r'^document/reg/$',
             views.document_reg_apply, name="document_reg_apply"),
+    re_path(r'^document/reg/delete/$',
+            views.document_reg_delete, name="document_reg_delete"),
     re_path(r'^document/upload/apply/$', views.document_upload_apply,
             name="document_upload_apply"),
     re_path(r'^document/attach/detail/apply/$', views.document_attach_detail_upload_apply,
