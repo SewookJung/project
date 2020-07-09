@@ -29,8 +29,24 @@ function site_edit_cancel() {
 
 function delete_project() {
   const projectId = $("#project_id").val();
-  if (confirm("해당 프로젝트를 삭제 하시겠습니까?") == true) {
-    location.href = "/sites/" + projectId + "/delete/";
+  if (
+    confirm(
+      "해당 프로젝트를 삭제 하시겠습니까?\n❗ 프로젝트에 등록되었던 문서들도 전부 삭제 됩니다. ❗"
+    ) == true
+  ) {
+    $.ajax({
+      url: "/sites/" + projectId + "/delete/",
+      success: function (data) {
+        const successMsg = JSON.parse(data).msg;
+        alert(successMsg);
+        window.location = "/sites/";
+      },
+      error: function (request, status, error) {
+        const errorMsg = JSON.parse(request.responseText).msg;
+        alert(errorMsg);
+        window.location = "/sites/";
+      },
+    });
   } else {
     return false;
   }
