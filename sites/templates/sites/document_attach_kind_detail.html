@@ -45,8 +45,7 @@
                     <td>
                         <button type="button" class="btn btn-outline-dark"
                             {% if login_id|stringformat:"i" in document.auth_value %}
-                            onclick="location.href='{% url 'document_download' pk=document.id %}'" {% else %} disabled
-                            {% endif %}>다운로드</button>
+                            onclick=downloadFile({{document.id}}); {% else %} disabled {% endif %}>다운로드</button>
                     </td>
                 </tr>
                 {% endfor %}
@@ -65,5 +64,6 @@
 {% block js%}
 <script src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
 <script src="https://cdn.datatables.net/1.10.20/js/dataTables.bootstrap4.min.js"></script>
+<script src="{% static 'js/sites/attachDetail.js' %}"></script>
 <script src="{% static 'js/datatable/dataTable.js' %}"></script>
 {% endblock %}
