@@ -200,8 +200,8 @@ $("#fine-uploader-manual-trigger").fineUploader({
       if (responseJSON.success) {
         addedFiles++;
         if (addedFiles == fileCount) {
-          alert("문서등록이 완료되었습니다.");
-          location.href = "/sites/";
+          alert(responseJSON.msg);
+          window.location = "/sites/";
         }
       } else {
         $.ajax({
@@ -211,9 +211,8 @@ $("#fine-uploader-manual-trigger").fineUploader({
           dataType: "json",
           data: { document_id: getDocumentId },
           success: function (data) {
-            console.log(data.success);
             if (data.success) {
-              alert(responseJSON.error);
+              alert(responseJSON.msg);
               window.location = "/sites/document/upload/";
             }
           },
