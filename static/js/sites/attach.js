@@ -12,10 +12,21 @@ function getDocumentId() {
   return $("#document_id").val();
 }
 
-function document_delete() {
-  const documentId = $("input[name=document_id]").val();
+function documentDelete(documentId) {
   if (confirm("업로드한 파일들을 전체 삭제하시겠습니까?") == true) {
-    location.href = "/sites/document/" + documentId + "/delete/";
+    $.ajax({
+      url: "/sites/document/" + documentId + "/delete/",
+      success: function (data) {
+        const successMsg = JSON.parse(data).msg;
+        alert(successMsg);
+        window.location = "/sites/";
+      },
+      error: function (request, status, error) {
+        const errorMsg = JSON.parse(request.responseText).msg;
+        alert(errorMsg);
+        window.location = "/sites/";
+      },
+    });
   } else {
     return false;
   }
@@ -23,7 +34,24 @@ function document_delete() {
 
 function document_attach_delete(attachment_id) {
   if (confirm("선택한 파일을 삭제하시겠습니까?") == true) {
-    location.href = "/sites/document/attach/" + attachment_id + "/delete/";
+    $.ajax({
+      url: "/sites/document/attach/" + attachment_id + "/delete/",
+      success: function (data) {
+        const isAble = JSON.parse(data).isAble;
+        alert("선택한 파일이 삭제되었습니다.");
+        if (isAble) {
+          const currentLink = document.location.href;
+          window.location = currentLink;
+        } else {
+          window.location = "/sites/";
+        }
+      },
+      error: function (request, status, error) {
+        const errorMsg = JSON.parse(request.responseText).msg;
+        alert(errorMsg);
+        window.location = "/sites/";
+      },
+    });
   } else {
     return false;
   }
@@ -81,10 +109,10 @@ function init() {
     $("select[id=proMiddleClass]").val(middleClass);
   } else if (documentKind == "EXA") {
     const middleClass = $("input[name=exaMiddleClass]").val();
-    $("select[id=proMiddleClass]").val(middleClass);
+    $("select[id=exaMiddleClass]").val(middleClass);
   } else if (documentKind == "MAN") {
     const middleClass = $("input[name=manMiddleClass]").val();
-    $("select[id=proMiddleClass]").val(middleClass);
+    $("select[id=manMiddleClass]").val(middleClass);
   } else {
     const middleClass = $("input[name=etcMiddleClass]").val();
     $("select[id=etcMiddleClass]").val(middleClass);
@@ -145,9 +173,9 @@ function site_reg_document() {
   } else if (documentKind == "EXA") {
     param.middleClass = $("#exaMiddleClass").val();
   } else if (documentKind == "MAN") {
-    param.middleClass = $("#etcMiddleClass").val();
-  } else {
     param.middleClass = $("#manMiddleClass").val();
+  } else {
+    param.middleClass = $("#etcMiddleClass").val();
   }
 
   $.ajax({
