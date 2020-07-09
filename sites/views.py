@@ -200,8 +200,13 @@ def sites_add_apply(request):
 
 @login_required
 def sites_delete(request, pk):
-    Project.objects.get(id=pk).delete()
-    return redirect("sites_main")
+    if not os.path.exists(settings.MEDIA_ROOT):
+        return make_response(status=400, content=json.dumps({'success': False, 'msg': "NAS서버와 연결이 해제되어 프로젝트 삭제가 불가능합니다.\n관리자에게 문의 바랍니다."}))
+    try:
+        Project.objects.get(id=pk).delete()
+        return make_response(status=200, content=json.dumps({'success': True, 'msg': "프로젝트가 삭제되었습니다."}))
+    except:
+        return make_response(status=400, content=json.dumps({'success': True, 'msg': "프로젝트를 삭제하는데 실패하였습니다.\n다시 시도해주세요."}))
 
 
 @login_required
@@ -332,9 +337,9 @@ def document_attach_detail_apply(request, document_id):
     permissions = json.loads(request.POST['permission'])
     kind = request.POST['kind']
     middle_class = request.POST['middleClass']
-
+    
     document = Document.objects.get(id=document_id)
-    document.kind = request.POST['kind']
+    document.kind = kind
     document.auth = permissions
 
     if kind == "PRE":
@@ -413,7 +418,7 @@ def document_upload_apply(request):
     if not request.POST['document_id'] == "":
         try:
             if not os.path.exists(settings.MEDIA_ROOT):
-                return make_response(status=400, content=json.dumps({'success': False, 'error': "NAS서버와 연결이 해제되어 파일 업로드가 불가능합니다.\n관리자에게 문의 바랍니다."}))
+                return make_response(status=400, content=json.dumps({'success': False, 'msg': "NAS서버와 연결이 해제되어 문서등록이 불가능합니다.\n관리자에게 문의 바랍니다."}))
 
             document_attach_apply = DocumentAttachment(
                 attach_name=request.POST['qqfilename'], content_size=request.FILES[
@@ -421,33 +426,42 @@ def document_upload_apply(request):
                 document_id=request.POST['document_id'], attach=request.FILES['qqfile'], check_code=request.POST['check_code']
             )
             document_attach_apply.save()
-            return make_response(content=json.dumps({'success': True, }))
+            return make_response(status=200, content=json.dumps({'success': True, 'msg': "파일 업로드에 성공하였습니다."}))
         except:
-            return make_response(status=400, content=json.dumps({'success': False, 'error': "파일 업로드에 실패하였습니다. 다시 시도하여주세요."}))
+            return make_response(status=400, content=json.dumps({'success': False, 'msg': "파일 업로드에 실패하였습니다. 다시 시도하여주세요."}))
     else:
-        return make_response(status=400, content=json.dumps({'success': False, 'error': "파일 업로드에 실패하였습니다. 다시 시도하여주세요."}))
+        return make_response(status=400, content=json.dumps({'success': False, 'msg': "파일 업로드에 실패하였습니다. 다시 시도하여주세요."}))
 
 
 @login_required
 @csrf_exempt
 def document_reg_delete(request):
-    # 파일업로드 과정에서 실패한 경우 신규의 경우 document삭제 및 documentattach를 삭제한다. 파일은 documentattach를 삭제 되는 경우 자동 삭제 된다.
     try:
         Document.objects.get(id=int(request.POST['document_id'])).delete()
         return make_response(status=200, content=json.dumps({'success': True}))
     except:
-        return make_response(status=400, content=json.dumps({'success': False, 'error': "document delete fail"}))
+        return make_response(status=400, content=json.dumps({'success': False, 'msg': "문서를 삭제하는데 실패하였습니다."}))
 
 
 @login_required
 def document_delete(request, document_id):
-    document_all = Document.objects.all()
-    document_all.filter(id=document_id).delete()
-    return redirect('sites_main')
+    if not os.path.exists(settings.MEDIA_ROOT):
+        return make_response(status=400, content=json.dumps({'success': False, 'msg': "NAS서버와 연결이 해제되어 문서삭제가 불가능합니다.\n관리자에게 문의 바랍니다."}))
+
+    try:
+        print(document_id)
+        document_all = Document.objects.all()
+        document_all.filter(id=document_id).delete()
+        return make_response(status=200, content=json.dumps({'success': True, 'msg': "해당 프로젝트의 모든 문서를 삭제하였습니다."}))
+    except:
+        return make_response(status=400, content=json.dumps({'success': False, 'msg': "해당 프로젝트의 모든 문서를 삭제하는데 실패하였습니다.\n다시 시도해주시기 바랍니다."}))
 
 
 @login_required
 def document_attach_delete(request, attachment_id):
+    if not os.path.exists(settings.MEDIA_ROOT):
+        return make_response(status=400, content=json.dumps({'success': False, 'msg': "NAS서버와 연결이 해제되어 문서삭제가 불가능합니다.\n관리자에게 문의 바랍니다."}))
+
     document_attach_all = DocumentAttachment.objects.all()
     document_id = document_attach_all.values(
         "document_id").get(id=attachment_id)
@@ -455,10 +469,24 @@ def document_attach_delete(request, attachment_id):
         document_id=document_id['document_id']).count()
     if attach_count > 1:
         DocumentAttachment.objects.get(id=attachment_id).delete()
-        return redirect('document_attach_detail', document_id['document_id'])
+        return make_response(status=200, content=json.dumps({'success': True, 'isAble': True}))
     else:
         Document.objects.get(id=document_id['document_id']).delete()
-    return redirect('sites_main')
+        return make_response(status=200, content=json.dumps({'success': True, 'isAble': False}))
+
+
+@login_required
+@csrf_exempt
+def document_download_check(request, pk):
+    if not os.path.exists(settings.MEDIA_ROOT):
+        return make_response(status=400, content=json.dumps({'success': False, 'msg': "NAS서버와 연결이 해제되어 파일 업로드가 불가능합니다.\n관리자에게 문의 바랍니다."}))
+
+    attach_info = DocumentAttachment.objects.get(id=pk)
+    filename = os.path.join(settings.MEDIA_ROOT, attach_info.attach.name)
+
+    if not os.path.exists(filename):
+        return make_response(status=400, content=json.dumps({'success': False, 'msg': "해당 문서가 서버에 존재하지 않아 다운로드 할 수 없습니다.\n관리자에게 문의 바랍니다."}))
+    return make_response(status=200, content=json.dumps({'success': True}))
 
 
 @login_required
