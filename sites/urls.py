@@ -42,4 +42,6 @@ urlpatterns = [
             name="document_attach_detail_upload_apply"),
     re_path(r'^document/download/(?P<pk>\d+)/$',
             views.document_download, name="document_download"),
+    re_path(r'^document/download/check/(?P<pk>\d+)/$',
+            views.document_download_check, name="document_download_check"),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
