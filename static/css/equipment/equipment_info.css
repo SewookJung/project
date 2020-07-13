@@ -1,0 +1,12 @@
+.list-group-item {
+  border-top: 1px solid rgba(0, 0, 0, 0.125) !important;
+  margin-top: -1px;
+}
+
+#client-search,
+#mnfacture-search,
+#product-search,
+#product-model-search {
+  font-family: FontAwesome;
+  margin: 10px 0px;
+}
