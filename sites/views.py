@@ -449,7 +449,6 @@ def document_delete(request, document_id):
         return make_response(status=400, content=json.dumps({'success': False, 'msg': "NAS서버와 연결이 해제되어 문서삭제가 불가능합니다.\n관리자에게 문의 바랍니다."}))
 
     try:
-        print(document_id)
         document_all = Document.objects.all()
         document_all.filter(id=document_id).delete()
         return make_response(status=200, content=json.dumps({'success': True, 'msg': "해당 프로젝트의 모든 문서를 삭제하였습니다."}))
