@@ -21,4 +21,8 @@ urlpatterns = [
             name="equipment_upload_complete"),
     re_path(r'^upload_cancel/$', views.equipment_upload_cancel,
             name="equipment_upload_cancel"),
+    re_path(r'^download/sample/$', views.equipment_sample_download,
+            name="equipment_sample_download"),
+    re_path(r'^download/sample/check/$', views.equipment_download_check,
+            name="equipment_download_check"),
 ]
