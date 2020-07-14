@@ -148,13 +148,17 @@ def equipment_detail(request, equipment_id):
 
 
 @login_required
-def equipment_input(request):
-    return render(request, 'equipment/equipment_main.html', {})
+def equipment_upload(request):
+    return render(request, 'equipment/equipment_upload.html', {'permission': REPORT_PERMISSION_DEFAULT})
 
 
 @login_required
-def equipment_upload(request):
-    return render(request, 'equipment/equipment_upload.html', {'permission': REPORT_PERMISSION_DEFAULT})
+def equipment_info(request):
+    client = Client.objects.all()
+    mnfacture = Mnfacture.objects.all()
+    product = Product.objects.all()
+    product_model = ProductModel.objects.all()
+    return render(request, 'equipment/equipment_info.html', {'client':client, 'mnfacture': mnfacture, 'product': product, 'product_model': product_model, 'permission': REPORT_PERMISSION_DEFAULT})
 
 
 @login_required
@@ -166,12 +170,11 @@ def equipment_upload_check(request):
         line_num = 2
         err_equip_list = []
         serial_list = []
-        
+
         if not os.path.exists(settings.MEDIA_ROOT):
             err_equip_list.append(
                 {'no': '-', 'msg': 'NAS서버와 연결이 해제되어 파일 업로드가 불가능합니다.\n 관리자에게 문의 바랍니다.'})
             return render(request, 'equipment/equipment_upload_check.html', {'err_equip_list': err_equip_list, 'permission': REPORT_PERMISSION_DEFAULT})
-        
 
         try:
             load_ws = load_wb['장비운용현황']
