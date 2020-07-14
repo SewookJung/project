@@ -16,6 +16,20 @@ function checkFileExt(sender) {
   }
 }
 
+function downloadSample() {
+  $.ajax({
+    url: "/equipment/download/sample/check/",
+    success: function (data) {
+      window.location = "/equipment/download/sample/";
+    },
+    error: function (request, status, error) {
+      const errorMsg = JSON.parse(request.responseText).msg;
+      alert(errorMsg);
+      window.location = "/equipment/upload/";
+    },
+  });
+}
+
 function checkSubmit() {
   if ($("#uploadfile").val() == "") alert("파일을 선택하세요");
   else $("#uploadform").submit();
