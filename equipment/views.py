@@ -1,5 +1,6 @@
 import json
 import os
+import urllib
 from collections import Counter
 
 from django.contrib.auth.decorators import login_required
@@ -10,12 +11,14 @@ from django.views.decorators.csrf import csrf_exempt
 from django.conf import settings
 from django.db.models import Count
 
+from wsgiref.util import FileWrapper
 from openpyxl import load_workbook
 
 from common.models import Client, Product, ProductModel, Mnfacture
 from .models import EquipmentAttachment, Equipment
 from .forms import EquipmentForm
 from utils.constant import REPORT_PERMISSION_DEFAULT
+from utils.constant import SAMPLE_FILE_ID
 
 from utils.functions import (
     make_response,
@@ -158,7 +161,7 @@ def equipment_info(request):
     mnfacture = Mnfacture.objects.all()
     product = Product.objects.all()
     product_model = ProductModel.objects.all()
-    return render(request, 'equipment/equipment_info.html', {'client':client, 'mnfacture': mnfacture, 'product': product, 'product_model': product_model, 'permission': REPORT_PERMISSION_DEFAULT})
+    return render(request, 'equipment/equipment_info.html', {'client': client, 'mnfacture': mnfacture, 'product': product, 'product_model': product_model, 'permission': REPORT_PERMISSION_DEFAULT})
 
 
 @login_required
@@ -215,6 +218,7 @@ def equipment_upload_check(request):
                     err_dic['msg'] = err_dic['msg'] + ' 제품명을 확인하세요. '
 
                 try:
+                    print(model_name)
                     product_model = ProductModel.objects.get(name=model_name)
                 except ProductModel.DoesNotExist:
                     err_dic['msg'] = err_dic['msg'] + ' 모델명을 확인하세요.'
@@ -318,3 +322,26 @@ def equipment_delete(request, equipment_id):
             return make_response(status=400, content=json.dumps({'success': True, 'msg': "해당 제품정보를 삭제하는데 실패 하였습니다."}))
     else:
         return make_response(status=400, content=json.dumps({'success': True, 'msg': "해당 제품정보를 삭제하는데 실패 하였습니다."}))
+
+
+def equipment_download_check(request):
+    if not os.path.exists(settings.MEDIA_ROOT):
+        return make_response(status=400, content=json.dumps({'success': False, 'msg': "NAS서버와 연결이 해제되어 파일 다운로드가 불가능합니다.\n관리자에게 문의 바랍니다."}))
+    try:
+        sample = EquipmentAttachment.objects.get(id=SAMPLE_FILE_ID)
+        return make_response(status=200, content=json.dumps({'success': True}))
+    except EquipmentAttachment.DoesNotExist:
+        return make_response(status=400, content=json.dumps({'success': False, 'msg': "파일이 존재하지 않아 다운로드 할 수 없습니다.\n관리자에게 문의 바랍니다."}))
+
+
+def equipment_sample_download(request):
+    attach_info = EquipmentAttachment.objects.get(id=SAMPLE_FILE_ID)
+    filename = os.path.join(settings.MEDIA_ROOT, attach_info.attach.name)
+    response = ""
+    if os.path.exists(filename):
+        with open(filename, 'rb') as f:
+            response = HttpResponse(FileWrapper(
+                f), content_type=attach_info.attach)
+            response['Content-Disposition'] = 'attachment; filename*=UTF-8\'\'%s' % urllib.parse.quote(
+                attach_info.attach_name.encode('utf-8'))
+    return response
