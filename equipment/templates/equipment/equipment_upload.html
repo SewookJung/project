@@ -16,6 +16,9 @@
                             <label for="uploadfile">파일선택</label>
                             <button type="button" class="btn btn-outline-primary" onclick="checkSubmit();">제품
                                 업로드</button>
+                            <br><br>
+                            <button type="button" class="btn btn-outline-success" onclick="downloadSample();">기본 양식
+                                다운로드</button>
                             <input type="file" class="upload-hidden " name="uploadfile" id="uploadfile"
                                 onchange="checkFileExt(this);"
                                 accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel">
@@ -37,7 +40,8 @@
                                                 정상적으로 등록이 되지 않습니다.<br>
                                             </li>
                                             <li>정보 확인<br>
-                                                <i class="fa fa-arrow-circle-right"></i> 위의 4개 항목은 장비현황관리 > DB정보 메뉴에서 확인
+                                                <i class="fa fa-arrow-circle-right"></i> 위의 4개 항목은 장비현황관리 > 정보 조회 메뉴에서
+                                                확인
                                                 후 정확히 기입 바랍니다.</li>
                                         </ul>
                                     </li>
