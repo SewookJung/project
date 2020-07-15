@@ -8,7 +8,7 @@ class DeptAdmin(admin.ModelAdmin):
 
 
 class ClientAdmin(admin.ModelAdmin):
-    list_display = ['id', 'name', 'similiar_word', 'created_at']
+    list_display = ['id', 'name', 'similar_word', 'created_at']
     list_display_links = ['id', 'name']
 
 
