@@ -31,7 +31,13 @@
                                     onkeyup="clientSearchFunction()" autocomplete="off">
                                 <ul class="list-group" id="clientUL">
                                     {% for item in client %}
-                                    <li class="list-group-item">{{item.name}}</li>
+                                    <li class="list-group-item">{{item.name}}
+                                        <p class="similar-word">
+                                            {% for item in item.similar_word.similar %}
+                                            {{item}}
+                                            {% endfor %}
+                                        </p>
+                                    </li>
                                     {% endfor %}
                                 </ul>
                             </div>

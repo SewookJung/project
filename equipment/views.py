@@ -218,7 +218,6 @@ def equipment_upload_check(request):
                     err_dic['msg'] = err_dic['msg'] + ' 제품명을 확인하세요. '
 
                 try:
-                    print(model_name)
                     product_model = ProductModel.objects.get(name=model_name)
                 except ProductModel.DoesNotExist:
                     err_dic['msg'] = err_dic['msg'] + ' 모델명을 확인하세요.'
