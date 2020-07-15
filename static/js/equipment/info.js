@@ -48,3 +48,9 @@ function productSearchFunction() {
     }
   }
 }
+
+function similarWords() {
+  const words = document.querySelectorAll(".similar-word");
+  words.forEach((ele) => (ele.style.display = "none"));
+}
+similarWords();
