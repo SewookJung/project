@@ -11,7 +11,7 @@ class Dept(models.Model):
 
 class Client(models.Model):
     name = models.CharField(max_length=40, default='',)
-    similiar_word = JSONField(default=dict, blank=True,
+    similar_word = JSONField(default=dict, blank=True,
                               null=True, editable=False)
     created_at = models.DateTimeField(auto_now_add=True, editable=False)
 
