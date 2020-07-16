@@ -111,13 +111,22 @@
             <div class="modal-body">
                 <div class="client__add">
                     <div class="client__search">
-                        <input type="text" class="form-control" id="client__search-field" placeholder="&#xf002; 고객사 조회"
+                        <input type="text" class="form-control" id="client__search-field" placeholder="&#xf002; 고객사 검색"
                             autocomplete="off">
                     </div>
                     <div class="client__search">
                         <button type="button" class="btn btn-outline-info" id="client__search-submit"
                             onclick="checkDupClient()">중복 확인</button>
                     </div>
+                </div>
+                <div class="client__search-comments">
+                    <small>
+                        <strong>
+                            <p>🔎 고객사 검색 방법</p>
+                        </strong>
+                        <p>1. 키워드 검색 -> "삼성" 또는 "Samsung" 검색</p>
+                        <p>2. Full Name 검색 -> "삼성디스플레이" 검색</p>
+                    </small>
                 </div>
                 <div class="client__contents contents">
                     <div class="contents__comments">
