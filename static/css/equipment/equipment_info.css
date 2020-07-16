@@ -6,7 +6,46 @@
 #client-search,
 #mnfacture-search,
 #product-search,
-#product-model-search {
+#product-model-search,
+#client__search-field {
   font-family: FontAwesome;
   margin: 10px 0px;
+}
+
+.tab-pane .col-sm-4 {
+  padding: 0px !important;
+}
+
+.equipment__title {
+  display: flex;
+  justify-self: center;
+  align-items: center;
+  flex-direction: row;
+  width: 200px;
+}
+
+.client__add button i {
+  font-size: 13px;
+}
+
+.modal-body .client__add {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+.client__add .client__search:first-child {
+  width: 78%;
+}
+
+.client__add .client__search:last-child {
+  display: flex;
+  justify-content: flex-end;
+  width: 22%;
+}
+
+.contents__similar-list small {
+  font-size: 12px;
+  font-weight: 600;
 }
