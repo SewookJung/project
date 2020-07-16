@@ -88,7 +88,9 @@ function checkDupClient() {
 }
 
 function dupCheckOfClient() {
-  const txtValue = document.getElementById("client__search-field").value;
+  const txtValue = document
+    .getElementById("client__search-field")
+    .value.replace(/ /gi, "");
   const addClientAlert = document.querySelector(".alert");
   const checkDupInput = document.querySelector(".check-dup-client");
 
