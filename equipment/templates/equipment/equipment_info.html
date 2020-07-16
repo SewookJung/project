@@ -7,10 +7,12 @@
                 <i class="fa fa-external-link"></i>
                 <h5 class="card-title">&nbsp;정보 조회</h5>
             </div>
+            {% if request.session.member_dept in permission %}
             <div class="client__add">
                 <button type="button" class="btn btn-outline-primary" data-toggle="modal"
                     data-target="#exampleModalCenter"><i class="fa fa-plus"></i> 고객사 추가</button>
             </div>
+            {% endif %}
         </div>
 
         <div class="card-body">
