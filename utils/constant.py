@@ -25,3 +25,6 @@ REPORT_DEFAULT_SELECT = 2
 
 # Sample file id
 SAMPLE_FILE_ID = 160
+
+# Similar word
+SIMILAR_WORD_DEFAULT = {"similar": []}
