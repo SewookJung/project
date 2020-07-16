@@ -69,8 +69,6 @@
             <div class="dropdown-divider"></div>
             <a class="dropdown-item" href="{% url 'equipment_form' %}">제품등록</a>
             <a class="dropdown-item" href="{% url 'equipment_upload' %}">제품등록(대량)</a>
-            <div class="dropdown-divider"></div>
-            <a class="dropdown-item" href="{% url 'equipment_info' %}">정보 조회</a>
           </div>
         </li>
         {% if request.session.member_dept in permission %}
@@ -86,6 +84,16 @@
           </div>
         </li>
         {% endif %}
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
+            aria-haspopup="true" aria-expanded="false">
+            정보 조회
+          </a>
+          <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <a class="dropdown-item" href="{% url 'equipment_info' %}">정보 조회</a>
+          </div>
+        </li>
+
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
             aria-haspopup="true" aria-expanded="false">
