@@ -2,15 +2,23 @@
 
 <div class="container">
     <div class="card equipment">
-        <div class="card-header document__header">
-            <i class="fa fa-external-link"></i>
-            <h5 class="card-title equipment__title">&nbsp;정보 조회</h5>
+        <div class="card-header equipment__header d-flex">
+            <div class="mr-auto equipment__title">
+                <i class="fa fa-external-link"></i>
+                <h5 class="card-title">&nbsp;정보 조회</h5>
+            </div>
+            <div class="client__add">
+                <button type="button" class="btn btn-outline-primary" data-toggle="modal"
+                    data-target="#exampleModalCenter"><i class="fa fa-plus"></i> 고객사 추가</button>
+            </div>
         </div>
+
         <div class="card-body">
             <div class="equipment__contents form-row">
                 <div class="form-group col-md-12">
                     <div class="form-group">
-
+                        <input type="hidden" class="check-dup-client" value="">
+                        {% csrf_token %}
                         <ul class="nav nav-tabs">
                             <li class="nav-item">
                                 <a class="nav-link active" data-toggle="tab" href="#client">고객사</a>
@@ -27,8 +35,11 @@
                         </ul>
                         <div class="tab-content">
                             <div class="tab-pane fade show active" id="client">
-                                <input type="text" class="form-control" id="client-search" placeholder="&#xf002; 고객사 조회"
-                                    onkeyup="clientSearchFunction()" autocomplete="off">
+                                <div class="col-sm-4">
+                                    <input type="text" class="form-control" id="client-search"
+                                        placeholder="&#xf002; 고객사 조회" onkeyup="clientSearchFunction()"
+                                        autocomplete="off">
+                                </div>
                                 <ul class="list-group" id="clientUL">
                                     {% for item in client %}
                                     <li class="list-group-item">{{item.name}}
@@ -42,9 +53,12 @@
                                 </ul>
                             </div>
                             <div class="tab-pane fade" id="mnfacture">
-                                <input type="text" class="form-control" id="mnfacture-search"
-                                    placeholder="&#xf002; 제조사 조회" onkeyup="mnfactureSearchFunction()"
-                                    autocomplete="off">
+                                <div class="col-sm-4">
+                                    <input type="text" class="form-control" id="mnfacture-search"
+                                        placeholder="&#xf002; 제조사 조회" onkeyup="mnfactureSearchFunction()"
+                                        autocomplete="off">
+                                </div>
+
                                 <ul class="list-group" id="mnfactureUL">
                                     {% for item in mnfacture %}
                                     <li class="list-group-item">{{item.manafacture}}</li>
@@ -52,8 +66,11 @@
                                 </ul>
                             </div>
                             <div class="tab-pane fade" id="product">
-                                <input type="text" class="form-control" id="product-search"
-                                    placeholder="&#xf002; 제품명 조회" onkeyup="productSearchFunction()" autocomplete="off">
+                                <div class="col-sm-4">
+                                    <input type="text" class="form-control" id="product-search"
+                                        placeholder="&#xf002; 제품명 조회" onkeyup="productSearchFunction()"
+                                        autocomplete="off">
+                                </div>
                                 <ul class="list-group" id="productUL">
                                     {% for item in product %}
                                     <li class="list-group-item">{{item.name}}</li>
@@ -61,9 +78,11 @@
                                 </ul>
                             </div>
                             <div class="tab-pane fade" id="model">
-                                <input type="text" class="form-control" id="product-model-search"
-                                    placeholder="&#xf002; 제품명 조회" onkeyup="productModelSearchFunction()"
-                                    autocomplete="off">
+                                <div class="col-sm-4">
+                                    <input type="text" class="form-control" id="product-model-search"
+                                        placeholder="&#xf002; 모델명 조회" onkeyup="productModelSearchFunction()"
+                                        autocomplete="off">
+                                </div>
                                 <ul class="list-group" id="productModelUL">
                                     {% for item in product_model %}
                                     <li class="list-group-item">{{item.name}}</li>
@@ -75,6 +94,46 @@
                 </div>
             </div>
 
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">고객사 등록 메뉴</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="client__add">
+                    <div class="client__search">
+                        <input type="text" class="form-control" id="client__search-field" placeholder="&#xf002; 고객사 조회"
+                            autocomplete="off">
+                    </div>
+                    <div class="client__search">
+                        <button type="button" class="btn btn-outline-info" id="client__search-submit"
+                            onclick="checkDupClient()">중복 확인</button>
+                    </div>
+                </div>
+                <div class="client__contents contents">
+                    <div class="contents__comments">
+                        <div class="alert " role="alert">
+                        </div>
+                    </div>
+                    <div class="contents__similar-comment">
+                    </div>
+                    <div class="contents__similar-list">
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
+                <button type="button" class="btn btn-primary" onclick="checkValue()">등록</button>
+            </div>
         </div>
     </div>
 </div>
