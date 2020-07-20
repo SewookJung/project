@@ -4,6 +4,7 @@ from . import views
 
 urlpatterns = [
     re_path(r'^$', views.equipment_main, name="equipment_main"),
+    re_path(r'^stock/$', views.equipment_stock, name="equipment_stock"),
     re_path(r'^info/$', views.equipment_info, name="equipment_info"),
     re_path(r'^(?P<equipment_id>\d+)/detail/$',
             views.equipment_detail, name="equipment_detail"),
