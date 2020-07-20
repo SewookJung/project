@@ -14,8 +14,13 @@ def _equipmentattachment_upload_path(instance, filename):
 
 
 class Equipment(models.Model):
+    STOCK_CHOICE = (
+        ("Y", "Y"),
+        ("N", "N"),
+    )
     client = models.ForeignKey(
         to=Client, null=True, on_delete=models.SET_NULL)
+    stock = models.CharField(max_length=3, choices=STOCK_CHOICE, default="N")
     creator = models.ForeignKey(
         to=Member, on_delete=models.SET_NULL, null=True)
     product = models.ForeignKey(
