@@ -27,7 +27,7 @@ from utils.functions import (
 
 @login_required
 def equipment_main(request):
-    equipments = Equipment.objects.all()
+    equipments = Equipment.objects.filter(stock="N")
     return render(request, 'equipment/equipment_main.html', {'equipments': equipments, 'permission': REPORT_PERMISSION_DEFAULT})
 
 
@@ -300,6 +300,13 @@ def equipment_upload_complete(request):
     return redirect("equipment_main")
 
 
+@login_required
+def equipment_stock(request):
+    equipments = Equipment.objects.filter(stock="Y")
+    return render(request, 'equipment/equipment_stock.html', {'equipments': equipments, 'permission': REPORT_PERMISSION_DEFAULT})
+
+
+@login_required
 def equipment_upload_cancel(request):
     if request.method == 'POST':
         equipment_attach_id = request.POST['equipment_attach_id']
@@ -312,6 +319,7 @@ def equipment_upload_cancel(request):
         return make_response(status=400, content=json.dumps({'success': False, 'error': "장비현황 등록을 취소하는데 실패하였습니다. \n 파일을 다시 업로드 해주시길 바랍니다."}))
 
 
+@login_required
 def equipment_delete(request, equipment_id):
     if request.method == 'GET':
         try:
@@ -323,6 +331,7 @@ def equipment_delete(request, equipment_id):
         return make_response(status=400, content=json.dumps({'success': True, 'msg': "해당 제품정보를 삭제하는데 실패 하였습니다."}))
 
 
+@login_required
 def equipment_download_check(request):
     if not os.path.exists(settings.MEDIA_ROOT):
         return make_response(status=400, content=json.dumps({'success': False, 'msg': "NAS서버와 연결이 해제되어 파일 다운로드가 불가능합니다.\n관리자에게 문의 바랍니다."}))
@@ -333,6 +342,7 @@ def equipment_download_check(request):
         return make_response(status=400, content=json.dumps({'success': False, 'msg': "파일이 존재하지 않아 다운로드 할 수 없습니다.\n관리자에게 문의 바랍니다."}))
 
 
+@login_required
 def equipment_sample_download(request):
     attach_info = EquipmentAttachment.objects.get(id=SAMPLE_FILE_ID)
     filename = os.path.join(settings.MEDIA_ROOT, attach_info.attach.name)
