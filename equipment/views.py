@@ -15,7 +15,7 @@ from wsgiref.util import FileWrapper
 from openpyxl import load_workbook
 
 from common.models import Client, Product, ProductModel, Mnfacture
-from .models import EquipmentAttachment, Equipment
+from .models import EquipmentAttachment, Equipment, Stock
 from .forms import EquipmentForm
 from utils.constant import REPORT_PERMISSION_DEFAULT
 from utils.constant import SAMPLE_FILE_ID
@@ -27,7 +27,7 @@ from utils.functions import (
 
 @login_required
 def equipment_main(request):
-    equipments = Equipment.objects.filter(stock="N")
+    equipments = Equipment.objects.all()
     return render(request, 'equipment/equipment_main.html', {'equipments': equipments, 'permission': REPORT_PERMISSION_DEFAULT})
 
 
@@ -302,8 +302,8 @@ def equipment_upload_complete(request):
 
 @login_required
 def equipment_stock(request):
-    equipments = Equipment.objects.filter(stock="Y")
-    return render(request, 'equipment/equipment_stock.html', {'equipments': equipments, 'permission': REPORT_PERMISSION_DEFAULT})
+    stocks = Stock.objects.filter(status="keep")
+    return render(request, 'equipment/equipment_stock.html', {'stocks': stocks, 'permission': REPORT_PERMISSION_DEFAULT})
 
 
 @login_required
