@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Equipment, EquipmentAttachment
+from .models import Equipment, EquipmentAttachment, Stock
 
 
 class EquipmentAdmin(admin.ModelAdmin):
@@ -14,5 +14,12 @@ class EquipmentAttachmentAdmin(admin.ModelAdmin):
     list_display_links = ['id', ]
 
 
+class StockAdmin(admin.ModelAdmin):
+    list_display = ['id', 'product', 'product_model', 'mnfacture',
+                    'serial', 'location', 'receive_date', 'status', 'comments']
+    list_display_links = ['id', 'product']
+
+
 admin.site.register(Equipment, EquipmentAdmin)
 admin.site.register(EquipmentAttachment, EquipmentAttachmentAdmin)
+admin.site.register(Stock, StockAdmin)
