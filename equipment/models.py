@@ -65,6 +65,33 @@ class EquipmentAttachment(models.Model):
     created_at = models.DateTimeField(auto_now_add=True, editable=False)
 
 
+class StockAttachment(models.Model):
+    member = models.ForeignKey(Member, on_delete=models.SET_NULL, null=True)
+    attach = models.FileField(
+        upload_to=_equipmentattachment_upload_path, default="")
+    attach_name = models.CharField(max_length=50, default="")
+    content_size = models.CharField(max_length=50, default="")
+    content_type = models.CharField(max_length=100, default="")
+    created_at = models.DateTimeField(auto_now_add=True, editable=False)
+
+
+@receiver(models.signals.pre_save, sender=StockAttachment)
+def stockattachment_on_pre_save(sender, instance, *args, **kwargs):
+    if instance.pk:
+        try:
+            obj = sender.objects.get(pk=instance.pk)
+            if obj.attach != instance.attach_name:
+                obj.attach.delete(save=False)
+        except sender.DoesNotExist:
+            pass
+
+
+@receiver(models.signals.post_delete, sender=StockAttachment)
+def stockattachment_on_post_delete(sender, instance, *args, **kwargs):
+    if instance.attach:
+        instance.attach.delete(save=False)
+
+
 @receiver(models.signals.pre_save, sender=EquipmentAttachment)
 def equipmentattachment_on_pre_save(sender, instance, *args, **kwargs):
     if instance.pk:
