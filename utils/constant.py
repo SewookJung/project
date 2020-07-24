@@ -25,6 +25,11 @@ REPORT_DEFAULT_SELECT = 2
 
 # Sample file id
 SAMPLE_FILE_ID = 160
+STOCK_SAMPLE_FILE_ID = 18
 
 # Similar word
 SIMILAR_WORD_DEFAULT = {"similar": []}
+
+# Equipment
+STOCK_STATUS_KEEP = "keep"
+STOCK_STATUS_SOLD = "sold"
