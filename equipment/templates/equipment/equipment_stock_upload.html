@@ -1,0 +1,65 @@
+{% extends 'base.html' %} {% block content %} {% load static %}
+<div class="container">
+    <div class="card equipment ">
+        <div class="card-header document__header">
+            <i class="fa fa-external-link"></i>
+            <h5 class="card-title equipment__title">&nbsp;재고 등록 (Excel)</h5>
+        </div>
+        <div class="card-body">
+            <div class="equipment__contents form-row">
+                <div class="form-group col-md-12">
+                    <form class="equipment__add" name="uploadform" id="uploadform" method="POST"
+                        enctype="multipart/form-data" action="{% url 'equipment_stock_upload_check' %}">
+                        {% csrf_token %}
+                        <div class="form-group file-upload">
+                            <input class="upload-name" disabled="disabled">
+                            <label for="uploadfile">파일선택</label>
+                            <button type="button" class="btn btn-outline-primary" onclick="checkSubmit();">재고
+                                등록</button>
+                            <br><br>
+                            <button type="button" class="btn btn-outline-success" onclick="downloadSample();">기본 양식
+                                다운로드</button>
+                            <input type="file" class="upload-hidden " name="uploadfile" id="uploadfile"
+                                onchange="checkFileExt(this);"
+                                accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel">
+                        </div>
+                    </form>
+                    <div class="form-group equipment__comment">
+                        <div class="media border p-3">
+                            <i class="fa fa-exclamation"></i>
+                            <div class="media-body">
+                                <h4>파일 업로드 시 주의사항</h4>
+                                <ul>
+                                    <li>기본양식을 임의로 수정하여 업로드 하지 마세요.</li>
+                                    <li>파일 이름은 변경되어도 상관 없습니다.</li>
+                                    <li>시트의 이름은 "재고신규등록" 의 이름을 사용해야 합니다.</li>
+                                    <li>정보기입 중 아래의 3개 항목은 정확히 입력해야 합니다. (추후, 유의어를 등록하여 정상적으로 등록이 가능하게 개발할 예정)
+                                        <ul>
+                                            <li>제조사, 제품명, 모델명</li>
+                                            <li>정보 확인<br>
+                                                <i class="fa fa-arrow-circle-right"></i> 위의 3개 항목은 "정보 조회" 메뉴에서
+                                                확인
+                                                후 정확히 기입 바랍니다.</li>
+                                        </ul>
+                                    </li>
+                                    <li>일정형식의 엑셀파일만 업로드가 가능합니다.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %} {% block title %} 재고 등록 {% endblock %}
+{% block css %}
+<link rel="stylesheet" href="{% static 'css/equipment.css' %}">
+{% endblock %}
+
+{% block js %}
+<script src="{% static 'js/equipment/stockUpload.js' %}"></script>
+<script src="{% static 'js/sites/jquery.form.js' %}"></script>
+{% endblock %}
