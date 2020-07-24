@@ -1,0 +1,72 @@
+{% extends 'base.html' %} {% block content %} {% load static %}
+
+<div class="container">
+    <div class="card equipment">
+        <div class="card-header document__header">
+            <i class="fa fa-external-link"></i>
+            <h5 class="card-title equipment__title">&nbsp;재고 등록 (Excel)</h5>
+        </div>
+        <div class="card-body">
+            <form class="equipment__add" name="ajaxform" id="ajaxform" method="POST"
+                action="{% url 'equipment_stock_upload_complete' %}">
+                {% csrf_token %}
+                <input type="hidden" id="equipment-attach-id" name="equipment-attach-id" value="{{stock_attach_id}}">
+                <div class="equipment__contents form-row">
+                    <div class="form-group col-md-12">
+                        <div class="form-group">
+                            {% if err_stock_list|length != 0 %}
+                            <table class="table table-striped table-bordered table-hover assets_table">
+                                <thead>
+                                    <tr>
+                                        <th>행 번호</th>
+                                        <th>에러 내용</th>
+                                    </tr>
+                                </thead>
+                                {% for err in err_stock_list %}
+                                <tr>
+                                    <td>{{err.no}}</td>
+                                    <td>{{err.msg | linebreaksbr}}</td>
+                                </tr>
+                                {% endfor %}
+                                {% endif %}
+
+                            </table>
+                            {% if err_stock_list|length == 0 %}
+                            <span>정상적으로 내용들이 입력 되었습니다. <br>계속 진행 하시려면 등록 버튼을 눌러주세요</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="text-right submit-box">
+                    {% if err_stock_list|length == 0 %}
+                    <button type="button" class="btn btn-outline-danger" onclick="stockAddCancel()">
+                        취소
+                    </button>
+                    <button type="submit" class="btn btn-outline-secondary" id="submit-btn">
+                        등록
+                    </button>
+                    {% else %}
+                    <button type="button" class="btn btn-outline-danger" id="submit-btn" onclick="returnStockUpload();">
+                        돌아가기
+                    </button>
+                    {% endif %}
+                </div>
+
+
+            </form>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %} {% block title %} 재고 등록 (Excel) {% endblock %}
+{% block css %}
+<link rel="stylesheet" href="https://cdn.datatables.net/1.10.20/css/dataTables.bootstrap4.min.css">
+{% endblock %}
+
+
+{% block js %}
+<script src="{% static 'js/equipment/stockUploadCheck.js' %}"></script>
+<script src="{% static 'js/sites/jquery.form.js' %}"></script>
+{% endblock %}
