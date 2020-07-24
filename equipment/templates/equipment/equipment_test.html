@@ -1,0 +1,74 @@
+{% extends 'base.html' %} {% block content %} {% load static %}
+
+<div class="container">
+    <div class="card equipment">
+        <div class="card-header document__header">
+            <i class="fa fa-external-link"></i>
+            <h5 class="card-title equipment__title">&nbsp;테스트 페이지</h5>
+        </div>
+        <div class="card-body">
+            고객사: {{equipment.client}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 제조사: {{equipment.mnfacture}}
+            <br><br>
+            <div class="equipment__contents form-row">
+                <div class="form-group col-md-12">
+                    <div class="form-group">
+                        <table class="table table-striped table-bordered table-hover assets_table " id="myTable1">
+                            <thead>
+                                <tr>
+                                    <th>고객사</th>
+                                    <th>제조사</th>
+                                    <th>제품명</th>
+                                    <th>모델명</th>
+                                    <th>시리얼</th>
+                                    <th>납품 장소</th>
+                                    <th>납품 일자</th>
+                                    <th>담당 엔지니어</th>
+                                    <th>기 타</th>
+                                </tr>
+                            </thead>
+
+                            <tr>
+                                <td rowspan=2>LG 화학</td>
+                                <td>Genians</td>
+                                <td>NAC</td>
+                                <td>C50</td>
+                                <td>ABCD123</td>
+                                <td>LG 화학 본사 1층</td>
+                                <td>2020-07-24</td>
+                                <td>정세욱 대리</td>
+                                <td>-</td>
+                            </tr>
+                            <tr>
+                                <td>Genians</td>
+                                <td>NAC</td>
+                                <td>S20</td>
+                                <td>ABCDEFG</td>
+                                <td>LG 화학 본사 2층</td>
+                                <td>2020-07-24</td>
+                                <td>정세욱 대리</td>
+                                <td>-</td>
+                            </tr>
+
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+{% endblock %} {% block title %} 고객사 운용제품현황 {% endblock %}
+{% block css %}
+<link rel="stylesheet" href="{% static 'css/selectpicker/bootstrap-select.css' %}">
+<link rel="stylesheet" href="https://cdn.datatables.net/1.10.20/css/dataTables.bootstrap4.min.css">
+<link rel="stylesheet" href="{% static 'css/equipment.css' %}">
+{% endblock %}
+
+{% block js %}
+<script src="{% static 'js/selectpicker/bootstrap-select.js' %}"></script>
+<script src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.20/js/dataTables.bootstrap4.min.js"></script>
+<script src="{% static 'js/datatable/dataTable.js' %}"></script>
+{% endblock %}

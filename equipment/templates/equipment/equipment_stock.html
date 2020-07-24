@@ -13,6 +13,7 @@
                         <table class="table table-striped table-bordered table-hover assets_table " id="myTable1">
                             <thead>
                                 <tr>
+                                    <th>구 분</th>
                                     <th>제조사</th>
                                     <th>제품명</th>
                                     <th>모델명</th>
@@ -25,6 +26,12 @@
 
                             {% for stock in stocks %}
                             <tr>
+                                <td>
+                                    <div class="form-check">
+                                        <input class="form-check-input position-static" type="checkbox"
+                                            id="blankCheckbox" value="option1" aria-label="...">
+                                    </div>
+                                </td>
                                 <td>
                                     <a href="{% url 'equipment_stock_detail' stock_id=stock.id %}">
                                         {{ stock.mnfacture }}
@@ -39,7 +46,7 @@
                                     <button type="button" class="btn btn-primary" data-toggle="modal"
                                         data-target="#exampleModal"
                                         onclick="stockApply('{{stock.id}}', '{{stock.mnfacture}}', '{{ stock.product }}', '{{ stock.product_model }}', '{{ stock.serial }}');">납품
-                                        신청</button>
+                                    </button>
                                 </td>
                             </tr>
                             {% endfor %}
@@ -119,6 +126,8 @@
 <link rel="stylesheet" href="https://cdn.datatables.net/1.10.20/css/dataTables.bootstrap4.min.css">
 <link rel="stylesheet" href="{% static 'css/selectpicker/bootstrap-select.css' %}">
 <link rel="stylesheet" href="{% static 'css/datepicker/datepicker3.css' %}">
+<link rel="stylesheet" href="{% static 'css/equipment/equipment_stock.css' %}">
+
 {% endblock %}
 
 {% block js %}

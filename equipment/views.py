@@ -706,3 +706,9 @@ def equipment_stock_sample_download(request):
             response['Content-Disposition'] = 'attachment; filename*=UTF-8\'\'%s' % urllib.parse.quote(
                 attach_info.attach_name.encode('utf-8'))
     return response
+
+
+@login_required
+def equipment_test(request):
+    equipment = EquipmentForm()
+    return render(request, 'equipment/equipment_test.html', {'equipment': equipment})

@@ -51,4 +51,6 @@ urlpatterns = [
             name="equipment_stock_sample_download"),
     re_path(r'^download/stock/sample/check/$', views.equipment_stock_download_check,
             name="equipment_stock_download_check"),
+
+    re_path(r'^test/$', views.equipment_test, name="equipment_test"),
 ]
