@@ -62,10 +62,10 @@
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
             aria-haspopup="true" aria-expanded="false">
-            납품등록관리
+            납품 관리
           </a>
           <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-            <a class="dropdown-item" href="{% url 'equipment_main' %}">고객사 납품 현황</a>
+            <a class="dropdown-item" href="{% url 'equipment_main' %}">납품 현황</a>
             <div class="dropdown-divider"></div>
             <a class="dropdown-item" href="{% url 'equipment_form' %}">납품 등록</a>
             <a class="dropdown-item" href="{% url 'equipment_upload' %}">납품 등록(대량)</a>
@@ -75,13 +75,13 @@
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
             aria-haspopup="true" aria-expanded="false">
-            재고등록관리
+            재고 관리
           </a>
           <div class="dropdown-menu" aria-labelledby="navbarDropdown">
             <a class="dropdown-item" href="{% url 'equipment_stock' %}">재고 현황</a>
             <div class="dropdown-divider"></div>
-            <a class="dropdown-item" href="{% url 'equipment_form' %}">재고 등록</a>
-            <a class="dropdown-item" href="{% url 'equipment_upload' %}">재고 등록(대량)</a>
+            <a class="dropdown-item" href="{% url 'equipment_stock_form' %}">재고 등록</a>
+            <a class="dropdown-item" href="{% url 'equipment_stock_upload' %}">재고 등록(대량)</a>
           </div>
         </li>
 
