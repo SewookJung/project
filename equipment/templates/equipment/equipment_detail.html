@@ -4,7 +4,7 @@
         <div class="card-header sites__header">
             <i class="fa fa-tasks"></i>
             <h5 class="card-title sites__title">&nbsp; {{ equipment.client }}[{{ equipment.mnfacture }} /
-                {{ equipment.product_model }}] 제품 정보</h5>
+                {{ equipment.product_model }}] 납품 세부정보</h5>
         </div>
         <div class="card-body">
             <form class="equipment__form" name="ajaxForm" id="ajaxForm" method="POST"
@@ -59,17 +59,17 @@
                                 value="{{ equipment.serial }}" autocomplete="off">
                         </div>
                         <div class="form-group">
-                            <label>담당 엔지니어</label>
+                            <label>담당 엔지니어 혹은 영업</label>
                             <input type="text" class="form-control" id="manager" name="manager"
                                 value="{{ equipment.manager }}" autocomplete="off">
                         </div>
                         <div class="form-group ">
-                            <label>설치장소</label>
+                            <label>납품 장소</label>
                             <input type="text" class="form-control" id="location" name="location"
                                 value="{{ equipment.location }}" autocomplete="off">
                         </div>
                         <div class="form-group ">
-                            <label>설치 일자</label>
+                            <label>납품 일자</label>
                             <input type="text" name="install-date" id="equipment-install-date"
                                 class="form-control calendar__start hasDatepicker" autocomplete="off"
                                 data-provide="datepicker" placeholder="&#xf073;"
@@ -80,6 +80,21 @@
                             <textarea class="form-control col-sm-12" rows="5" id="comments"
                                 name="comments">{{ equipment.comments | linebreaksbr }}</textarea>
                         </div>
+                        {% if stock is not None %}
+                        <hr>
+                        <div class="form-group">
+                            <label>입고 내역</label>
+                            <textarea class="form-control col-sm-12" rows="5" id="comments" name="comments"
+                                disabled>{{stock.receive_date}} / {{stock.location}}</textarea>
+                        </div>
+                        {% else %}
+                        <hr>
+                        <div class="form-group">
+                            <label>입고 내역</label>
+                            <textarea class="form-control col-sm-12" rows="5" id="comments" name="comments"
+                                disabled>입고내역이 존재하지 않음</textarea>
+                        </div>
+                        {% endif %}
                     </div>
                 </div>
                 {% if equipment.creator.id == login_id %}
@@ -104,7 +119,7 @@
 </div>
 
 
-{% endblock %} {% block title %} 고객사 등록 {% endblock %}
+{% endblock %} {% block title %} {{ equipment.client }} 납품 세부정보 {% endblock %}
 {% block css %}
 <link rel=" stylesheet" href="{% static 'css/selectpicker/bootstrap-select.css' %}">
                             <link rel="stylesheet" href="{% static 'css/datepicker/datepicker3.css' %}">
