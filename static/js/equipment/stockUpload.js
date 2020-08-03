@@ -17,7 +17,6 @@ function checkFileExt(sender) {
 }
 
 function downloadSample() {
-  console.log("gg");
   $.ajax({
     url: "/equipment/download/stock/sample/check/",
     success: function (data) {
