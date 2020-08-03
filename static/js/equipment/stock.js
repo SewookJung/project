@@ -69,3 +69,23 @@ const valueCheck = () => {
     },
   });
 };
+
+function checkTheBox(event) {
+  const clickedElementId = event.target.id;
+  if (clickedElementId == "blankCheckbox") return false;
+
+  if (clickedElementId == "form-check") {
+    const checkBox = event.target.childNodes[1];
+    if (checkBox.checked == false) {
+      checkBox.checked = true;
+      return false;
+    } else {
+      checkBox.checked = false;
+      return false;
+    }
+  }
+
+  const checkBox = event.target.childNodes[1].childNodes[1];
+  if (checkBox.checked == false) checkBox.checked = true;
+  else checkBox.checked = false;
+}
