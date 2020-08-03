@@ -237,19 +237,32 @@ def equipment_upload_check(request):
                     err_dic['msg'] = err_dic['msg'] + ' 모델명을 확인하세요.'
 
                 try:
-                    equipment = Equipment.objects.get(
-                        product_model=product_model.id, serial=serial)
+                    equipment = Equipment.objects.get(serial=serial)
                     raise
                 except Equipment.DoesNotExist:
                     try:
                         serial_list.index(serial)
                         err_dic['msg'] = err_dic['msg'] + \
-                            ' 엑셀파일에 중복되는 serail이 있습니다.'
+                            ' 엑셀파일에 중복되는 시리얼이 존재합니다.'
                     except ValueError:
                         serial_list.append(serial)
                 except:
                     err_dic['msg'] = err_dic['msg'] + \
-                        ' 기존 입력된 동일 모델의 serial이 있습니다.'
+                        ' 이미 납품된 시리얼 정보입니다.'
+
+                try:
+                    stock = Stock.objects.get(serial=serial)
+                    raise
+                except Stock.DoesNotExist:
+                    try:
+                        serial_list.index(serial)
+                        err_dic['msg'] = err_dic['msg'] + \
+                            ' 엑셀파일에 중복되는 시리얼이 존재합니다.'
+                    except ValueError:
+                        serial_list.append(serial)
+                except:
+                    err_dic['msg'] = err_dic['msg'] + \
+                        ' 재고에 등록 되어 있는 시리얼 정보입니다.'
 
                 if len(err_dic['msg']) != 0:
                     err_equip_list.append(err_dic)
@@ -393,7 +406,6 @@ def equipment_stock_form(request):
 @login_required
 def equipment_stock_form_apply(request):
     if request.method == "POST":
-        print(request.POST)
         equipments = Equipment.objects.all()
         stocks = Stock.objects.all()
 
@@ -556,21 +568,22 @@ def equipment_stock_upload_check(request):
         if not os.path.exists(settings.MEDIA_ROOT):
             err_stock_list.append(
                 {'no': '-', 'msg': 'NAS서버와 연결이 해제되어 파일 업로드가 불가능합니다.\n 관리자에게 문의 바랍니다.'})
-            return render(request, 'equipment/equipment_upload_check.html', {'err_stock_list': err_stock_list, 'permission': REPORT_PERMISSION_DEFAULT})
+            return render(request, 'equipment/equipment_stock_upload_check.html', {'err_stock_list': err_stock_list, 'permission': REPORT_PERMISSION_DEFAULT})
 
         try:
             load_ws = load_wb['재고신규등록']
+
         except:
             err_stock_list.append(
-                {'no': '-', 'msg': '시트명을 확인하세요.\n 기본 시트명은 "장비운용현황" 입니다.'})
-            return render(request, 'equipment/equipment_upload_check.html', {'err_stock_list': err_stock_list, 'permission': REPORT_PERMISSION_DEFAULT})
+                {'no': '-', 'msg': '시트명을 확인하세요.\n 기본 시트명은 "재고신규등록" 입니다.'})
+            return render(request, 'equipment/equipment_stock_upload_check.html', {'err_stock_list': err_stock_list, 'permission': REPORT_PERMISSION_DEFAULT})
 
         iter_rows = iter(load_ws.rows)
         next(iter_rows)
         max_rows = load_ws.max_row
 
         for row in iter_rows:
-            if row[0].value == None and row[1].value == None and row[2].value == None and row[3].value == None and row[4].value == None and row[5].value == None and row[6].value == None and row[7].value == None:
+            if row[0].value == None and row[1].value == None and row[2].value == None and row[3].value == None and row[4].value == None and row[5].value == None and row[6].value == None:
                 pass
             else:
                 mnfacture_name = row[0].value
@@ -603,12 +616,26 @@ def equipment_stock_upload_check(request):
                     try:
                         serial_list.index(serial)
                         err_dic['msg'] = err_dic['msg'] + \
-                            ' 엑셀파일에 중복되는 serail이 있습니다.'
+                            ' 엑셀파일에 중복되는 시리얼이 존재합니다.'
                     except ValueError:
                         serial_list.append(serial)
                 except:
                     err_dic['msg'] = err_dic['msg'] + \
-                        ' 기존 입력된 동일 모델의 serial이 있습니다.'
+                        ' 이미 재고에 등록되어 있는 시리얼 번호입니다.'
+
+                try:
+                    equipment = Equipment.objects.get(serial=serial)
+                    raise
+                except Equipment.DoesNotExist:
+                    try:
+                        serial_list.index(serial)
+                        err_dic['msg'] = err_dic['msg'] + \
+                            ' 엑셀파일에 중복되는 시리얼이 존재합니다.'
+                    except ValueError:
+                        serial_list.append(serial)
+                except:
+                    err_dic['msg'] = err_dic['msg'] + \
+                        ' 이미 납품된 시리얼 정보입니다.'
 
                 if len(err_dic['msg']) != 0:
                     err_stock_list.append(err_dic)
@@ -656,13 +683,12 @@ def equipment_stock_upload_complete(request):
         product_model = product_model_objects.values('id').get(name=item[2])
         serial = item[3].strip()
         location = item[4]
-        manager = item[5]
-        receive_date = item[6]
+        receive_date = item[5]
 
-        if item[7] == None:
+        if item[6] == None:
             comments = ""
         else:
-            comments = item[7]
+            comments = item[6]
 
         stock = Stock(mnfacture_id=mnfacture['id'], product_id=product['id'], product_model_id=product_model['id'], serial=serial,
                       location=location, status=STOCK_STATUS_KEEP, receive_date=receive_date, creator_id=request.session['id'], comments=comments)
