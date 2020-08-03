@@ -1,4 +1,9 @@
 .form-check {
   display: flex;
   justify-content: center;
+  transform: scale(1.2);
+}
+
+.td-checkBox {
+  cursor: pointer;
 }
