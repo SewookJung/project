@@ -13,7 +13,7 @@
                         <table class="table table-striped table-bordered table-hover assets_table " id="myTable1">
                             <thead>
                                 <tr>
-                                    <th>구 분</th>
+                                    <th>선택</th>
                                     <th>제조사</th>
                                     <th>제품명</th>
                                     <th>모델명</th>
@@ -26,10 +26,10 @@
 
                             {% for stock in stocks %}
                             <tr>
-                                <td>
-                                    <div class="form-check">
+                                <td class="td-checkBox" onclick="checkTheBox(event)">
+                                    <div class="form-check" id="form-check">
                                         <input class="form-check-input position-static" type="checkbox"
-                                            id="blankCheckbox" value="option1" aria-label="...">
+                                            id="blankCheckbox" value="option1">
                                     </div>
                                 </td>
                                 <td>
