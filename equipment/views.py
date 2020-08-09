@@ -254,12 +254,7 @@ def equipment_upload_check(request):
                     stock = Stock.objects.get(serial=serial)
                     raise
                 except Stock.DoesNotExist:
-                    try:
-                        serial_list.index(serial)
-                        err_dic['msg'] = err_dic['msg'] + \
-                            ' 엑셀파일에 중복되는 시리얼이 존재합니다.'
-                    except ValueError:
-                        serial_list.append(serial)
+                    pass
                 except:
                     err_dic['msg'] = err_dic['msg'] + \
                         ' 재고에 등록 되어 있는 시리얼 정보입니다.'
@@ -441,6 +436,30 @@ def equipment_stock_form_apply(request):
             return make_response(status=400, content=json.dumps({'success': False, 'msg': "재고 등록에 실패 하였습니다.\n다시 시도해주시기 바랍니다."}))
     else:
         return make_response(status=400, content=json.dumps({'success': False, 'msg': "제품등록 페이지에 다시 접속해주시기 바랍니다."}))
+
+
+@login_required
+def equipment_stock_multi_apply(request):
+    if request.method == 'POST':
+        stocks = Stock.objects.all()
+        client_id = request.POST['client']
+        stock_ids = request.POST.getlist('stockIds[]')
+        location = request.POST['location']
+        manager = request.POST['manager']
+        delivery_date = request.POST['deliveryDate']
+
+        try:
+            for stock_id in stock_ids:
+                stock = stocks.get(id=stock_id)
+                stock.status = "sold"
+                stock.save()
+
+                equipment = Equipment(client_id=client_id, product_id=stock.product.id, product_model_id=stock.product_model.id, serial=stock.serial, mnfacture_id=stock.mnfacture.id,
+                                      manager=manager, location=location, install_date=delivery_date, comments="", creator_id=request.session['id'])
+                equipment.save()
+            return make_response(status=200, content=json.dumps({'success': True, 'msg': "납품이 완료 되었습니다."}))
+        except:
+            return make_response(status=400, content=json.dumps({'success': True, 'msg': "납품이 정상적으로 처리 되지 않았습니다.\n다시 시도해 주세요."}))
 
 
 @login_required
@@ -627,12 +646,7 @@ def equipment_stock_upload_check(request):
                     equipment = Equipment.objects.get(serial=serial)
                     raise
                 except Equipment.DoesNotExist:
-                    try:
-                        serial_list.index(serial)
-                        err_dic['msg'] = err_dic['msg'] + \
-                            ' 엑셀파일에 중복되는 시리얼이 존재합니다.'
-                    except ValueError:
-                        serial_list.append(serial)
+                    pass
                 except:
                     err_dic['msg'] = err_dic['msg'] + \
                         ' 이미 납품된 시리얼 정보입니다.'
@@ -738,3 +752,42 @@ def equipment_stock_sample_download(request):
 def equipment_test(request):
     equipment = EquipmentForm()
     return render(request, 'equipment/equipment_test.html', {'equipment': equipment})
+
+
+@login_required
+def equipment_stock_permission_check(request):
+    stocks = Stock.objects.all()
+    stock_ids = request.POST.getlist('stockIds[]')
+    permission_denied_lists = []
+    try:
+        for stock_id in stock_ids:
+            creator = stocks.values("creator").get(id=stock_id)
+            if not creator['creator'] == request.session['id']:
+                raise
+        return make_response(status=200, content=json.dumps({'success': True}))
+
+    except:
+        for stock_id in stock_ids:
+            stock = stocks.get(id=stock_id)
+            if not stock.creator_id == request.session['id']:
+                mnfacture = str(stock.mnfacture)
+                product = str(stock.product)
+                product_model = str(stock.product_model)
+                creator = str(stock.creator)
+                permission_denied_stock = {"mnfacture": mnfacture, "product": product,
+                                           "product_model": product_model, "serial": stock.serial, "creator": creator}
+                permission_denied_lists.append(permission_denied_stock)
+        return make_response(status=400, content=json.dumps({'success': False, 'error': "permission-error", "denied_lists": permission_denied_lists}))
+
+
+@login_required
+def equipment_stock_multi_delete(request):
+    stocks = Stock.objects.all()
+    stock_ids = request.POST.getlist('stockIds[]')
+    try:
+        for stock_id in stock_ids:
+            stocks.get(id=stock_id).delete()
+        return make_response(status=200, content=json.dumps({'success': True, 'msg': "재고 삭제에 성공 하였습니다."}))
+
+    except:
+        return make_response(status=400, content=json.dumps({'success': False, 'msg': "재고 삭제에 실패하였습니다.\n다시 시도해주시기 바랍니다."}))
