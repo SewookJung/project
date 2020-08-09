@@ -2,8 +2,52 @@
   display: flex;
   justify-content: center;
   transform: scale(1.2);
+  height: 0px;
+  width: 0px;
+}
+
+.form-check-input {
+  position: relative;
+  margin-left: 0px;
+  cursor: pointer;
 }
 
 .td-checkBox {
+  text-align: center;
   cursor: pointer;
+}
+
+#blankCheckbox {
+  position: relative;
+}
+
+.single-delivery__media i,
+.multi-delivery__media i {
+  margin-right: 30px;
+  font-size: 28px;
+}
+
+.media-body ul {
+  margin-left: 20px;
+  padding-left: 10px;
+  list-style-type: circle;
+}
+
+.media-body h5 {
+  margin-bottom: 18px;
+}
+
+.collapsing .card-body,
+.collapse .card-body {
+  padding: 0px;
+}
+
+.collapsing .card-body ul,
+.collapse .card-body ul {
+  margin-left: 0px;
+  padding-left: 0px;
+}
+
+.card-header .card-link {
+  padding-right: 5px;
 }
