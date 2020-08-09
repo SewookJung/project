@@ -34,6 +34,22 @@ $(document).ready(function () {
     },
   });
 
+  $("#stock-table").DataTable({
+    pageLength: 15,
+    lengthMenu: [5, 10, 15, 20, 30, 50, 100],
+    columnDefs: [
+      { orderable: true, targets: [1, 2, 3, 4, 5, 6] },
+      { orderable: false, targets: "_all" },
+    ],
+    language: {
+      paginate: {
+        previous: "‹",
+        next: "›",
+      },
+    },
+    order: [[2, "dec"]],
+  });
+
   $("#weekly_table").DataTable({
     pageLength: 15,
     lengthMenu: [5, 10, 15, 20, 30, 50, 100],
