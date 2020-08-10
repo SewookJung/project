@@ -130,7 +130,6 @@ const checkTheBox = (event) => {
           stockInfoResult[mnfacture].splice(deleteStockObject, 1);
         if (stockInfoResult[mnfacture].length < 1)
           delete stockInfoResult[mnfacture];
-
         const selectReleaseStock = selectedStockIds.findIndex(function (item) {
           return item === checkBox.value;
         });
@@ -180,10 +179,10 @@ const checkTheBox = (event) => {
 };
 
 const deleteCards = () => {
-  const foo = accordion.querySelectorAll(".card");
-  if (foo.length > 0) {
-    for (let i = 0; i < foo.length; i++) {
-      foo[i].remove();
+  const cards = accordion.querySelectorAll(".card");
+  if (cards.length > 0) {
+    for (let i = 0; i < cards.length; i++) {
+      cards[i].remove();
     }
   }
 };
@@ -208,8 +207,8 @@ const checkSelectedStocks = () => {
       const span = document.createElement("span");
       const selectedStocks = stockInfoResult[mnfacture];
       const submitBtn = document.getElementById("sumbit-btn");
-      submitBtn.setAttribute("onclick", "multiStocksApply()");
 
+      submitBtn.setAttribute("onclick", "multiStocksApply()");
       card.classList.add("card");
       cardHeader.classList.add("card-header");
       anchor.classList.add("card-link");
@@ -232,14 +231,21 @@ const checkSelectedStocks = () => {
 
       for (let i = 0; i < selectedStocks.length; i++) {
         const li = document.createElement("li");
+        const deleteBadge = document.createElement("span");
         const stockInfo =
           selectedStocks[i].product +
           "  " +
           selectedStocks[i].model +
           "  " +
           selectedStocks[i].serial;
+        deleteBadge.setAttribute("onclick", "deleteStockOfList(event)");
+        deleteBadge.classList.add("badge");
+        deleteBadge.classList.add("badge-danger");
+        deleteBadge.innerText = "삭제";
         li.classList.add("list-group-item");
         li.innerText = stockInfo;
+        li.id = selectedStocks[i].id;
+        li.appendChild(deleteBadge);
         ul.append(li);
       }
       span.innerText = selectedStocks.length;
@@ -279,6 +285,13 @@ const multiStocksApply = () => {
   if (locationValue == "") {
     alert("❗ 납품 장소를 작성해주세요.");
     return false;
+  }
+
+  if (selectedStockIds.length < 1) {
+    alert(
+      "❗ 선택된 재고가 없습니다.\n   다시 일괄납품을 신청하여 주시기 바랍니다. "
+    );
+    return (window.location = "/equipment/stock/");
   }
 
   param = {};
@@ -396,4 +409,23 @@ const stockMultiDelete = () => {
       window.location = "/equipment/stock/";
     },
   });
+};
+
+const deleteStockOfList = (event) => {
+  const deleteLi = event.target.parentElement;
+  const deleteStockId = event.target.parentElement.id;
+  let badgeOfStock =
+    deleteLi.parentElement.parentElement.parentElement.parentElement.firstChild
+      .lastChild;
+  let countOfSelectedStocks = Number(badgeOfStock.innerText);
+  deleteLi.remove();
+  countOfSelectedStocks--;
+  badgeOfStock.innerText = countOfSelectedStocks;
+  const idxOfExceptStock = selectedStockIds.findIndex(function (ele) {
+    return ele === deleteStockId;
+  });
+
+  if (idxOfExceptStock > -1) {
+    selectedStockIds.splice(idxOfExceptStock, 1);
+  }
 };
