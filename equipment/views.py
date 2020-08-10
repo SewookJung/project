@@ -46,7 +46,7 @@ def equipment_form_apply(request):
             product = request.POST['product_id']
             mnfacture = request.POST['mnfacture']
             product_model = request.POST['product_model']
-            serial = request.POST['serial'].strip()
+            serial = request.POST['serial'].strip().upper()
             manager = request.POST['manager']
             location = request.POST['location']
             install_date = request.POST['install-date']
@@ -408,7 +408,7 @@ def equipment_stock_form_apply(request):
             product = request.POST['product_id']
             mnfacture = request.POST['mnfacture']
             product_model = request.POST['product_model']
-            serial = request.POST['serial']
+            serial = request.POST['serial'].strip().upper()
             location = request.POST['location']
             receive_date = request.POST['install-date']
             comments = request.POST['comments']
@@ -628,8 +628,7 @@ def equipment_stock_upload_check(request):
                     err_dic['msg'] = err_dic['msg'] + ' 모델명을 확인하세요.'
 
                 try:
-                    stock = Stock.objects.get(
-                        product_model=product_model.id, serial=serial)
+                    stock = Stock.objects.get(serial=serial)
                     raise
                 except Stock.DoesNotExist:
                     try:
