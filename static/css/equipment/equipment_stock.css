@@ -51,3 +51,7 @@
 .card-header .card-link {
   padding-right: 5px;
 }
+
+.list-group-item .badge-danger {
+  cursor: pointer;
+}
