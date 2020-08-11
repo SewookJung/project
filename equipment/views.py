@@ -46,7 +46,7 @@ def equipment_form_apply(request):
             product = request.POST['product_id']
             mnfacture = request.POST['mnfacture']
             product_model = request.POST['product_model']
-            serial = request.POST['serial'].replace(" ", "").upper()
+            serial = request.POST['serial'].replace(" ", "").strip().upper()
             manager = request.POST['manager']
             location = request.POST['location']
             install_date = request.POST['install-date']
@@ -85,11 +85,19 @@ def equipment_detail_apply(request, equipment_id):
         mnfacture = request.POST['mnfacture']
         product_model = request.POST['product_model']
         manager = request.POST['manager']
-        serial = request.POST['serial'].replace(" ", "").upper()
+        serial = request.POST['serial'].replace(" ", "").strip().upper()
         location = request.POST['location']
         install_date = request.POST['install-date']
         comments = request.POST['comments']
         creator = request.session['id']
+
+        try:
+            stock = Stock.objects.get(serial=serial, status=STOCK_STATUS_KEEP)
+            raise
+        except Stock.DoesNotExist:
+            pass
+        except:
+            return make_response(status=400, content=json.dumps({'success': False, 'msg': "입력한 시리얼 번호는 이미 재고에 등록 되어 있습니다. \n시리얼 번호 확인 후 다시 시도하시기 바랍니다.", 'error': 'serial_error'}))
 
         try:
             equipment = Equipment.objects.get(id=int(equipment_id))
@@ -139,7 +147,7 @@ def equipment_detail_apply(request, equipment_id):
                     equipment.save()
                     return make_response(status=200, content=json.dumps({'success': True, 'msg': "제품수정을 완료하였습니다."}))
                 except:
-                    return make_response(status=400, content=json.dumps({'success': False, 'msg': "작성된 시리얼 번호가 존재합니다. \n시리얼 번호 확인 후 다시 시도하시기 바랍니다.", 'error': 'serial_error'}))
+                    return make_response(status=400, content=json.dumps({'success': False, 'msg': "입력한 시리얼 번호는 이미 납품된 시리얼 번호입니다. \n시리얼 번호 확인 후 다시 시도하시기 바랍니다.", 'error': 'serial_error'}))
 
         except Equipment.DoesNotExist:
             return make_response(status=400, content=json.dumps({'success': False, 'msg': "제품정보를 가지고 오는데 실패하였습니다. \n다시 시도하시기 바랍니다.", 'error': 'upload_error'}))
@@ -212,7 +220,7 @@ def equipment_upload_check(request):
                 mnfacture_name = row[1].value
                 product_name = row[2].value
                 model_name = row[3].value
-                serial = row[4].value.replace(" ", "").upper()
+                serial = row[4].value.replace(" ", "").strip().upper()
                 err_dic = {'no': line_num, 'msg': ''}
 
                 try:
@@ -251,7 +259,8 @@ def equipment_upload_check(request):
                         ' 이미 납품된 시리얼 정보입니다.'
 
                 try:
-                    stock = Stock.objects.get(serial=serial)
+                    stock = Stock.objects.get(
+                        serial=serial, status=STOCK_STATUS_KEEP)
                     raise
                 except Stock.DoesNotExist:
                     pass
@@ -305,7 +314,7 @@ def equipment_upload_complete(request):
         mnfacture = mnfacture_objects.values('id').get(manafacture=item[1])
         product = product_objects.values('id').get(name=item[2])
         product_model = product_model_objects.values('id').get(name=item[3])
-        serial = item[4].replace(" ", "").upper()
+        serial = item[4].replace(" ", "").strip().upper()
         location = item[5]
         manager = item[6]
         install_date = item[7]
@@ -408,7 +417,7 @@ def equipment_stock_form_apply(request):
             product = request.POST['product_id']
             mnfacture = request.POST['mnfacture']
             product_model = request.POST['product_model']
-            serial = request.POST['serial'].replace(" ", "").upper()
+            serial = request.POST['serial'].replace(" ", "").strip().upper()
             location = request.POST['location']
             receive_date = request.POST['install-date']
             comments = request.POST['comments']
@@ -478,11 +487,20 @@ def equipment_stock_detail_apply(request, stock_id):
         product = request.POST['product_id']
         mnfacture = request.POST['mnfacture']
         product_model = request.POST['product_model']
-        serial = request.POST['serial'].replace(" ", "").upper()
+        serial = request.POST['serial'].replace(" ", "").strip().upper()
         location = request.POST['location']
         receive_date = request.POST['install-date']
         comments = request.POST['comments']
         creator = request.session['id']
+        print(serial)
+
+        try:
+            equipment = Equipment.objects.get(serial=serial)
+            raise
+        except Equipment.DoesNotExist:
+            pass
+        except:
+            return make_response(status=400, content=json.dumps({'success': False, 'msg': "입력한 시리얼 번호는 이미 납품되어 있는 시리얼 번호 입니다. \n시리얼번호 확인 후 다시 시도하시기 바랍니다.", 'error': 'serial_error'}))
 
         try:
             stock = Stock.objects.get(id=stock_id)
@@ -525,7 +543,7 @@ def equipment_stock_detail_apply(request, stock_id):
                     stock.save()
                     return make_response(status=200, content=json.dumps({'success': True, 'msg': "제품수정을 완료하였습니다."}))
                 except:
-                    return make_response(status=400, content=json.dumps({'success': False, 'msg': "작성한 시리얼 번호가 재고에 이미 존재합니다. \n시리얼번호 확인 후 다시 시도하시기 바랍니다.", 'error': 'serial_error'}))
+                    return make_response(status=400, content=json.dumps({'success': False, 'msg': "입력한 시리얼 번호가 재고에 이미 존재합니다. \n시리얼번호 확인 후 다시 시도하시기 바랍니다.", 'error': 'serial_error'}))
 
         except Equipment.DoesNotExist:
             return make_response(status=400, content=json.dumps({'success': False, 'msg': "제품정보를 가지고 오는데 실패하였습니다. \n다시 시도하시기 바랍니다.", 'error': 'upload_error'}))
@@ -608,7 +626,7 @@ def equipment_stock_upload_check(request):
                 mnfacture_name = row[0].value
                 product_name = row[1].value
                 model_name = row[2].value
-                serial = row[3].value.replace(" ", "").upper()
+                serial = row[3].value.replace(" ", "").strip().upper()
                 err_dic = {'no': line_num, 'msg': ''}
 
                 try:
@@ -628,7 +646,8 @@ def equipment_stock_upload_check(request):
                     err_dic['msg'] = err_dic['msg'] + ' 모델명을 확인하세요.'
 
                 try:
-                    stock = Stock.objects.get(serial=serial)
+                    stock = Stock.objects.get(
+                        serial=serial, status=STOCK_STATUS_KEEP)
                     raise
                 except Stock.DoesNotExist:
                     try:
@@ -694,7 +713,7 @@ def equipment_stock_upload_complete(request):
         mnfacture = mnfacture_objects.values('id').get(manafacture=item[0])
         product = product_objects.values('id').get(name=item[1])
         product_model = product_model_objects.values('id').get(name=item[2])
-        serial = item[3].replace(" ", "").upper()
+        serial = item[3].replace(" ", "").strip().upper()
         location = item[4]
         receive_date = item[5]
 
