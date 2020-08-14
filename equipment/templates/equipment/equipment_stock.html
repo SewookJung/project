@@ -1,210 +1,22 @@
 {% extends 'base.html' %} {% block content %} {% load static %}
 
 <div class="container">
-    <div class="card equipment">
-        <div class="card-header equipment__header">
-            <i class="fa fa-external-link"></i>
-            <h5 class="card-title equipment__title">&nbsp;재고 현황 </h5>
+    <div class="card stock">
+        <div class="card-header stock__header">
+            <i class="fa fa-tasks"></i>
+            <h5 class="card-title stock__title">&nbsp;재고 현황 </h5>
         </div>
         <div class="card-body">
-            <div class="equipment__contents form-row">
+            {% csrf_token %}
+            <div class="form-row stock__body body">
                 <div class="form-group col-md-12">
-                    <div class="form-group">
-                        <div class="form-group">
-                            <button type="button" class="btn btn-outline-primary" data-toggle="modal"
-                                id="selectSubmitStocks" data-target="#exampleModal" onclick="checkSelectedStocks()">일괄
-                                납품</button>
-                            <button type="button" class="btn btn-outline-danger" data-toggle="modal"
-                                data-target="#delete-modal" onclick="deleteStocks()">
-                                일괄 삭제
-                            </button>
-                        </div>
-                        <table class="table table-striped table-bordered table-hover assets_table " id="stock-table">
-                            <thead>
-                                <tr>
-                                    <th>선택</th>
-                                    <th>제조사</th>
-                                    <th>제품명</th>
-                                    <th>모델명</th>
-                                    <th>시리얼</th>
-                                    <th>재고 위치</th>
-                                    <th>입고 일자</th>
-                                    <th>신청</th>
-                                </tr>
-                            </thead>
-                            {% for stock in stocks %}
-                            <tr>
-                                <td class="td-checkBox" onclick="checkTheBox(event)" id="td-checkbox">
-                                    <input class="form-check-input position-static" type="checkbox" id="blankCheckbox"
-                                        value="{{stock.id}}">
-
-                                </td>
-                                <td>
-                                    <a href="{% url 'equipment_stock_detail' stock_id=stock.id %}">
-                                        {{ stock.mnfacture }}
-                                    </a>
-                                </td>
-                                <td>{{ stock.product }}</td>
-                                <td>{{ stock.product_model }}</td>
-                                <td>{{ stock.serial }}</td>
-                                <td>{{ stock.location }}</td>
-                                <td>{{ stock.receive_date }}</td>
-                                <td>
-                                    <button type="button" class="btn btn-primary" data-toggle="modal"
-                                        data-target="#exampleModal"
-                                        onclick="stockApply('{{stock.id}}', '{{stock.mnfacture}}', '{{ stock.product }}', '{{ stock.product_model }}', '{{ stock.serial }}', '{{ stock.receive_date }}');">납품
-                                    </button>
-                                </td>
-                            </tr>
-                            {% endfor %}
-                        </table>
+                    <div class="form-group body__mnfacture">
+                        제조사 선택
+                        {{equipment_form.mnfacture}}
+                    </div>
+                    <div class="form-group col-md-12 body__stock-info" id="body__stock-info">
                     </div>
                 </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle"
-    aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content" id="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLongTitle">납품 신청 페이지</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <form class="modal-body" method="POST" id="modal-body">
-                {% csrf_token %}
-                <input type="hidden" id="stock_id">
-                <div class="form-group">
-                    <label>고객사</label>
-                    {{equipment_form.client}}
-                </div>
-                <div class="form-group">
-                    <label>납품일자</label>
-                    <input type="text" name="install-date" id="equipment-install-date"
-                        class="form-control calendar__start hasDatepicker" autocomplete="off" data-provide="datepicker"
-                        placeholder="&#xf073;">
-                </div>
-                <div class="form-group">
-                    <label>담당 엔지니어 혹은 영업</label>
-                    <input type="text" class="form-control" id="manager" autocomplete="off" name="manager">
-                </div>
-                <div class="form-group">
-                    <label>납품 장소</label>
-                    <input type="text" class="form-control" id="location" autocomplete="off" name="location">
-                </div>
-                <div class="card single-delivery" id="single-delivery">
-                    <h5 class="card-header single-delivery__header">장비 정보</h5>
-                    <div class="card-body single-delivery__body">
-                        <div class="media single-delivery__media">
-                            <i class="fa fa-hdd-o"></i>
-                            <div class="media-body">
-                                <h5 class="mt-0" id="media-title"></h5>
-                                <ul class="list-group list-group-flush" id="stock-info">
-                                    <li id="stock-product"></li>
-                                    <li id="stock-product-model"></li>
-                                    <li id="stock-serial"></li>
-                                    <li id="stock-receive-date"></li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="card multi-delivery" id="multi-delivery">
-                    <h5 class="card-header multi-delivery__header">장비 정보</h5>
-                    <div class="card-body multi-delivery__body">
-                        <div class="media multi-delivery__media">
-                            <i class="fa fa-hdd-o"></i>
-                            <div class="media-body">
-                                <div id="accordion">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </form>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-outline-danger" data-dismiss="modal">닫기</button>
-                <button type="button" class="btn btn-outline-primary" id="sumbit-btn" onclick="valueCheck()">납품
-                    신청</button>
-            </div>
-        </div>
-        <div class="modal-content waring-content" id="waring-content">
-            <div class="modal-header waring-header" id="waring-header">
-                <h5 class="modal-title waring-title" id="waring-header">❗ 일괄 신청 오류</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body waring-body" id="waring-body">
-                <div class="alert alert-danger" role="alert">
-                    ❌ 재고가 선택되지 않았습니다.<br><br>✔ 체크박스 선택 후 다시 일괄납품을 신청하세요.
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-outline-danger" data-dismiss="modal">돌아가기</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-
-
-<div class="modal fade" id="delete-modal" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content" id="delete-select-error">
-            <div class="modal-header">
-                <h5 class="modal-title">일괄 삭제</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <div class="alert alert-danger" role="alert">
-                    ❌ 재고가 선택되지 않았습니다.<br><br>✔ 체크박스 선택 후 일괄 삭제를 신청하세요.
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-outline-danger" data-dismiss="modal">돌아가기</button>
-            </div>
-        </div>
-
-        <div class="modal-content" id="delete-success">
-            <div class="modal-header">
-                <h5 class="modal-title">일괄 삭제</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <div class="alert alert-warning" role="alert">
-                    ⚠ 선택된 재고는 전부 삭제처리 됩니다.<br><br>🗑 계속 진행하시려면 하단의 일괄 삭제 버튼을 눌러주세요.
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-outline-danger" data-dismiss="modal"
-                    onclick="stockMultiDelete()">일괄
-                    삭제</button>
-            </div>
-        </div>
-
-        <div class="modal-content" id="delete-permission-denied">
-            <div class="modal-header">
-                <h5 class="modal-title ">일괄 삭제</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body" id='permission-denied-body'>
-                <div class="alert alert-danger" role="alert">
-                    ❌ 선택된 재고는 해당 사용자가 삭제 할 수 없습니다.<br><br>👇 아래에서 권한이 없는 재고를 확인해주세요.
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-outline-danger" data-dismiss="modal">돌아가기</button>
             </div>
         </div>
     </div>
@@ -217,17 +29,17 @@
 <link rel="stylesheet" href="https://cdn.datatables.net/1.10.20/css/dataTables.bootstrap4.min.css">
 <link rel="stylesheet" href="{% static 'css/selectpicker/bootstrap-select.css' %}">
 <link rel="stylesheet" href="{% static 'css/datepicker/datepicker3.css' %}">
-<link rel="stylesheet" href="{% static 'css/equipment/equipment_stock.css' %}">
+<link rel="stylesheet" href="{% static 'css/equipment/stock.css' %}">
 
 {% endblock %}
 
 {% block js %}
 <script src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
 <script src="https://cdn.datatables.net/1.10.20/js/dataTables.bootstrap4.min.js"></script>
+<script src="{% static 'js/equipment/stock.js' %}"></script>
 <script src="{% static 'js/selectpicker/bootstrap-select.js' %}"></script>
 <script src="{% static 'js/datepicker/bootstrap-datepicker.js' %}"></script>
 <script src="{% static 'js/datepicker/bootstrap-datepicker.kr.js' %}"></script>
 <script src="{% static 'js/datepicker/datepicker.js' %}"></script>
-<script src="{% static 'js/equipment/stock.js' %}"></script>
 <script src="{% static 'js/datatable/dataTable.js' %}"></script>
 {% endblock %}
