@@ -1,0 +1,58 @@
+{% extends 'base.html' %} {% block content %} {% load static %}
+
+<div class="container">
+    <div class="card equipment">
+        <div class="card-header equipment__header">
+            <i class="fa fa-tasks"></i>
+            <h5 class="card-title equipment__title">&nbsp;<span class="stock-model-name"
+                    id="stock-model-name">{{stock_model_name}}</span> 반납 현황</h5>
+        </div>
+        <div class="card-body">
+            <div class="equipment__contents form-row">
+                <div class="form-group col-md-12">
+                    <div class="form-group">
+                        <table class="table table-striped table-bordered table-hover assets_table " id="myTable1">
+                            <thead>
+                                <tr>
+                                    <th>시리얼</th>
+                                    <th>입고 일자</th>
+                                    <th>반납 일자</th>
+                                    <th>기 타</th>
+                                </tr>
+                            </thead>
+                            {% for return in returns %}
+                            <tr>
+                                <td>{{ return.serial }}</td>
+                                <td>{{ return.receive_date }}</td>
+                                <td>{{ return.return_date }}</td>
+                                <td>{{ return.comments }}</td>
+                            </tr>
+                            {% endfor %}
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %} {% block title %} 반납 현황 {% endblock %}
+{% block css %}
+<link rel="stylesheet" href="https://cdn.datatables.net/1.10.20/css/dataTables.bootstrap4.min.css">
+<link rel="stylesheet" href="{% static 'css/selectpicker/bootstrap-select.css' %}">
+<link rel="stylesheet" href="{% static 'css/datepicker/datepicker3.css' %}">
+<link rel="stylesheet" href="{% static 'css/equipment/stockDelivery.css' %}">
+
+{% endblock %}
+
+{% block js %}
+<script src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.20/js/dataTables.bootstrap4.min.js"></script>
+<script src="{% static 'js/selectpicker/bootstrap-select.js' %}"></script>
+<script src="{% static 'js/datepicker/bootstrap-datepicker.js' %}"></script>
+<script src="{% static 'js/datepicker/bootstrap-datepicker.kr.js' %}"></script>
+<script src="{% static 'js/datepicker/datepicker.js' %}"></script>
+<script src="{% static 'js/equipment/stockDetail.js' %}"></script>
+<script src="{% static 'js/datatable/dataTable.js' %}"></script>
+{% endblock %}
