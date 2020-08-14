@@ -5,6 +5,7 @@ from django.db import models
 from django.dispatch import receiver
 from member.models import Member
 from common.models import Client, Product, ProductModel, Mnfacture
+from utils.constant import STOCK_STATUS_KEEP, STOCK_STATUS_SOLD, STOCK_STATUS_DISPOSAL, STOCK_STATUS_RETURN
 
 
 def _equipmentattachment_upload_path(instance, filename):
@@ -35,9 +36,12 @@ class Equipment(models.Model):
 
 class Stock(models.Model):
     STOCK_STATUS_CHOICE = (
-        ("keep", "keep"),
-        ("sold", "sold"),
+        (STOCK_STATUS_KEEP, STOCK_STATUS_KEEP),
+        (STOCK_STATUS_SOLD, STOCK_STATUS_SOLD),
+        (STOCK_STATUS_DISPOSAL, STOCK_STATUS_DISPOSAL),
+        (STOCK_STATUS_RETURN, STOCK_STATUS_RETURN)
     )
+
     mnfacture = models.ForeignKey(
         to=Mnfacture, null=True, on_delete=models.SET_NULL)
     product = models.ForeignKey(
@@ -49,6 +53,8 @@ class Stock(models.Model):
     status = models.CharField(
         max_length=10, choices=STOCK_STATUS_CHOICE, default="keep")
     receive_date = models.DateField(max_length=20, blank=True)
+    return_date = models.DateField(max_length=20, blank=True, null=True)
+    disposal_date = models.DateField(max_length=20, blank=True, null=True)
     creator = models.ForeignKey(
         to=Member, on_delete=models.SET_NULL, null=True)
     comments = models.CharField(max_length=200, default='')
