@@ -31,7 +31,6 @@ $(function () {
       const product = $("#product_id").val();
       const productModel = $("#product-model").val();
       const serial = $("#serial").val();
-      const manager = $("#manager").val();
       const location = $("#location").val();
       const installDate = $("#equipment-install-date").val();
 
