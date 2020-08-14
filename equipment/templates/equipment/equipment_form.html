@@ -43,19 +43,19 @@
                             {{ equipment_form.product_model }}
                         </div>
                         <div class="form-group">
-                            <label>시리얼 </label>
+                            <label>시리얼</label>
                             <input type="text" class="form-control" id="serial" autocomplete="off" name="serial">
                         </div>
                         <div class="form-group">
-                            <label>담당 엔지니어</label>
+                            <label>담당 영업 혹은 엔지니어</label>
                             <input type="text" class="form-control" id="manager" autocomplete="off" name="manager">
                         </div>
                         <div class="form-group ">
-                            <label>설치장소</label>
+                            <label>설치 및 납품장소</label>
                             <input type="text" class="form-control" id="location" autocomplete="off" name="location">
                         </div>
                         <div class="form-group ">
-                            <label>설치 일자</label>
+                            <label>납품 일자</label>
                             <input type="text" name="install-date" id="equipment-install-date"
                                 class="form-control calendar__start hasDatepicker" autocomplete="off"
                                 data-provide="datepicker" placeholder="&#xf073;">
@@ -91,6 +91,6 @@
 <script src="{% static 'js/datepicker/bootstrap-datepicker.js' %}"></script>
 <script src="{% static 'js/datepicker/bootstrap-datepicker.kr.js' %}"></script>
 <script src="{% static 'js/datepicker/datepicker.js' %}"></script>
-<script src="{% static 'js/equipment/formUpload.js' %}"></script>
+<script src="{% static 'js/equipment/equipmentForm.js' %}"></script>
 <script src="{% static 'js/sites/jquery.form.js' %}"></script>
 {% endblock %}
