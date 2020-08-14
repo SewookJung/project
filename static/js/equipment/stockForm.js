@@ -51,10 +51,6 @@ $(function () {
         alert("시리얼 번호를 입력하세요.");
         $("#serial").focus();
         return false;
-      } else if (manager == "") {
-        alert("담당 엔지니어 혹은 담당 영업을 입력하세요.");
-        $("#manager").focus();
-        return false;
       } else if (location == "") {
         alert("입고 위치를 입력하세요");
         $("#location").focus();
