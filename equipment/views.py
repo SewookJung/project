@@ -17,7 +17,8 @@ from openpyxl import load_workbook
 from common.models import Client, Product, ProductModel, Mnfacture
 from .models import EquipmentAttachment, Equipment, Stock, StockAttachment
 from .forms import EquipmentForm
-from utils.constant import REPORT_PERMISSION_DEFAULT, SAMPLE_FILE_ID, STOCK_SAMPLE_FILE_ID, STOCK_STATUS_KEEP, STOCK_STATUS_SOLD
+from utils.constant import REPORT_PERMISSION_DEFAULT, SAMPLE_FILE_ID, STOCK_SAMPLE_FILE_ID
+from utils.constant import STOCK_STATUS_KEEP, STOCK_STATUS_SOLD, STOCK_STATUS_RETURN, STOCK_STATUS_DISPOSAL
 
 from utils.functions import (
     make_response,
@@ -318,8 +319,12 @@ def equipment_upload_complete(request):
         location = item[5]
         manager = item[6]
         install_date = item[7]
+        comments = item[8]
 
-        if item[8] == None:
+        if manager == None:
+            manager = ""
+
+        if comments == None:
             comments = ""
         else:
             comments = item[8]
@@ -382,6 +387,52 @@ def equipment_sample_download(request):
 
 
 @login_required
+def equipment_stock(request):
+    equipment_form = EquipmentForm()
+    return render(request, 'equipment/equipment_stock.html', {"equipment_form": equipment_form, 'permission': REPORT_PERMISSION_DEFAULT})
+
+
+@login_required
+def equipment_stock_get_list(request):
+    try:
+        mnfacture_id = request.POST['mnfactureId']
+
+        stock_objects = Stock.objects.filter(mnfacture_id=mnfacture_id)
+        mn_objects = Mnfacture.objects.all()
+        product_model_objects = ProductModel.objects.all()
+        stocks = []
+
+        mnfacture_name = str(mn_objects.get(id=mnfacture_id))
+        mnfacture_object = {mnfacture_name: []}
+        stocks.append(mnfacture_object)
+        product_model_id_list = stock_objects.values(
+            "product_model", "product").distinct()
+
+        for product in product_model_id_list:
+            product_id = product['product']
+            product_model_id = product['product_model']
+
+            product_name = str(Product.objects.get(id=product_id))
+            product_model_name = str(
+                product_model_objects.get(id=product_model_id))
+            stock_keep_count = stock_objects.filter(
+                product_model_id=product_model_id, status=STOCK_STATUS_KEEP).count()
+            stock_sold_count = stock_objects.filter(
+                product_model_id=product_model_id, status=STOCK_STATUS_SOLD).count()
+            stock_disposal_count = stock_objects.filter(
+                product_model_id=product_model_id, status=STOCK_STATUS_DISPOSAL).count()
+            stock_return_count = stock_objects.filter(
+                product_model_id=product_model_id, status=STOCK_STATUS_RETURN).count()
+            stock_object = {product_model_name: {
+                'id': product_model_id, 'keep': stock_keep_count, 'sold': stock_sold_count, 'disposal': stock_disposal_count, 'return': stock_return_count, 'product': product_name}}
+            mnfacture_object[mnfacture_name].append(stock_object)
+        return make_response(status=200, content=json.dumps({'success': True, 'stocks': stocks}))
+
+    except:
+        return make_response(status=400, content=json.dumps({'success': False, 'msg': "파일이 존재하지 않아 다운로드 할 수 없습니다.\n관리자에게 문의 바랍니다."}))
+
+
+@login_required
 def equipment_stock_check(request):
     if not os.path.exists(settings.MEDIA_ROOT):
         return make_response(status=400, content=json.dumps({'success': False, 'msg': "NAS서버와 연결이 해제되어 파일 다운로드가 불가능합니다.\n관리자에게 문의 바랍니다."}))
@@ -390,13 +441,6 @@ def equipment_stock_check(request):
         return make_response(status=200, content=json.dumps({'success': True}))
     except EquipmentAttachment.DoesNotExist:
         return make_response(status=400, content=json.dumps({'success': False, 'msg': "파일이 존재하지 않아 다운로드 할 수 없습니다.\n관리자에게 문의 바랍니다."}))
-
-
-@login_required
-def equipment_stock(request):
-    equipment_form = EquipmentForm()
-    stocks = Stock.objects.filter(status=STOCK_STATUS_KEEP)
-    return render(request, 'equipment/equipment_stock.html', {'stocks': stocks, 'permission': REPORT_PERMISSION_DEFAULT, "equipment_form": equipment_form})
 
 
 @login_required
@@ -472,13 +516,40 @@ def equipment_stock_multi_apply(request):
 
 
 @login_required
-def equipment_stock_detail(request, stock_id):
+def equipment_stock_detail(request, model_id, model_status):
+    stock_objects = Stock.objects.all()
+    stocks = stock_objects.filter(
+        product_model_id=model_id, status=model_status)
+    stock_model_name = stocks[0].product_model
+    equipment_form = EquipmentForm()
+
+    if model_status == STOCK_STATUS_KEEP:
+        return render(request, 'equipment/equipment_stock_keep.html', {'stocks': stocks, 'stock_model_name': stock_model_name, 'equipment_form': equipment_form, 'permission': REPORT_PERMISSION_DEFAULT})
+
+    if model_status == STOCK_STATUS_SOLD:
+        equipments = Equipment.objects.all()
+        serials = stocks.values('serial')
+        delivers = []
+        for serial in serials:
+            equipment_data = equipments.get(serial=serial['serial'])
+            delivers.append(equipment_data)
+        return render(request, 'equipment/equipment_stock_sold.html', {'delivers': delivers, 'stock_model_name': stock_model_name, 'equipment_form': equipment_form, 'permission': REPORT_PERMISSION_DEFAULT})
+
+    if model_status == STOCK_STATUS_RETURN:
+        return render(request, 'equipment/equipment_stock_return.html', {'returns': stocks, 'stock_model_name': stock_model_name, 'equipment_form': equipment_form, 'permission': REPORT_PERMISSION_DEFAULT})
+
+    if model_status == STOCK_STATUS_DISPOSAL:
+        return render(request, 'equipment/equipment_stock_disposal.html', {'disposals': stocks, 'stock_model_name': stock_model_name, 'equipment_form': equipment_form, 'permission': REPORT_PERMISSION_DEFAULT})
+
+
+@login_required
+def equipment_stock_edit(request, stock_id):
     if request.method == "GET":
         equipment_form = EquipmentForm()
         products = Product.objects.values('id',
                                           'name', 'makers', 'level').order_by('makers', 'level')
         stock = Stock.objects.get(id=stock_id)
-    return render(request, 'equipment/equipment_stock_detail.html', {"stock": stock, "products": products, "equipment_form": equipment_form, 'login_id': request.session['id'], 'permission': REPORT_PERMISSION_DEFAULT})
+    return render(request, 'equipment/equipment_stock_edit.html', {"stock": stock, "products": products, "equipment_form": equipment_form, 'login_id': request.session['id'], 'permission': REPORT_PERMISSION_DEFAULT})
 
 
 @login_required
@@ -492,7 +563,6 @@ def equipment_stock_detail_apply(request, stock_id):
         receive_date = request.POST['install-date']
         comments = request.POST['comments']
         creator = request.session['id']
-        print(serial)
 
         try:
             equipment = Equipment.objects.get(serial=serial)
