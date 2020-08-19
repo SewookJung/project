@@ -1,6 +1,6 @@
 $(function () {
   $(
-    "#datepicker1, #datepicker2, #mnStDate, #mnEdDate, #pjStDate, #pjEdDate, #report_date, #rent_date, #return_date, #equipment-install-date, #stock-install-date"
+    "#datepicker1, #datepicker2, #mnStDate, #mnEdDate, #pjStDate, #pjEdDate, #report_date, #rent_date, #return_date, #equipment-install-date, #stock-install-date, #equipment-maintenance-date, #stock-return-date, #stock-disposal-date, .hasDatepicker"
   ).datepicker({
     format: "yyyy-mm-dd", //데이터 포맷 형식(yyyy : 년 mm : 월 dd : 일 )
     autoclose: true, //사용자가 날짜를 클릭하면 자동 캘린더가 닫히는 옵션
