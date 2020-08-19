@@ -4,8 +4,9 @@
     <div class="card equipment">
         <div class="card-header equipment__header">
             <i class="fa fa-tasks"></i>
-            <h5 class="card-title equipment__title">&nbsp;<span class="stock-model-name"
-                    id="stock-model-name">{{stock_model_name}}</span> 폐기 현황</h5>
+            <h5 class="card-title equipment__title">&nbsp; [{{stock_mnfacture_name}} /
+                {{stock_model_name}}] 폐기 현황</h5>
+            <span class="total-count">{{total_count}}</span>
         </div>
         <div class="card-body">
             <div class="equipment__contents form-row">
@@ -53,6 +54,5 @@
 <script src="{% static 'js/datepicker/bootstrap-datepicker.js' %}"></script>
 <script src="{% static 'js/datepicker/bootstrap-datepicker.kr.js' %}"></script>
 <script src="{% static 'js/datepicker/datepicker.js' %}"></script>
-<script src="{% static 'js/equipment/stockDetail.js' %}"></script>
 <script src="{% static 'js/datatable/dataTable.js' %}"></script>
 {% endblock %}
