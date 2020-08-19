@@ -1,3 +1,24 @@
+const settingMaintenance = (event) => {
+  const maintenanceField = document.getElementById(
+    "equipment-maintenance-date"
+  );
+  const getDeliveryDateValue = event.target.value.split("-");
+
+  const DeliveryDate = new Date(
+    getDeliveryDateValue[0],
+    getDeliveryDateValue[1],
+    getDeliveryDateValue[2]
+  );
+
+  DeliveryDate.setFullYear(DeliveryDate.getFullYear() + 1);
+
+  const year = DeliveryDate.getFullYear();
+  const month = ("0" + DeliveryDate.getMonth()).slice(-2);
+  const day = ("0" + DeliveryDate.getDate()).slice(-2);
+  const defaultMaintenanceValue = `${year}-${month}-${day}`;
+  maintenanceField.value = defaultMaintenanceValue;
+};
+
 function equipmentAddCancel() {
   if (confirm("제품정보 수정을 취소하시겠습니까?"))
     location.href = "/equipment/";
@@ -32,9 +53,10 @@ $(function () {
       const product = $("#product_id").val();
       const productModel = $("#product-model").val();
       const serial = $("#serial").val();
-      const manager = $("#manager").val();
       const location = $("#location").val();
       const installDate = $("#equipment-install-date").val();
+      const maintenanceDate = $("#equipment-maintenance-date").val();
+      console.log(maintenanceDate);
 
       if (client == "") {
         alert("고객사를 선택해주세요.");
@@ -57,12 +79,16 @@ $(function () {
         $("#serial").focus();
         return false;
       } else if (location == "") {
-        alert("설치장소를 입력하세요");
+        alert("설치 및 납품장소를 입력하세요.");
         $("#location").focus();
         return false;
       } else if (installDate == "") {
-        alert("설치 날짜를 선택하세요");
+        alert("납품 일자를 선택하세요.");
         $("#equipment-install-date").focus();
+        return false;
+      } else if (maintenanceDate == "") {
+        alert("유지보수 만료 일자를 선택하세요.");
+        $("#equipment-maintenance-date").focus();
         return false;
       } else {
         return true;
