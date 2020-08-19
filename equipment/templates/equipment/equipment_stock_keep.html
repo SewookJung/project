@@ -4,19 +4,28 @@
     <div class="card equipment">
         <div class="card-header equipment__header">
             <i class="fa fa-tasks"></i>
-            <h5 class="card-title equipment__title">&nbsp;<span class="stock-model-name"
-                    id="stock-model-name">{{stock_model_name}}</span> 재고현황</h5>
+            <h5 class="card-title equipment__title">&nbsp; [{{stock_mnfacture_name}} /
+                {{stock_model_name}}] 재고 현황</h5>
+            <span class="total-count">{{total_count}}</span>
         </div>
         <div class="card-body">
             <div class="equipment__contents form-row">
                 <div class="form-group col-md-12">
                     <div class="form-group">
-                        <div class="form-group">
-                            <button type="button" class="btn btn-outline-primary" data-toggle="modal"
-                                id="selectSubmitStocks" data-target="#exampleModal" onclick="checkSelectedStocks()">일괄
+                        <div class="form-group mulit-form">
+                            <input type="hidden" id="stock-model-name" value="{{stock_model_name}}">
+                            <button type="button" class="btn btn-success" data-toggle="modal" id="selectSubmitStocks"
+                                data-target="#exampleModal" onclick="checkSelectedStocks()">일괄
                                 납품</button>
-                            <button type="button" class="btn btn-outline-danger" data-toggle="modal"
-                                data-target="#delete-modal" onclick="deleteStocks()">
+                            <button type="button" class="btn btn-warning" data-toggle="modal" id="selectSubmitStocks"
+                                data-target="#multiReturnModal" onclick="returnStocks()">일괄
+                                반납</button>
+                            <button type="button" class="btn btn-dark" data-toggle="modal"
+                                data-target="#multiDisposalModal" onclick="disposalStocks()">
+                                일괄 폐기
+                            </button>
+                            <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#delete-modal"
+                                onclick="deleteStocks()">
                                 일괄 삭제
                             </button>
                         </div>
@@ -47,9 +56,19 @@
                                 <td>{{ stock.location }}</td>
                                 <td>{{ stock.receive_date }}</td>
                                 <td>
-                                    <button type="button" class="btn btn-primary" data-toggle="modal"
+                                    <button type="button" class="btn btn-success" data-toggle="modal"
                                         data-target="#exampleModal"
                                         onclick="stockApply('{{stock.id}}', '{{stock.mnfacture}}', '{{ stock.product }}', '{{ stock.product_model }}', '{{ stock.serial }}', '{{ stock.receive_date }}');">납품
+                                    </button>
+                                    <button type="button" class="btn btn-warning" data-toggle="modal"
+                                        data-target="#returnModal"
+                                        onclick="stockReturnApply('{{stock.id}}', '{{stock.mnfacture}}', '{{ stock.product }}', '{{ stock.product_model }}', '{{ stock.serial }}', '{{ stock.receive_date }}');">
+                                        반납
+                                    </button>
+                                    <button type="button" class="btn btn-dark" data-toggle="modal"
+                                        data-target="#disposalModal"
+                                        onclick="stockDisposalApply('{{stock.id}}', '{{stock.mnfacture}}', '{{ stock.product }}', '{{ stock.product_model }}', '{{ stock.serial }}', '{{ stock.receive_date }}');">
+                                        폐기
                                     </button>
                                 </td>
                             </tr>
@@ -83,7 +102,12 @@
                     <label>납품일자</label>
                     <input type="text" name="install-date" id="equipment-install-date"
                         class="form-control calendar__start hasDatepicker" autocomplete="off" data-provide="datepicker"
-                        placeholder="&#xf073;">
+                        onchange="settingMaintenance(event)" placeholder="&#xf073;">
+                </div>
+                <div class="form-group ">
+                    <label>유지보수 만료 일자</label>
+                    <input type="text" name="maintenance-date" id="equipment-maintenance-date"
+                        class="form-control calendar__start hasDatepicker" autocomplete="off" placeholder="&#xf073;">
                 </div>
                 <div class="form-group">
                     <label>담당 엔지니어 혹은 영업</label>
@@ -208,7 +232,221 @@
 </div>
 
 
+<!-- Return Modal -->
+<div class="modal fade" id="returnModal" role="dialog" tabindex="-1">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <input type="hidden" id="return-stock-id">
+            <div class="modal-header">
+                <h5 class="modal-title">반납 신청 페이지</h5>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>반납 일자</label>
+                    <input type="text" name="stock-return-date" id="stock-return-date"
+                        class="form-control calendar__start hasDatepicker" autocomplete="off" placeholder="&#xf073;">
+                </div>
+                <div class="form-group">
+                    <label>반납 사유</label>
+                    <input type="text" class="form-control" id="stock-return-comments" autocomplete="off"
+                        name="stock-return-comments">
+                </div>
+                <div class="form-group">
+                    <div class="card stock-return" id="stock-return">
+                        <h5 class="card-header stock-return__header">장비 정보</h5>
+                        <div class="card-body stock-return__body">
+                            <div class="media stock-return__media">
+                                <i class="fa fa-hdd-o"></i>
+                                <div class="media-body">
+                                    <h5 class="mt-0" id="return-mnfacture"></h5>
+                                    <ul class="list-group list-group-flush" id="return-info">
+                                        <li id="return-product"></li>
+                                        <li id="return-product-model"></li>
+                                        <li id="return-serial"></li>
+                                        <li id="return-receive-date"></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-danger" data-dismiss="modal">닫기</button>
+                <button type="button" class="btn btn-outline-primary" id="sumbit-btn" onclick="stockReturnSubmit()">반품
+                    신청</button>
+            </div>
+        </div>
+    </div>
+</div>
 
+<!-- Multi selected return stock Modal -->
+<div class="modal fade" id="multiReturnModal" role="dialog" tabindex="-1">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">반납 신청 페이지</h5>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="success-return-form" id="success-return-form">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label>반납 일자</label>
+                        <input type="text" name="multi-return-date" id="multi-return-date"
+                            class="form-control calendar__start hasDatepicker" autocomplete="off"
+                            placeholder="&#xf073;">
+                    </div>
+                    <div class="form-group">
+                        <label>반납 사유</label>
+                        <input type="text" class="form-control" id="multi-return-comments" autocomplete="off"
+                            name="multi-return-comments">
+                    </div>
+                    <div class="card multi-return" id="multi-return">
+                        <h5 class="card-header multi-return__header">장비 정보</h5>
+                        <div class="card-body multi-return__body">
+                            <div class="media multi-return__media">
+                                <i class="fa fa-hdd-o"></i>
+                                <div class="media-body">
+                                    <div id="multi-return-accordion">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-danger" data-dismiss="modal">닫기</button>
+                    <button type="button" class="btn btn-outline-primary" id="sumbit-btn"
+                        onclick="multiStocksReturn()">반납신청</button>
+                </div>
+            </div>
+
+            <div class="fail-return-form" id="fail-return-form">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <div class="alert alert-danger" role="alert">
+                            ❌ 재고가 선택되지 않았습니다.<br><br>
+                            ✔ 체크박스 선택 후 다시 일괄 반납을 신청하세요.
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-danger" data-dismiss="modal">돌아가기</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Disposal Modal -->
+<div class="modal fade" id="disposalModal" role="dialog" tabindex="-1">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <input type="hidden" id="disposal-stock-id">
+            <div class="modal-header">
+                <h5 class="modal-title">폐기 신청 페이지</h5>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>폐기 일자</label>
+                    <input type="text" name="stock-disposal-date" id="stock-disposal-date"
+                        class="form-control hasDatepicker" autocomplete="off" placeholder="&#xf073;">
+                </div>
+                <div class="form-group">
+                    <label>폐기 사유</label>
+                    <input type="text" class="form-control" id="stock-disposal-comments" autocomplete="off"
+                        name="stock-disposal-comments">
+                </div>
+                <div class="form-group">
+                    <div class="card stock-disposal" id="stock-disposal">
+                        <h5 class="card-header stock-disposal__header">장비 정보</h5>
+                        <div class="card-body stock-disposal__body">
+                            <div class="media stock-disposal__media">
+                                <i class="fa fa-hdd-o"></i>
+                                <div class="media-body">
+                                    <h5 class="mt-0" id="disposal-mnfacture"></h5>
+                                    <ul class="list-group list-group-flush" id="disposal-info">
+                                        <li id="disposal-product"></li>
+                                        <li id="disposal-product-model"></li>
+                                        <li id="disposal-serial"></li>
+                                        <li id="disposal-receive-date"></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-danger" data-dismiss="modal">닫기</button>
+                <button type="button" class="btn btn-outline-primary" id="sumbit-btn" onclick="stockDisposalSubmit()">반품
+                    신청</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Multi selected disposal stock Modal -->
+<div class="modal fade" id="multiDisposalModal" role="dialog" tabindex="-1">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">폐기 신청 페이지</h5>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="success-disposal-form" id="success-disposal-form">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label>폐기 일자</label>
+                        <input type="text" name="multi-disposal-date" id="multi-disposal-date"
+                            class="form-control calendar__start hasDatepicker" autocomplete="off"
+                            placeholder="&#xf073;">
+                    </div>
+                    <div class="form-group">
+                        <label>폐기 사유</label>
+                        <input type="text" class="form-control" id="multi-disposal-comments" autocomplete="off"
+                            name="multi-disposal-comments">
+                    </div>
+                    <div class="card multi-disposal" id="multi-disposal">
+                        <h5 class="card-header multi-disposal__header">장비 정보</h5>
+                        <div class="card-body multi-disposal__body">
+                            <div class="media multi-disposal__media">
+                                <i class="fa fa-hdd-o"></i>
+                                <div class="media-body">
+                                    <div id="multi-disposal-accordion">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-danger" data-dismiss="modal">닫기</button>
+                    <button type="button" class="btn btn-outline-primary" id="sumbit-btn"
+                        onclick="multiStocksDisposal()">폐기신청</button>
+                </div>
+            </div>
+
+            <div class="fail-disposal-form" id="fail-disposal-form">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <div class="alert alert-danger" role="alert">
+                            ❌ 재고가 선택되지 않았습니다.<br><br>
+                            ✔ 체크박스 선택 후 다시 일괄 폐기를 신청하세요.
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-danger" data-dismiss="modal">돌아가기</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %} {% block title %} 재고 현황 {% endblock %}
 {% block css %}
 <link rel="stylesheet" href="https://cdn.datatables.net/1.10.20/css/dataTables.bootstrap4.min.css">
