@@ -43,6 +43,50 @@ const stockApply = (
   liOfReceiveDate.innerText = receiveDate + " 입고";
 };
 
+const stockReturnApply = (
+  stockId,
+  mnfacture,
+  product,
+  productModel,
+  serial,
+  receiveDate
+) => {
+  const stockIdInput = document.getElementById("return-stock-id");
+  const titleOfMnfacture = document.getElementById("return-mnfacture");
+  const liOfProduct = document.getElementById("return-product");
+  const liOfProductModel = document.getElementById("return-product-model");
+  const liOfSerial = document.getElementById("return-serial");
+  const liOfReceiveDate = document.getElementById("return-receive-date");
+  stockIdInput.value = stockId;
+  titleOfMnfacture.innerText = mnfacture;
+  liOfProduct.innerText = product;
+  liOfProductModel.innerText = productModel;
+  liOfSerial.innerText = serial;
+  liOfReceiveDate.innerText = receiveDate + " 입고";
+};
+
+const stockDisposalApply = (
+  stockId,
+  mnfacture,
+  product,
+  productModel,
+  serial,
+  receiveDate
+) => {
+  const stockIdInput = document.getElementById("disposal-stock-id");
+  const titleOfMnfacture = document.getElementById("disposal-mnfacture");
+  const liOfProduct = document.getElementById("disposal-product");
+  const liOfProductModel = document.getElementById("disposal-product-model");
+  const liOfSerial = document.getElementById("disposal-serial");
+  const liOfReceiveDate = document.getElementById("disposal-receive-date");
+  stockIdInput.value = stockId;
+  titleOfMnfacture.innerText = mnfacture;
+  liOfProduct.innerText = product;
+  liOfProductModel.innerText = productModel;
+  liOfSerial.innerText = serial;
+  liOfReceiveDate.innerText = receiveDate + " 입고";
+};
+
 const valueCheck = () => {
   const client = document.getElementById("client_id");
   const deliveryDate = document.getElementById("equipment-install-date");
@@ -100,6 +144,85 @@ const valueCheck = () => {
   });
 };
 
+const stockReturnSubmit = () => {
+  const returnDate = document.getElementById("stock-return-date").value;
+  const returnComments = document.getElementById("stock-return-comments").value;
+  const returnStockId = document.getElementById("return-stock-id").value;
+
+  if (returnDate == "") {
+    alert("❗ 반납 일자를 선택해주세요.");
+    return false;
+  }
+
+  if (returnComments == "") {
+    alert("❗ 반납 사유를 입력해주세요.");
+    return false;
+  }
+
+  param = {};
+  param.returnStockId = returnStockId;
+  param.returnDate = returnDate;
+  param.returnComments = returnComments;
+
+  $.ajax({
+    url: "/equipment/stock/return/apply/",
+    data: param,
+    type: "POST",
+    dataType: "json",
+    headers: { "X-CSRFToken": csrfToken },
+    success: function (data) {
+      const successMsg = data.msg;
+      alert(successMsg);
+      window.location = "/equipment/stock/";
+    },
+    error: function (request, status, error) {
+      const errorMsg = JSON.parse(request.responseText).msg;
+      alert(errorMsg);
+      window.location = "/equipment/stock/";
+    },
+  });
+};
+
+const stockDisposalSubmit = () => {
+  const disposalDate = document.getElementById("stock-disposal-date").value;
+  const disposalComments = document.getElementById("stock-disposal-comments")
+    .value;
+  const disposalStockId = document.getElementById("disposal-stock-id").value;
+
+  if (disposalDate == "") {
+    alert("❗ 폐기 일자를 선택해주세요.");
+    return false;
+  }
+
+  if (disposalComments == "") {
+    alert("❗ 폐기 사유를 입력해주세요.");
+    return false;
+  }
+
+  param = {};
+  param.disposalStockId = disposalStockId;
+  param.disposalDate = disposalDate;
+  param.disposalComments = disposalComments;
+
+  $.ajax({
+    url: "/equipment/stock/disposal/apply/",
+    data: param,
+    type: "POST",
+    dataType: "json",
+    headers: { "X-CSRFToken": csrfToken },
+    success: function (data) {
+      const successMsg = data.msg;
+      alert(successMsg);
+      window.location = "/equipment/stock/";
+    },
+    error: function (request, status, error) {
+      const errorMsg = JSON.parse(request.responseText).msg;
+      alert(errorMsg);
+      window.location = "/equipment/stock/";
+    },
+  });
+};
+
 const checkTheBox = (event) => {
   const clickedElementId = event.target.id;
   stockInfoOjbect = new Object();
@@ -109,7 +232,7 @@ const checkTheBox = (event) => {
       checkBoxStatus = checkBox.checked;
       rowData = event.target.parentNode.parentNode.children;
       if (checkBoxStatus == true) {
-        modelName = document.getElementById("stock-model-name").innerText;
+        modelName = document.getElementById("stock-model-name").value;
         if (!(modelName in stockInfoResult)) {
           stockInfoResult[modelName] = new Array();
         }
@@ -145,7 +268,7 @@ const checkTheBox = (event) => {
       rowData = event.target.parentNode.children;
       if (checkBox.checked == false) {
         checkBox.checked = true;
-        modelName = document.getElementById("stock-model-name").innerText;
+        modelName = document.getElementById("stock-model-name").value;
         if (!(modelName in stockInfoResult)) {
           stockInfoResult[modelName] = new Array();
         }
@@ -253,64 +376,6 @@ const checkSelectedStocks = () => {
   }
 };
 
-const multiStocksApply = () => {
-  const client = document.getElementById("client_id");
-  const deliveryDate = document.getElementById("equipment-install-date");
-  const manager = document.getElementById("manager");
-  const location = document.getElementById("location");
-  const clientVlaue = client.options[client.selectedIndex].value;
-  const deliveryDateValue = deliveryDate.value;
-  const managerValue = manager.value;
-  const locationValue = location.value;
-
-  if (clientVlaue == "") {
-    alert("❗ 납품 고객사를 선택해주세요.");
-    return false;
-  }
-
-  if (deliveryDateValue == "") {
-    alert("❗ 납품 날짜를 선택해주세요.");
-    return false;
-  }
-
-  if (locationValue == "") {
-    alert("❗ 납품 장소를 작성해주세요.");
-    return false;
-  }
-
-  if (selectedStockIds.length < 1) {
-    alert(
-      "❗ 선택된 재고가 없습니다.\n   다시 일괄납품을 신청하여 주시기 바랍니다. "
-    );
-    return (window.location = "/equipment/stock/");
-  }
-
-  param = {};
-  param.client = clientVlaue;
-  param.deliveryDate = deliveryDateValue;
-  param.manager = managerValue;
-  param.location = locationValue;
-  param.stockIds = selectedStockIds;
-
-  $.ajax({
-    url: "/equipment/stock/multi/apply/",
-    data: param,
-    type: "POST",
-    dataType: "json",
-    headers: { "X-CSRFToken": csrfToken },
-    success: function (data) {
-      const successMsg = data.msg;
-      alert(successMsg);
-      window.location = "/equipment/";
-    },
-    error: function (request, status, error) {
-      const errorMsg = JSON.parse(request.responseText).msg;
-      alert(errorMsg);
-      window.location = "/equipment/stock/";
-    },
-  });
-};
-
 const deleteStocks = () => {
   const selectedStocklength = Object.keys(stockInfoResult).length;
   const deleteSelectErrorContent = document.getElementById(
@@ -380,6 +445,199 @@ const deleteStocks = () => {
   }
 };
 
+const returnStocks = () => {
+  const selectedStocklength = Object.keys(stockInfoResult).length;
+  const failReturnFrom = document.getElementById("fail-return-form");
+  const successReturnForm = document.getElementById("success-return-form");
+  const accordion = document.getElementById("multi-return-accordion");
+  failReturnFrom.style.display = "none";
+  if (selectedStocklength == 0) {
+    failReturnFrom.style.display = "block";
+    successReturnForm.style.display = "none";
+  } else {
+    accordion.innerHTML = "";
+    const selectedStockKeys = Object.keys(stockInfoResult);
+    makeSelectedStocksList(selectedStockKeys, accordion);
+    failReturnFrom.style.display = "none";
+    successReturnForm.style.display = "block";
+  }
+};
+
+const disposalStocks = () => {
+  const selectedStocklength = Object.keys(stockInfoResult).length;
+  const failDisposalFrom = document.getElementById("fail-disposal-form");
+  const successDisposalForm = document.getElementById("success-disposal-form");
+  const accordion = document.getElementById("multi-disposal-accordion");
+  failDisposalFrom.style.display = "none";
+  if (selectedStocklength == 0) {
+    failDisposalFrom.style.display = "block";
+    successDisposalForm.style.display = "none";
+  } else {
+    accordion.innerHTML = "";
+    const selectedStockKeys = Object.keys(stockInfoResult);
+    makeSelectedStocksList(selectedStockKeys, accordion);
+    failDisposalFrom.style.display = "none";
+    successDisposalForm.style.display = "block";
+  }
+};
+
+const multiStocksApply = () => {
+  const client = document.getElementById("client_id");
+  const deliveryDate = document.getElementById("equipment-install-date");
+  const maintenanceDate = document.getElementById("equipment-maintenance-date");
+  const manager = document.getElementById("manager");
+  const location = document.getElementById("location");
+  const clientVlaue = client.options[client.selectedIndex].value;
+  const deliveryDateValue = deliveryDate.value;
+  const managerValue = manager.value;
+  const locationValue = location.value;
+  const maintenanceValue = maintenanceDate.value;
+
+  if (clientVlaue == "") {
+    alert("❗ 납품 고객사를 선택해주세요.");
+    return false;
+  }
+
+  if (deliveryDateValue == "") {
+    alert("❗ 납품 일자를 선택해주세요.");
+    return false;
+  }
+
+  if (maintenanceValue == "") {
+    alert("❗ 유지보수 만료 일자를 선택해주세요.");
+    return false;
+  }
+
+  if (locationValue == "") {
+    alert("❗ 납품 장소를 작성해주세요.");
+    return false;
+  }
+
+  if (selectedStockIds.length < 1) {
+    alert(
+      "❗ 선택된 재고가 없습니다.\n   다시 일괄납품을 신청하여 주시기 바랍니다. "
+    );
+    return (window.location = "/equipment/stock/");
+  }
+
+  param = {};
+  param.client = clientVlaue;
+  param.deliveryDate = deliveryDateValue;
+  param.manager = managerValue;
+  param.location = locationValue;
+  param.stockIds = selectedStockIds;
+  param.maintenanceDate = maintenanceValue;
+
+  $.ajax({
+    url: "/equipment/stock/multi/apply/",
+    data: param,
+    type: "POST",
+    dataType: "json",
+    headers: { "X-CSRFToken": csrfToken },
+    success: function (data) {
+      const successMsg = data.msg;
+      alert(successMsg);
+      window.location = "/equipment/";
+    },
+    error: function (request, status, error) {
+      const errorMsg = JSON.parse(request.responseText).msg;
+      alert(errorMsg);
+      window.location = "/equipment/stock/";
+    },
+  });
+};
+
+const multiStocksReturn = () => {
+  const returnDate = document.getElementById("multi-return-date").value;
+  const returnComments = document.getElementById("multi-return-comments").value;
+
+  if (returnDate == "") {
+    alert("❗ 반납 일자를 선택해주세요.");
+    return false;
+  }
+
+  if (returnComments == "") {
+    alert("❗ 반납 사유를 입력해주세요.");
+    return false;
+  }
+
+  if (selectedStockIds.length < 1) {
+    alert(
+      "❗ 선택된 재고가 없습니다.\n   다시 일괄납품을 신청하여 주시기 바랍니다. "
+    );
+    return (window.location = "/equipment/stock/");
+  }
+
+  param = {};
+  param.stockIds = selectedStockIds;
+  param.returnDate = returnDate;
+  param.returnComments = returnComments;
+
+  $.ajax({
+    url: "/equipment/stock/multi/return/",
+    data: param,
+    type: "POST",
+    dataType: "json",
+    headers: { "X-CSRFToken": csrfToken },
+    success: function (data) {
+      const successMsg = data.msg;
+      alert(successMsg);
+      window.location = "/equipment/stock/";
+    },
+    error: function (request, status, error) {
+      const errorMsg = JSON.parse(request.responseText).msg;
+      alert(errorMsg);
+      window.location = "/equipment/stock/";
+    },
+  });
+};
+
+const multiStocksDisposal = () => {
+  const disposalDate = document.getElementById("multi-disposal-date").value;
+  const disposalComments = document.getElementById("multi-disposal-comments")
+    .value;
+
+  if (disposalDate == "") {
+    alert("❗ 폐기 일자를 선택해주세요.");
+    return false;
+  }
+
+  if (disposalComments == "") {
+    alert("❗ 폐기 사유를 입력해주세요.");
+    return false;
+  }
+
+  if (selectedStockIds.length < 1) {
+    alert(
+      "❗ 선택된 재고가 없습니다.\n   다시 일괄납품을 신청하여 주시기 바랍니다. "
+    );
+    return (window.location = "/equipment/stock/");
+  }
+
+  param = {};
+  param.stockIds = selectedStockIds;
+  param.disposalDate = disposalDate;
+  param.disposalComments = disposalComments;
+
+  $.ajax({
+    url: "/equipment/stock/multi/disposal/",
+    data: param,
+    type: "POST",
+    dataType: "json",
+    headers: { "X-CSRFToken": csrfToken },
+    success: function (data) {
+      const successMsg = data.msg;
+      alert(successMsg);
+      window.location = "/equipment/stock/";
+    },
+    error: function (request, status, error) {
+      const errorMsg = JSON.parse(request.responseText).msg;
+      alert(errorMsg);
+      window.location = "/equipment/stock/";
+    },
+  });
+};
+
 const stockMultiDelete = () => {
   param = {};
   param.stockIds = selectedStockIds;
@@ -419,4 +677,76 @@ const deleteStockOfList = (event) => {
   if (idxOfExceptStock > -1) {
     selectedStockIds.splice(idxOfExceptStock, 1);
   }
+};
+
+const settingMaintenance = (event) => {
+  const maintenanceField = document.getElementById(
+    "equipment-maintenance-date"
+  );
+  const getDeliveryDateValue = event.target.value.split("-");
+  const DeliveryDate = new Date(
+    getDeliveryDateValue[0],
+    getDeliveryDateValue[1],
+    getDeliveryDateValue[2]
+  );
+  DeliveryDate.setFullYear(DeliveryDate.getFullYear() + 1);
+
+  const year = DeliveryDate.getFullYear();
+  const month = ("0" + DeliveryDate.getMonth()).slice(-2);
+  const day = ("0" + DeliveryDate.getDate()).slice(-2);
+  const defaultMaintenanceValue = `${year}-${month}-${day}`;
+  maintenanceField.value = defaultMaintenanceValue;
+};
+
+const makeSelectedStocksList = (selectedStockKeys, accordion) => {
+  selectedStockKeys.forEach(function (mnfacture) {
+    const card = document.createElement("div");
+    const cardHeader = document.createElement("div");
+    const anchor = document.createElement("a");
+    const collapseDiv = document.createElement("div");
+    const cardBody = document.createElement("div");
+    const ul = document.createElement("ul");
+    const span = document.createElement("span");
+    const selectedStocks = stockInfoResult[mnfacture];
+    const submitBtn = document.getElementById("sumbit-btn");
+
+    submitBtn.setAttribute("onclick", "multiStocksApply()");
+    card.classList.add("card");
+    cardHeader.classList.add("card-header");
+    anchor.classList.add("card-link");
+    anchor.dataset.toggle = "collapse";
+    anchor.innerText = mnfacture;
+    anchor.href = "#" + mnfacture;
+    collapseDiv.id = mnfacture;
+    collapseDiv.classList.add("collapse");
+    cardBody.classList.add("card-body");
+    ul.classList.add("list-group");
+    span.classList.add("badge");
+    span.classList.add("badge-dark");
+
+    card.appendChild(cardHeader);
+    cardHeader.append(anchor);
+    cardHeader.append(span);
+    card.appendChild(collapseDiv);
+    collapseDiv.appendChild(cardBody);
+    cardBody.appendChild(ul);
+
+    for (let i = 0; i < selectedStocks.length; i++) {
+      const li = document.createElement("li");
+      const deleteBadge = document.createElement("span");
+      const stockInfo =
+        selectedStocks[i].serial + "  " + selectedStocks[i].product;
+      deleteBadge.setAttribute("onclick", "deleteStockOfList(event)");
+      deleteBadge.classList.add("badge");
+      deleteBadge.classList.add("badge-danger");
+      deleteBadge.innerText = "삭제";
+      li.classList.add("list-group-item");
+      li.innerText = stockInfo;
+      li.id = selectedStocks[i].id;
+      li.appendChild(deleteBadge);
+      ul.append(li);
+    }
+    span.innerText = selectedStocks.length;
+    accordion.append(card);
+  });
 };
