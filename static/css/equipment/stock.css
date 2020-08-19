@@ -7,17 +7,19 @@
 }
 
 .stock-lists .stock-model {
-  width: 150px;
+  width: 100%;
   display: flex;
   align-items: center;
   font-size: 22px;
   font-weight: 700;
+  margin-bottom: 10px;
 }
 .stock-lists .stock-product-name {
   color: grey;
-  margin-bottom: 30px;
   font-size: 14px;
   font-weight: 700;
+  margin-left: 5px;
+  margin-top: 5px;
 }
 
 .stock-lists .stock-status-lists {
@@ -38,7 +40,7 @@
   color: #3498db;
   font-size: 18px;
   font-weight: 700;
-  margin-bottom: 15px;
+  margin-bottom: 5px;
 }
 
 .stock-status__keep div:last-child {
@@ -51,14 +53,14 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  border-radius: 50%;
+  border-radius: 20%;
 }
 
 .stock-status__sold div:first-child {
   color: #20bf6b;
   font-size: 18px;
   font-weight: 700;
-  margin-bottom: 15px;
+  margin-bottom: 5px;
 }
 
 .stock-status__sold div:last-child {
@@ -71,14 +73,14 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  border-radius: 50%;
+  border-radius: 20%;
 }
 
 .stock-status__disposal div:first-child {
   color: #eb3b5a;
   font-size: 18px;
   font-weight: 700;
-  margin-bottom: 15px;
+  margin-bottom: 5px;
 }
 
 .stock-status__disposal div:last-child {
@@ -91,14 +93,14 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  border-radius: 50%;
+  border-radius: 20%;
 }
 
 .stock-status__return div:first-child {
   color: #ff9f43;
   font-size: 18px;
   font-weight: 700;
-  margin-bottom: 15px;
+  margin-bottom: 5px;
 }
 
 .stock-status__return div:last-child {
@@ -111,5 +113,5 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  border-radius: 50%;
+  border-radius: 20%;
 }
