@@ -4,8 +4,9 @@
     <div class="card equipment">
         <div class="card-header equipment__header">
             <i class="fa fa-tasks"></i>
-            <h5 class="card-title equipment__title">&nbsp;<span class="stock-model-name"
-                    id="stock-model-name">{{stock_model_name}}</span> 납품 현황</h5>
+            <h5 class="card-title equipment__title">&nbsp; [{{stock_mnfacture_name}} /
+                {{stock_model_name}}] 납품 현황</h5>
+            <span class="total-count">{{total_count}}</span>
         </div>
         <div class="card-body">
             <div class="equipment__contents form-row">
@@ -14,20 +15,18 @@
                         <table class="table table-striped table-bordered table-hover assets_table " id="myTable1">
                             <thead>
                                 <tr>
-                                    <th>납품 고객사</th>
                                     <th>시리얼</th>
-                                    <th>납품 장소</th>
-                                    <th>납품 일자</th>
-                                    <th>기 타</th>
+                                    <th>입고 위치</th>
+                                    <th>입고 날짜</th>
+                                    <th>상태</th>
                                 </tr>
                             </thead>
-                            {% for deliver in delivers %}
+                            {% for stock in stocks %}
                             <tr>
-                                <td>{{ deliver.client }}</td>
-                                <td>{{ deliver.serial }}</td>
-                                <td>{{ deliver.location }}</td>
-                                <td>{{ deliver.install_date }}</td>
-                                <td>{{ deliver.comments }}</td>
+                                <td>{{ stock.serial }}</td>
+                                <td>{{ stock.location }}</td>
+                                <td>{{ stock.receive_date }}</td>
+                                <td>납품 완료</td>
                             </tr>
                             {% endfor %}
                         </table>
@@ -39,7 +38,7 @@
 </div>
 
 
-{% endblock %} {% block title %} 재고 현황 {% endblock %}
+{% endblock %} {% block title %} 납품 현황 {% endblock %}
 {% block css %}
 <link rel="stylesheet" href="https://cdn.datatables.net/1.10.20/css/dataTables.bootstrap4.min.css">
 <link rel="stylesheet" href="{% static 'css/selectpicker/bootstrap-select.css' %}">
@@ -55,6 +54,5 @@
 <script src="{% static 'js/datepicker/bootstrap-datepicker.js' %}"></script>
 <script src="{% static 'js/datepicker/bootstrap-datepicker.kr.js' %}"></script>
 <script src="{% static 'js/datepicker/datepicker.js' %}"></script>
-<script src="{% static 'js/equipment/stockDetail.js' %}"></script>
 <script src="{% static 'js/datatable/dataTable.js' %}"></script>
 {% endblock %}
