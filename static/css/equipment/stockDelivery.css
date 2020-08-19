@@ -6,6 +6,17 @@
   width: 0px;
 }
 
+.form-group .mulit-form {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.mulit-form button {
+  padding: 3px 7px;
+  font-size: 16px;
+  margin-left: 1px;
+}
+
 .form-check-input {
   position: relative;
   margin-left: 0px;
@@ -21,8 +32,7 @@
   position: relative;
 }
 
-.single-delivery__media i,
-.multi-delivery__media i {
+.media i {
   margin-right: 30px;
   font-size: 28px;
 }
@@ -54,4 +64,18 @@
 
 .list-group-item .badge-danger {
   cursor: pointer;
+}
+
+.equipment__header .equipment__title {
+  margin-right: 2px;
+}
+
+.equipment__header .total-count {
+  display: inline-block;
+  font-weight: 700;
+  color: white;
+  padding: 1px 5px;
+  border-radius: 20%;
+  font-size: 13px;
+  background-color: #007bff;
 }
