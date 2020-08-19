@@ -58,7 +58,13 @@
                             <label>납품 일자</label>
                             <input type="text" name="install-date" id="equipment-install-date"
                                 class="form-control calendar__start hasDatepicker" autocomplete="off"
-                                data-provide="datepicker" placeholder="&#xf073;">
+                                onchange="settingMaintenance(event)" placeholder="&#xf073;">
+                        </div>
+                        <div class="form-group ">
+                            <label>유지보수 만료 일자</label>
+                            <input type="text" name="maintenance-date" id="equipment-maintenance-date"
+                                class="form-control calendar__start hasDatepicker" autocomplete="off"
+                                placeholder="&#xf073;">
                         </div>
                         <div class="form-group">
                             <label>기 타</label>
