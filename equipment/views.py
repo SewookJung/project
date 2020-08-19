@@ -20,6 +20,7 @@ from .forms import EquipmentForm
 from utils.constant import REPORT_PERMISSION_DEFAULT, SAMPLE_FILE_ID, STOCK_SAMPLE_FILE_ID
 from utils.constant import STOCK_STATUS_KEEP, STOCK_STATUS_SOLD, STOCK_STATUS_RETURN, STOCK_STATUS_DISPOSAL
 
+
 from utils.functions import (
     make_response,
 )
@@ -51,6 +52,7 @@ def equipment_form_apply(request):
             manager = request.POST['manager']
             location = request.POST['location']
             install_date = request.POST['install-date']
+            maintenance_date = request.POST['maintenance-date']
             comments = request.POST['comments']
 
             try:
@@ -66,7 +68,7 @@ def equipment_form_apply(request):
                 raise
             except Equipment.DoesNotExist:
                 equipment = Equipment(client_id=client, product_id=product, product_model_id=product_model, serial=serial, mnfacture_id=mnfacture,
-                                      manager=manager, location=location, install_date=install_date, comments=comments, creator_id=request.session['id'])
+                                      manager=manager, location=location, install_date=install_date, maintenance_date=maintenance_date, comments=comments, creator_id=request.session['id'])
                 equipment.save()
                 return make_response(status=200, content=json.dumps({'success': True, 'msg': "납품 등록이 완료 되었습니다."}))
             except:
@@ -500,6 +502,7 @@ def equipment_stock_multi_apply(request):
         location = request.POST['location']
         manager = request.POST['manager']
         delivery_date = request.POST['deliveryDate']
+        maintenance_date = request.POST['maintenanceDate']
 
         try:
             for stock_id in stock_ids:
@@ -508,7 +511,7 @@ def equipment_stock_multi_apply(request):
                 stock.save()
 
                 equipment = Equipment(client_id=client_id, product_id=stock.product.id, product_model_id=stock.product_model.id, serial=stock.serial, mnfacture_id=stock.mnfacture.id,
-                                      manager=manager, location=location, install_date=delivery_date, comments="", creator_id=request.session['id'])
+                                      manager=manager, location=location, install_date=delivery_date, maintenance_date=maintenance_date, comments="", creator_id=request.session['id'])
                 equipment.save()
             return make_response(status=200, content=json.dumps({'success': True, 'msg': "납품이 완료 되었습니다."}))
         except:
@@ -521,25 +524,22 @@ def equipment_stock_detail(request, model_id, model_status):
     stocks = stock_objects.filter(
         product_model_id=model_id, status=model_status)
     stock_model_name = stocks[0].product_model
+    stock_mnfacture_name = stocks[0].mnfacture
+    total_count = stocks.count()
+
     equipment_form = EquipmentForm()
 
     if model_status == STOCK_STATUS_KEEP:
-        return render(request, 'equipment/equipment_stock_keep.html', {'stocks': stocks, 'stock_model_name': stock_model_name, 'equipment_form': equipment_form, 'permission': REPORT_PERMISSION_DEFAULT})
+        return render(request, 'equipment/equipment_stock_keep.html', {'stocks': stocks, 'stock_model_name': stock_model_name, 'stock_mnfacture_name': stock_mnfacture_name, 'total_count': total_count, 'equipment_form': equipment_form, 'permission': REPORT_PERMISSION_DEFAULT})
 
     if model_status == STOCK_STATUS_SOLD:
-        equipments = Equipment.objects.all()
-        serials = stocks.values('serial')
-        delivers = []
-        for serial in serials:
-            equipment_data = equipments.get(serial=serial['serial'])
-            delivers.append(equipment_data)
-        return render(request, 'equipment/equipment_stock_sold.html', {'delivers': delivers, 'stock_model_name': stock_model_name, 'equipment_form': equipment_form, 'permission': REPORT_PERMISSION_DEFAULT})
+        return render(request, 'equipment/equipment_stock_sold.html', {'stocks': stocks, 'stock_model_name': stock_model_name, 'stock_mnfacture_name': stock_mnfacture_name, 'total_count': total_count, 'equipment_form': equipment_form, 'permission': REPORT_PERMISSION_DEFAULT})
 
     if model_status == STOCK_STATUS_RETURN:
-        return render(request, 'equipment/equipment_stock_return.html', {'returns': stocks, 'stock_model_name': stock_model_name, 'equipment_form': equipment_form, 'permission': REPORT_PERMISSION_DEFAULT})
+        return render(request, 'equipment/equipment_stock_return.html', {'returns': stocks, 'stock_model_name': stock_model_name, 'stock_mnfacture_name': stock_mnfacture_name, 'total_count': total_count, 'equipment_form': equipment_form, 'permission': REPORT_PERMISSION_DEFAULT})
 
     if model_status == STOCK_STATUS_DISPOSAL:
-        return render(request, 'equipment/equipment_stock_disposal.html', {'disposals': stocks, 'stock_model_name': stock_model_name, 'equipment_form': equipment_form, 'permission': REPORT_PERMISSION_DEFAULT})
+        return render(request, 'equipment/equipment_stock_disposal.html', {'disposals': stocks, 'stock_model_name': stock_model_name, 'stock_mnfacture_name': stock_mnfacture_name, 'total_count': total_count, 'equipment_form': equipment_form, 'permission': REPORT_PERMISSION_DEFAULT})
 
 
 @login_required
@@ -562,7 +562,6 @@ def equipment_stock_detail_apply(request, stock_id):
         location = request.POST['location']
         receive_date = request.POST['install-date']
         comments = request.POST['comments']
-        creator = request.session['id']
 
         try:
             equipment = Equipment.objects.get(serial=serial)
@@ -660,6 +659,46 @@ def equipment_stock_delivery_apply(request):
             return make_response(status=200, content=json.dumps({'success': True, 'msg': "납품이 완료 되었습니다."}))
         except:
             return make_response(status=400, content=json.dumps({'success': True, 'msg': "납품이 정상적으로 처리 되지 않았습니다.\n다시 시도해 주세요."}))
+
+
+@login_required
+def equipment_stock_return_apply(request):
+    if request.method == "POST":
+        try:
+            stock_id = request.POST['returnStockId']
+            return_date = request.POST['returnDate']
+            return_comments = request.POST['returnComments']
+
+            stock = Stock.objects.get(id=stock_id)
+            stock.status = STOCK_STATUS_RETURN
+            stock.return_date = return_date
+            stock.comments = return_comments
+            stock.save()
+            return make_response(status=200, content=json.dumps({'success': True, 'msg': "✔ 해당 재고가 정상적으로 반납 처리 되었습니다."}))
+        except:
+            return make_response(status=400, content=json.dumps({'success': False, 'msg': "❌ 해당 재고를 반납 처리하는데 실패하였습니다.\n      다시 시도해주세요"}))
+    else:
+        return make_response(status=400, content=json.dumps({'success': False, 'msg': "❌ 정상적인 접근방식이 아닙니다.\n      다시 시도해주세요"}))
+
+
+@login_required
+def equipment_stock_disposal_apply(request):
+    if request.method == "POST":
+        try:
+            stock_id = request.POST['disposalStockId']
+            disposal_date = request.POST['disposalDate']
+            disposal_comments = request.POST['disposalComments']
+
+            stock = Stock.objects.get(id=stock_id)
+            stock.status = STOCK_STATUS_DISPOSAL
+            stock.disposal_date = disposal_date
+            stock.comments = disposal_comments
+            stock.save()
+            return make_response(status=200, content=json.dumps({'success': True, 'msg': "✔ 해당 재고가 정상적으로 폐기 처리 되었습니다."}))
+        except:
+            return make_response(status=400, content=json.dumps({'success': False, 'msg': "❌ 해당 재고를 폐기 처리하는데 실패하였습니다.\n      다시 시도해주세요"}))
+    else:
+        return make_response(status=400, content=json.dumps({'success': False, 'msg': "❌ 정상적인 접근방식이 아닙니다.\n      다시 시도해주세요"}))
 
 
 @login_required
@@ -876,6 +915,42 @@ def equipment_stock_multi_delete(request):
         for stock_id in stock_ids:
             stocks.get(id=stock_id).delete()
         return make_response(status=200, content=json.dumps({'success': True, 'msg': "재고 삭제에 성공 하였습니다."}))
-
     except:
         return make_response(status=400, content=json.dumps({'success': False, 'msg': "재고 삭제에 실패하였습니다.\n다시 시도해주시기 바랍니다."}))
+
+
+@login_required
+def equipment_stock_multi_return(request):
+    if request.method == "POST":
+        try:
+            stocks = Stock.objects.all()
+            stock_ids = request.POST.getlist('stockIds[]')
+            return_date = request.POST['returnDate']
+            return_comments = request.POST['returnComments']
+            for stock_id in stock_ids:
+                stock = stocks.get(id=stock_id)
+                stock.status = STOCK_STATUS_RETURN
+                stock.return_date = return_date
+                stock.comments = return_comments
+                stock.save()
+            return make_response(status=200, content=json.dumps({'success': True, 'msg': "✔ 해당 재고가 정상적으로 반납 처리 되었습니다."}))
+        except:
+            return make_response(status=400, content=json.dumps({'success': False, 'msg': "❌ 해당 재고를 반납 처리하는데 실패하였습니다.\n      다시 시도해주세요"}))
+
+@login_required
+def equipment_stock_multi_disposal(request):
+    if request.method == "POST":
+        try:
+            stocks = Stock.objects.all()
+            stock_ids = request.POST.getlist('stockIds[]')
+            disposal_date = request.POST['disposalDate']
+            disposal_comments = request.POST['disposalComments']
+            for stock_id in stock_ids:
+                stock = stocks.get(id=stock_id)
+                stock.status = STOCK_STATUS_DISPOSAL
+                stock.disposal_date = disposal_date
+                stock.comments = disposal_comments
+                stock.save()
+            return make_response(status=200, content=json.dumps({'success': True, 'msg': "✔ 해당 재고가 정상적으로 폐기 처리 되었습니다."}))
+        except:
+            return make_response(status=400, content=json.dumps({'success': False, 'msg': "❌ 해당 재고를 폐기 처리하는데 실패하였습니다.\n      다시 시도해주세요"}))
