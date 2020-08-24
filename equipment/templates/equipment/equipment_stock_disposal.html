@@ -12,6 +12,34 @@
             <div class="equipment__contents form-row">
                 <div class="form-group col-md-12">
                     <div class="form-group">
+                        <div class="form-group stock-form">
+                            <div class="card stock-contents">
+                                <div class="card-body stock-lists">
+                                    <h5 class="card-title text-right">{{stock_model_name}}</h5>
+                                    <div class="stock-status-lists">
+                                        <div id="stock-status" class="stock-status__keep keep">
+                                            <div class="keep-title">재 고</div>
+                                            <div class="keep-count"
+                                                onclick="goToDetailPage(event, {{stock_product_model}}, `keep`)">
+                                                {{stock_keep_count}}
+                                            </div>
+                                        </div>
+                                        <div id="stock-status" class="stock-status__sold sold">
+                                            <div class="sold-title">납 품</div>
+                                            <div class="sold-count"
+                                                onclick="goToDetailPage(event, {{stock_product_model}} ,`sold`)">
+                                                {{stock_sold_count}}</div>
+                                        </div>
+                                        <div id="stock-status" class="stock-status__return return">
+                                            <div class="return-title">반 납</div>
+                                            <div class="return-count"
+                                                onclick="goToDetailPage(event, {{stock_product_model}} ,`return`)">
+                                                {{stock_return_count}}</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                         <table class="table table-striped table-bordered table-hover assets_table " id="myTable1">
                             <thead>
                                 <tr>
@@ -44,7 +72,7 @@
 <link rel="stylesheet" href="{% static 'css/selectpicker/bootstrap-select.css' %}">
 <link rel="stylesheet" href="{% static 'css/datepicker/datepicker3.css' %}">
 <link rel="stylesheet" href="{% static 'css/equipment/stockDelivery.css' %}">
-
+<link rel="stylesheet" href="{% static 'css/equipment/stockList.css' %}">
 {% endblock %}
 
 {% block js %}
@@ -55,4 +83,5 @@
 <script src="{% static 'js/datepicker/bootstrap-datepicker.kr.js' %}"></script>
 <script src="{% static 'js/datepicker/datepicker.js' %}"></script>
 <script src="{% static 'js/datatable/dataTable.js' %}"></script>
+<script src="{% static 'js/equipment/stockGotoDetail.js' %}"></script>
 {% endblock %}

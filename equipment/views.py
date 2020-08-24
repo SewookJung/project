@@ -523,23 +523,32 @@ def equipment_stock_detail(request, model_id, model_status):
     stock_objects = Stock.objects.all()
     stocks = stock_objects.filter(
         product_model_id=model_id, status=model_status)
+    stock_return_count = stock_objects.filter(
+        product_model_id=model_id, status=STOCK_STATUS_RETURN).count()
+    stock_sold_count = stock_objects.filter(
+        product_model_id=model_id, status=STOCK_STATUS_SOLD).count()
+    stock_keep_count = stock_objects.filter(
+        product_model_id=model_id, status=STOCK_STATUS_KEEP).count()
+    stock_disposal_count = stock_objects.filter(
+        product_model_id=model_id, status=STOCK_STATUS_DISPOSAL).count()
     stock_model_name = stocks[0].product_model
     stock_mnfacture_name = stocks[0].mnfacture
+    stock_product_model = stocks[0].product_model_id
     total_count = stocks.count()
 
     equipment_form = EquipmentForm()
 
     if model_status == STOCK_STATUS_KEEP:
-        return render(request, 'equipment/equipment_stock_keep.html', {'stocks': stocks, 'stock_model_name': stock_model_name, 'stock_mnfacture_name': stock_mnfacture_name, 'total_count': total_count, 'equipment_form': equipment_form, 'permission': REPORT_PERMISSION_DEFAULT})
+        return render(request, 'equipment/equipment_stock_keep.html', {'stocks': stocks, 'stock_model_name': stock_model_name, 'stock_mnfacture_name': stock_mnfacture_name, 'equipment_form': equipment_form, 'permission': REPORT_PERMISSION_DEFAULT, 'stock_return_count': stock_return_count, "stock_sold_count": stock_sold_count, "stock_disposal_count": stock_disposal_count, 'stock_product_model': stock_product_model, 'total_count': total_count})
 
     if model_status == STOCK_STATUS_SOLD:
-        return render(request, 'equipment/equipment_stock_sold.html', {'stocks': stocks, 'stock_model_name': stock_model_name, 'stock_mnfacture_name': stock_mnfacture_name, 'total_count': total_count, 'equipment_form': equipment_form, 'permission': REPORT_PERMISSION_DEFAULT})
+        return render(request, 'equipment/equipment_stock_sold.html', {'stocks': stocks, 'stock_model_name': stock_model_name, 'stock_mnfacture_name': stock_mnfacture_name, 'equipment_form': equipment_form, 'permission': REPORT_PERMISSION_DEFAULT, 'stock_keep_count': stock_keep_count, "stock_return_count": stock_return_count, "stock_disposal_count": stock_disposal_count, 'stock_product_model': stock_product_model, 'total_count': total_count})
 
     if model_status == STOCK_STATUS_RETURN:
-        return render(request, 'equipment/equipment_stock_return.html', {'returns': stocks, 'stock_model_name': stock_model_name, 'stock_mnfacture_name': stock_mnfacture_name, 'total_count': total_count, 'equipment_form': equipment_form, 'permission': REPORT_PERMISSION_DEFAULT})
+        return render(request, 'equipment/equipment_stock_return.html', {'returns': stocks, 'stock_model_name': stock_model_name, 'stock_mnfacture_name': stock_mnfacture_name, 'equipment_form': equipment_form, 'permission': REPORT_PERMISSION_DEFAULT, 'stock_keep_count': stock_keep_count, "stock_sold_count": stock_sold_count, "stock_disposal_count": stock_disposal_count, 'stock_product_model': stock_product_model,  'total_count': total_count})
 
     if model_status == STOCK_STATUS_DISPOSAL:
-        return render(request, 'equipment/equipment_stock_disposal.html', {'disposals': stocks, 'stock_model_name': stock_model_name, 'stock_mnfacture_name': stock_mnfacture_name, 'total_count': total_count, 'equipment_form': equipment_form, 'permission': REPORT_PERMISSION_DEFAULT})
+        return render(request, 'equipment/equipment_stock_disposal.html', {'disposals': stocks, 'stock_model_name': stock_model_name, 'stock_mnfacture_name': stock_mnfacture_name, 'equipment_form': equipment_form, 'permission': REPORT_PERMISSION_DEFAULT, 'stock_keep_count': stock_keep_count, "stock_return_count": stock_return_count, "stock_sold_count": stock_sold_count, 'stock_product_model': stock_product_model,  'total_count': total_count})
 
 
 @login_required
@@ -936,6 +945,7 @@ def equipment_stock_multi_return(request):
             return make_response(status=200, content=json.dumps({'success': True, 'msg': "✔ 해당 재고가 정상적으로 반납 처리 되었습니다."}))
         except:
             return make_response(status=400, content=json.dumps({'success': False, 'msg': "❌ 해당 재고를 반납 처리하는데 실패하였습니다.\n      다시 시도해주세요"}))
+
 
 @login_required
 def equipment_stock_multi_disposal(request):
