@@ -14,7 +14,7 @@
 .mulit-form button {
   padding: 3px 7px;
   font-size: 16px;
-  margin-left: 1px;
+  margin-left: 2px;
 }
 
 .form-check-input {
@@ -66,11 +66,11 @@
   cursor: pointer;
 }
 
-.equipment__header .equipment__title {
+.card-header .card-title {
   margin-right: 2px;
 }
 
-.equipment__header .total-count {
+.card-header .total-count {
   display: inline-block;
   font-weight: 700;
   color: white;
