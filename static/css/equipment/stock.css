@@ -54,6 +54,7 @@
   justify-content: center;
   align-items: center;
   border-radius: 20%;
+  cursor: pointer;
 }
 
 .stock-status__sold div:first-child {
@@ -74,6 +75,7 @@
   justify-content: center;
   align-items: center;
   border-radius: 20%;
+  cursor: pointer;
 }
 
 .stock-status__disposal div:first-child {
@@ -94,6 +96,7 @@
   justify-content: center;
   align-items: center;
   border-radius: 20%;
+  cursor: pointer;
 }
 
 .stock-status__return div:first-child {
@@ -114,4 +117,5 @@
   justify-content: center;
   align-items: center;
   border-radius: 20%;
+  cursor: pointer;
 }
