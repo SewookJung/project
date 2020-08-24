@@ -15,6 +15,29 @@ let mnfacture;
 let deleteStockObject;
 let checkBoxStatus;
 
+$(document).ready(function () {
+  const stockTable = $("#stock-table").DataTable({
+    pageLength: 15,
+    lengthMenu: [5, 10, 15, 20, 30, 50, 100],
+    columnDefs: [
+      { orderable: true, targets: [1, 2, 3, 4] },
+      { orderable: false, targets: "_all" },
+    ],
+    language: {
+      paginate: {
+        previous: "‹",
+        next: "›",
+      },
+    },
+    order: [[2, "dec"]],
+  });
+
+  $("#stock-table").on("page.dt", function (event) {
+    const test = event.target.children[1];
+    console.log(test.querySelectorAll("td"));
+  });
+});
+
 const stockApply = (
   stockId,
   mnfacture,
@@ -232,7 +255,7 @@ const checkTheBox = (event) => {
       checkBoxStatus = checkBox.checked;
       rowData = event.target.parentNode.parentNode.children;
       if (checkBoxStatus == true) {
-        modelName = document.getElementById("stock-model-name").value;
+        let modelName = document.getElementById("stock-model-name").value;
         if (!(modelName in stockInfoResult)) {
           stockInfoResult[modelName] = new Array();
         }
@@ -749,4 +772,81 @@ const makeSelectedStocksList = (selectedStockKeys, accordion) => {
     span.innerText = selectedStocks.length;
     accordion.append(card);
   });
+};
+
+const pageCheckTheBox = (event) => {
+  let entries = Number(document.querySelector(".custom-select").value);
+  let rows = document.querySelectorAll(".rows");
+  const clickedElementId = event.target.id;
+  let startIdx = 0;
+  let endIdx = entries - 1;
+
+  switch (clickedElementId) {
+    case "th-checkBox":
+      let checkBox = event.target.children[0];
+      let checkBoxStatus = checkBox.checked;
+      if (checkBoxStatus == true) {
+        checkBox.checked = false;
+      } else {
+        checkBox.checked = true;
+        addStocks(rows, startIdx, endIdx);
+      }
+      break;
+  }
+};
+
+const addStocks = (rows, startIdx, endIdx) => {
+  let modelName = document.getElementById("stock-model-name").value;
+
+  if (rows.length < endIdx) endIdx = rows.length;
+
+  for (startIdx; startIdx <= endIdx; startIdx++) {
+    let checkBox = rows[startIdx].children[0].children[0];
+    let rowData = rows[startIdx].children;
+    let serial = rowData[1].innerText;
+    stockInfoOjbect = new Object();
+
+    checkBox.checked = true;
+    if (!(modelName in stockInfoResult))
+      stockInfoResult[modelName] = new Array();
+
+    const dupCheckOfArray = stockInfoResult[modelName].findIndex(function (
+      item
+    ) {
+      return item.serial === serial;
+    });
+
+    if (dupCheckOfArray == -1) {
+      stockInfoOjbect.id = checkBox.value;
+      stockInfoOjbect.serial = rowData[1].innerText;
+      stockInfoOjbect.product = rowData[2].innerText;
+      stockInfoOjbect.location = rowData[3].innerText;
+      stockInfoResult[modelName].push(stockInfoOjbect);
+      selectedStockIds.push(stockInfoOjbect.id);
+    }
+  }
+  stockInfoResult[modelName].sort(function (a, b) {
+    return Number(a.id - b.id);
+  });
+};
+
+const removeStocks = (checkBox, rowData, modelName) => {
+  stockInfoOjbect = new Object();
+
+  checkBox.checked = false;
+  const serial = rowData[1].innerText;
+  const deleteStockObject = stockInfoResult[modelName].findIndex(function (
+    item
+  ) {
+    return item.serial === serial;
+  });
+  if (deleteStockObject > -1)
+    stockInfoResult[modelName].splice(deleteStockObject, 1);
+  if (stockInfoResult[modelName].length < 1) delete stockInfoResult[modelName];
+  const selectReleaseStock = selectedStockIds.findIndex(function (item) {
+    return item === checkBox.value;
+  });
+  if (selectReleaseStock > -1) {
+    selectedStockIds.splice(selectReleaseStock, 1);
+  }
 };
