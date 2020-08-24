@@ -54,7 +54,6 @@ const getListsProductModel = (param) => {
           "onclick",
           `goToDetailPage(event, ${productId}, 'keep')`
         );
-        stockKeepCountDiv.style.cursor = "pointer";
         stockKeepDiv.id = "stock-status";
         stockKeepDiv.classList.add("stock-status__keep");
         stockKeepDiv.append(stockKeepTitleDiv);
@@ -66,7 +65,6 @@ const getListsProductModel = (param) => {
           "onclick",
           `goToDetailPage(event, ${productId}, 'sold')`
         );
-        stockSoldCountDiv.style.cursor = "pointer";
         stockSoldDiv.id = "stock-status";
         stockSoldDiv.classList.add("stock-status__sold");
         stockSoldDiv.append(stockSoldTitleDiv);
@@ -78,7 +76,6 @@ const getListsProductModel = (param) => {
           "onclick",
           `goToDetailPage(event, ${productId}, 'disposal')`
         );
-        stockDisposalCountDiv.style.cursor = "pointer";
         stockDisposalDiv.id = "stock-status";
         stockDisposalDiv.classList.add("stock-status__disposal");
         stockDisposalDiv.append(stockDisposalTitleDiv);
@@ -90,7 +87,6 @@ const getListsProductModel = (param) => {
           "onclick",
           `goToDetailPage(event, ${productId}, 'return')`
         );
-        stockReturnCountDiv.style.cursor = "pointer";
         stockReturnDiv.id = "stock-status";
         stockReturnDiv.classList.add("stock-status__return");
         stockReturnDiv.append(stockReturnTitleDiv);
@@ -132,12 +128,6 @@ mnfactureBox.addEventListener("change", (event) => {
     getListsProductModel(param);
   }
 });
-
-const goToDetailPage = (event, productId, status) => {
-  const selectedStockCount = Number(event.target.innerText);
-  if (selectedStockCount < 1) alert("선택한 목록이 존재하지 않습니다.");
-  else window.location = `/equipment/stock/${productId}/${status}`;
-};
 
 $(document).ready(function () {
   const coreEdgeId = 4;
