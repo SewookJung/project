@@ -15,15 +15,15 @@ class EquipmentAttachmentAdmin(admin.ModelAdmin):
 
 
 class StockAdmin(admin.ModelAdmin):
-    list_display = ['id', 'product', 'product_model', 'mnfacture',
+    list_display = ['id', 'product_model', 'mnfacture',
                     'serial', 'location', 'receive_date', 'status', 'comments']
-    list_display_links = ['id', 'product']
+    list_display_links = ['id', 'product_model']
 
 
 class StockAttachmentAdmin(admin.ModelAdmin):
     list_display = ['id', 'attach_name',
                     'content_size', 'content_type', 'created_at']
-    list_display_links = ['id', ]
+    list_display_links = ['id']
 
 
 admin.site.register(Equipment, EquipmentAdmin)
