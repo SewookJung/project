@@ -1,3 +1,15 @@
+.form-group .stock-contents {
+  border: 0px;
+}
+
+.stock-contents .stock-lists {
+  padding: 0px;
+}
+
+.stock-lists .stock-status-lists {
+  width: 150px;
+}
+
 .form-check {
   display: flex;
   justify-content: center;
@@ -6,12 +18,19 @@
   width: 0px;
 }
 
-.form-group .mulit-form {
+.form-group .stock-form {
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
+  flex-wrap: wrap-reverse;
+  width: 100%;
 }
 
-.mulit-form button {
+.stock-form .multi-form {
+  margin-bottom: 0px;
+  height: 100%;
+}
+
+.multi-form button {
   padding: 3px 7px;
   font-size: 16px;
   margin-left: 2px;
@@ -23,13 +42,10 @@
   cursor: pointer;
 }
 
-.td-checkBox {
+.td-checkBox,
+.th-checkBox {
   text-align: center;
   cursor: pointer;
-}
-
-#blankCheckbox {
-  position: relative;
 }
 
 .media i {
@@ -66,16 +82,26 @@
   cursor: pointer;
 }
 
-.card-header .card-title {
-  margin-right: 2px;
+@media (min-width: 320px) and (max-width: 452px) {
+  .stock-lists .stock-status-lists {
+    margin-bottom: 10px;
+  }
 }
 
-.card-header .total-count {
-  display: inline-block;
-  font-weight: 700;
-  color: white;
-  padding: 1px 5px;
-  border-radius: 20%;
-  font-size: 13px;
-  background-color: #007bff;
+@media (min-width: 500px) {
+  .body__stock-info .card {
+    width: 100%;
+  }
+}
+
+@media (min-width: 768px) {
+  .body__stock-info .card {
+    width: 48%;
+  }
+}
+
+@media (min-width: 992px) {
+  .body__stock-info .card {
+    width: 33%;
+  }
 }
