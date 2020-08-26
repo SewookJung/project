@@ -22,17 +22,16 @@ const getListsProductModel = (param) => {
 
       for (let i = 0; i < stockList.length; i++) {
         const modelName = Object.keys(stockList[i])[0];
-        const productName = Object.values(stockList[i])[0].product;
+        const productId = Object.values(stockList[i])[0].id;
         const keepCount = Object.values(stockList[i])[0].keep;
         const soldCount = Object.values(stockList[i])[0].sold;
         const disposalCount = Object.values(stockList[i])[0].disposal;
         const returnCount = Object.values(stockList[i])[0].return;
-        const productId = Object.values(stockList[i])[0].id;
+        const totalCount = Object.values(stockList[i])[0].total;
 
         const cardDiv = document.createElement("div");
         const cardBodyDiv = document.createElement("div");
         const stockModelNameDiv = document.createElement("div");
-        const stockProductNameDiv = document.createElement("div");
         const stockStatusListsDiv = document.createElement("div");
 
         const stockKeepDiv = document.createElement("div");
@@ -47,6 +46,10 @@ const getListsProductModel = (param) => {
         const stockReturnDiv = document.createElement("div");
         const stockReturnTitleDiv = document.createElement("div");
         const stockReturnCountDiv = document.createElement("div");
+
+        const totalDiv = document.createElement("div");
+        const totalTitleDiv = document.createElement("div");
+        const totalCountDiv = document.createElement("div");
 
         stockKeepTitleDiv.innerText = "재 고";
         stockKeepCountDiv.innerText = keepCount;
@@ -92,6 +95,14 @@ const getListsProductModel = (param) => {
         stockReturnDiv.append(stockReturnTitleDiv);
         stockReturnDiv.append(stockReturnCountDiv);
 
+        totalTitleDiv.innerText = "누 적";
+        totalCountDiv.innerText = totalCount;
+        totalDiv.id = "stock-status";
+        totalDiv.classList.add("stock-status__total");
+        totalDiv.append(totalTitleDiv);
+        totalDiv.append(totalCountDiv);
+
+        stockStatusListsDiv.append(totalDiv);
         stockStatusListsDiv.append(stockKeepDiv);
         stockStatusListsDiv.append(stockSoldDiv);
         stockStatusListsDiv.append(stockReturnDiv);
@@ -101,14 +112,11 @@ const getListsProductModel = (param) => {
         cardBodyDiv.append(stockModelNameDiv);
         cardBodyDiv.append(stockStatusListsDiv);
         stockModelNameDiv.innerText = modelName;
-        stockProductNameDiv.innerText = productName;
-        stockModelNameDiv.append(stockProductNameDiv);
 
         cardDiv.classList.add("card");
         cardBodyDiv.classList.add("card-body", "stock-lists");
         stockModelNameDiv.classList.add("stock-model");
         stockStatusListsDiv.classList.add("stock-status-lists");
-        stockProductNameDiv.classList.add("stock-product-name");
         stockInfoDiv.append(cardDiv);
       }
     },
