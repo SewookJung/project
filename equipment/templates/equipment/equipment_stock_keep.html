@@ -13,16 +13,37 @@
                 <div class="form-group col-md-12">
                     <div class="form-group">
                         <div class="form-group stock-form">
+                            <div class="form-group multi-form">
+                                <input type="hidden" id="stock-model-name" value="{{stock_model_name}}">
+                                <button type="button" class="btn btn-success" data-toggle="modal"
+                                    id="selectSubmitStocks" data-target="#exampleModal"
+                                    onclick="checkSelectedStocks()">일괄<br>
+                                    납품</button>
+                                <button type="button" class="btn btn-warning" data-toggle="modal"
+                                    id="selectSubmitStocks" data-target="#multiReturnModal"
+                                    onclick="returnStocks()">일괄<br>
+                                    반납</button>
+                                <button type="button" class="btn btn-dark" data-toggle="modal"
+                                    data-target="#multiDisposalModal" onclick="disposalStocks()">
+                                    일괄<br>폐기
+                                </button>
+                                <button type="button" class="btn btn-danger" data-toggle="modal"
+                                    data-target="#delete-modal" onclick="deleteStocks()">
+                                    일괄<br>삭제
+                                </button>
+                            </div>
+
                             <div class="card stock-contents">
                                 <div class="card-body stock-lists">
-                                    <h5 class="card-title text-right">{{stock_model_name}}</h5>
                                     <div class="stock-status-lists">
                                         <div id="stock-status" class="stock-status__sold sold">
                                             <div class="sold-title">납 품</div>
                                             <div class="sold-count"
-                                                onclick="goToDetailPage(event, {{stock_product_model}} ,`sold`)">
-                                                {{stock_sold_count}}</div>
+                                                onclick="goToDetailPage(event, {{stock_product_model}}, `sold`)">
+                                                {{stock_sold_count}}
+                                            </div>
                                         </div>
+
                                         <div id="stock-status" class="stock-status__return return">
                                             <div class="return-title">반 납</div>
                                             <div class="return-count"
@@ -39,33 +60,15 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="form-group mulit-form">
-                            <input type="hidden" id="stock-model-name" value="{{stock_model_name}}">
-                            <button type="button" class="btn btn-success" data-toggle="modal" id="selectSubmitStocks"
-                                data-target="#exampleModal" onclick="checkSelectedStocks()">일괄<br>
-                                납품</button>
-                            <button type="button" class="btn btn-warning" data-toggle="modal" id="selectSubmitStocks"
-                                data-target="#multiReturnModal" onclick="returnStocks()">일괄<br>
-                                반납</button>
-                            <button type="button" class="btn btn-dark" data-toggle="modal"
-                                data-target="#multiDisposalModal" onclick="disposalStocks()">
-                                일괄<br>폐기
-                            </button>
-                            <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#delete-modal"
-                                onclick="deleteStocks()">
-                                일괄<br>삭제
-                            </button>
-                        </div>
 
                         <table class="table table-striped table-bordered table-hover assets_table " id="stock-table">
                             <thead>
                                 <tr>
                                     <th class="th-checkBox" onclick="pageCheckTheBox(event)" id="th-checkBox">
                                         <input class="form-check-input position-static" type="checkbox"
-                                            id="blankCheckbox">
+                                            id="pageCheckBox">
                                     </th>
                                     <th>시리얼</th>
-                                    <th>제품명</th>
                                     <th>재고 위치</th>
                                     <th>입고 일자</th>
                                     <th>신청</th>
@@ -82,22 +85,21 @@
                                         {{ stock.serial }}
                                     </a>
                                 </td>
-                                <td>{{ stock.product }}</td>
                                 <td>{{ stock.location }}</td>
                                 <td>{{ stock.receive_date }}</td>
                                 <td>
                                     <button type="button" class="btn btn-success" data-toggle="modal"
                                         data-target="#exampleModal"
-                                        onclick="stockApply('{{stock.id}}', '{{stock.mnfacture}}', '{{ stock.product }}', '{{ stock.product_model }}', '{{ stock.serial }}', '{{ stock.receive_date }}');">납품
+                                        onclick="stockApply('{{stock.id}}', '{{stock.mnfacture}}', '{{ stock.product_model }}', '{{ stock.serial }}', '{{ stock.receive_date }}');">납품
                                     </button>
                                     <button type="button" class="btn btn-warning" data-toggle="modal"
                                         data-target="#returnModal"
-                                        onclick="stockReturnApply('{{stock.id}}', '{{stock.mnfacture}}', '{{ stock.product }}', '{{ stock.product_model }}', '{{ stock.serial }}', '{{ stock.receive_date }}');">
+                                        onclick="stockReturnApply('{{stock.id}}', '{{stock.mnfacture}}', '{{ stock.product_model }}', '{{ stock.serial }}', '{{ stock.receive_date }}');">
                                         반납
                                     </button>
                                     <button type="button" class="btn btn-dark" data-toggle="modal"
                                         data-target="#disposalModal"
-                                        onclick="stockDisposalApply('{{stock.id}}', '{{stock.mnfacture}}', '{{ stock.product }}', '{{ stock.product_model }}', '{{ stock.serial }}', '{{ stock.receive_date }}');">
+                                        onclick="stockDisposalApply('{{stock.id}}', '{{stock.mnfacture}}', '{{ stock.product_model }}', '{{ stock.serial }}', '{{ stock.receive_date }}');">
                                         폐기
                                     </button>
                                 </td>
@@ -144,7 +146,7 @@
                     <input type="text" class="form-control" id="manager" autocomplete="off" name="manager">
                 </div>
                 <div class="form-group">
-                    <label>납품 장소</label>
+                    <label>납품처</label>
                     <input type="text" class="form-control" id="location" autocomplete="off" name="location">
                 </div>
                 <div class="card single-delivery" id="single-delivery">
@@ -155,7 +157,6 @@
                             <div class="media-body">
                                 <h5 class="mt-0" id="media-title"></h5>
                                 <ul class="list-group list-group-flush" id="stock-info">
-                                    <li id="stock-product"></li>
                                     <li id="stock-product-model"></li>
                                     <li id="stock-serial"></li>
                                     <li id="stock-receive-date"></li>
@@ -291,7 +292,6 @@
                                 <div class="media-body">
                                     <h5 class="mt-0" id="return-mnfacture"></h5>
                                     <ul class="list-group list-group-flush" id="return-info">
-                                        <li id="return-product"></li>
                                         <li id="return-product-model"></li>
                                         <li id="return-serial"></li>
                                         <li id="return-receive-date"></li>
@@ -400,7 +400,6 @@
                                 <div class="media-body">
                                     <h5 class="mt-0" id="disposal-mnfacture"></h5>
                                     <ul class="list-group list-group-flush" id="disposal-info">
-                                        <li id="disposal-product"></li>
                                         <li id="disposal-product-model"></li>
                                         <li id="disposal-serial"></li>
                                         <li id="disposal-receive-date"></li>
@@ -482,8 +481,8 @@
 <link rel="stylesheet" href="https://cdn.datatables.net/1.10.20/css/dataTables.bootstrap4.min.css">
 <link rel="stylesheet" href="{% static 'css/selectpicker/bootstrap-select.css' %}">
 <link rel="stylesheet" href="{% static 'css/datepicker/datepicker3.css' %}">
+<link rel="stylesheet" href="{% static 'css/equipment/stockDetail.css' %}">
 <link rel="stylesheet" href="{% static 'css/equipment/stockDelivery.css' %}">
-<link rel="stylesheet" href="{% static 'css/equipment/stockList.css' %}">
 {% endblock %}
 
 {% block js %}
