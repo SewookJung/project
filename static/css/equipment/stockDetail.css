@@ -1,0 +1,149 @@
+.card-header .card-title {
+  margin-right: 2px;
+}
+
+.card-header .total-count {
+  display: inline-block;
+  font-weight: 700;
+  color: white;
+  padding: 1px 5px;
+  border-radius: 20%;
+  font-size: 13px;
+  background-color: #007bff;
+}
+
+.stock-contents .stock-lists {
+  display: flex;
+  padding: 10px 10px;
+}
+
+.stock-lists .card-title {
+  display: inline-block;
+  width: 150px;
+  height: auto;
+}
+
+.stock-lists .stock-status-lists {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.stock-lists h5 {
+  margin-bottom: 5px;
+}
+
+.stock-status-lists #stock-status {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.stock-status__keep div:first-child {
+  color: #3498db;
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 5px;
+}
+
+.stock-status__keep div:last-child {
+  width: 40px;
+  height: 40px;
+  background-color: #3498db;
+  color: white;
+  font-size: 18px;
+  font-weight: 700;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 20%;
+  cursor: pointer;
+}
+
+.stock-status__sold div:first-child {
+  color: #20bf6b;
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 5px;
+}
+
+.stock-status__sold div:last-child {
+  width: 40px;
+  height: 40px;
+  background-color: #20bf6b;
+  color: white;
+  font-size: 18px;
+  font-weight: 700;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 20%;
+  cursor: pointer;
+}
+
+.stock-status__disposal div:first-child {
+  color: #eb3b5a;
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 5px;
+}
+
+.stock-status__disposal div:last-child {
+  width: 40px;
+  height: 40px;
+  background-color: #eb3b5a;
+  color: white;
+  font-size: 18px;
+  font-weight: 700;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 20%;
+  cursor: pointer;
+}
+
+.stock-status__return div:first-child {
+  color: #ff9f43;
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 5px;
+}
+
+.stock-status__return div:last-child {
+  width: 40px;
+  height: 40px;
+  background-color: #ff9f43;
+  color: white;
+  font-size: 18px;
+  font-weight: 700;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 20%;
+  cursor: pointer;
+}
+
+.form-group .stock-contents {
+  border: 0px;
+}
+
+.stock-contents .stock-lists {
+  padding: 0px;
+}
+
+.stock-lists .stock-status-lists {
+  width: 150px;
+}
+
+.form-group .stock-form {
+  display: flex;
+  justify-content: flex-end;
+  flex-wrap: wrap-reverse;
+  width: 100%;
+}
+
+.stock-form .multi-form {
+  margin-bottom: 0px;
+  height: 100%;
+}
