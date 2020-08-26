@@ -3,7 +3,16 @@
 }
 
 .form-group .body__stock-info {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-between;
   padding: 0px;
+  width: 100%;
+}
+
+.body__stock-info .card {
+  width: 33%;
 }
 
 .stock-lists .stock-model {
@@ -13,13 +22,6 @@
   font-size: 22px;
   font-weight: 700;
   margin-bottom: 10px;
-}
-.stock-lists .stock-product-name {
-  color: grey;
-  font-size: 14px;
-  font-weight: 700;
-  margin-left: 5px;
-  margin-top: 5px;
 }
 
 .stock-lists .stock-status-lists {
@@ -118,4 +120,48 @@
   align-items: center;
   border-radius: 20%;
   cursor: pointer;
+}
+
+.stock-status__total div:first-child {
+  color: #182c61;
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 5px;
+}
+
+.stock-status__total div:last-child {
+  width: 40px;
+  height: 40px;
+  background-color: #182c61;
+  color: white;
+  font-size: 18px;
+  font-weight: 700;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 20%;
+}
+
+@media (min-width: 320px) and (max-width: 480px) {
+  .body__stock-info .card {
+    width: 100%;
+  }
+}
+
+@media (min-width: 500px) {
+  .body__stock-info .card {
+    width: 100%;
+  }
+}
+
+@media (min-width: 768px) {
+  .body__stock-info .card {
+    width: 48%;
+  }
+}
+
+@media (min-width: 992px) {
+  .body__stock-info .card {
+    width: 33%;
+  }
 }
