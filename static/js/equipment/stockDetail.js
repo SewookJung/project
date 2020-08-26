@@ -33,22 +33,15 @@ $(document).ready(function () {
   });
 
   $("#stock-table").on("page.dt", function (event) {
-    const test = event.target.children[1];
-    console.log(test.querySelectorAll("td"));
+    let rows = stockTable.rows().nodes();
+    let pageIdx = stockTable.page.info().page + 1;
+    checkSelectCheckBox(rows, pageIdx);
   });
 });
 
-const stockApply = (
-  stockId,
-  mnfacture,
-  product,
-  productModel,
-  serial,
-  receiveDate
-) => {
+const stockApply = (stockId, mnfacture, productModel, serial, receiveDate) => {
   const stockIdInput = document.getElementById("stock_id");
   const titleOfMnfacture = document.getElementById("media-title");
-  const liOfProduct = document.getElementById("stock-product");
   const liOfProductModel = document.getElementById("stock-product-model");
   const liOfSerial = document.getElementById("stock-serial");
   const liOfReceiveDate = document.getElementById("stock-receive-date");
@@ -60,7 +53,6 @@ const stockApply = (
   singleContent.style.display = "block";
   stockIdInput.value = stockId;
   titleOfMnfacture.innerText = mnfacture;
-  liOfProduct.innerText = product;
   liOfProductModel.innerText = productModel;
   liOfSerial.innerText = serial;
   liOfReceiveDate.innerText = receiveDate + " 입고";
@@ -69,20 +61,17 @@ const stockApply = (
 const stockReturnApply = (
   stockId,
   mnfacture,
-  product,
   productModel,
   serial,
   receiveDate
 ) => {
   const stockIdInput = document.getElementById("return-stock-id");
   const titleOfMnfacture = document.getElementById("return-mnfacture");
-  const liOfProduct = document.getElementById("return-product");
   const liOfProductModel = document.getElementById("return-product-model");
   const liOfSerial = document.getElementById("return-serial");
   const liOfReceiveDate = document.getElementById("return-receive-date");
   stockIdInput.value = stockId;
   titleOfMnfacture.innerText = mnfacture;
-  liOfProduct.innerText = product;
   liOfProductModel.innerText = productModel;
   liOfSerial.innerText = serial;
   liOfReceiveDate.innerText = receiveDate + " 입고";
@@ -91,20 +80,17 @@ const stockReturnApply = (
 const stockDisposalApply = (
   stockId,
   mnfacture,
-  product,
   productModel,
   serial,
   receiveDate
 ) => {
   const stockIdInput = document.getElementById("disposal-stock-id");
   const titleOfMnfacture = document.getElementById("disposal-mnfacture");
-  const liOfProduct = document.getElementById("disposal-product");
   const liOfProductModel = document.getElementById("disposal-product-model");
   const liOfSerial = document.getElementById("disposal-serial");
   const liOfReceiveDate = document.getElementById("disposal-receive-date");
   stockIdInput.value = stockId;
   titleOfMnfacture.innerText = mnfacture;
-  liOfProduct.innerText = product;
   liOfProductModel.innerText = productModel;
   liOfSerial.innerText = serial;
   liOfReceiveDate.innerText = receiveDate + " 입고";
@@ -248,6 +234,7 @@ const stockDisposalSubmit = () => {
 
 const checkTheBox = (event) => {
   const clickedElementId = event.target.id;
+  let modelName = document.getElementById("stock-model-name").value;
   stockInfoOjbect = new Object();
   switch (clickedElementId) {
     case "blankCheckbox":
@@ -255,14 +242,13 @@ const checkTheBox = (event) => {
       checkBoxStatus = checkBox.checked;
       rowData = event.target.parentNode.parentNode.children;
       if (checkBoxStatus == true) {
-        let modelName = document.getElementById("stock-model-name").value;
         if (!(modelName in stockInfoResult)) {
           stockInfoResult[modelName] = new Array();
         }
         stockInfoOjbect.id = checkBox.value;
         stockInfoOjbect.serial = rowData[1].innerText;
-        stockInfoOjbect.product = rowData[2].innerText;
-        stockInfoOjbect.location = rowData[3].innerText;
+        stockInfoOjbect.location = rowData[2].innerText;
+        stockInfoOjbect.receiveDate = rowData[3].innerText;
         stockInfoResult[modelName].push(stockInfoOjbect);
         selectedStockIds.push(stockInfoOjbect.id);
       } else {
@@ -291,14 +277,13 @@ const checkTheBox = (event) => {
       rowData = event.target.parentNode.children;
       if (checkBox.checked == false) {
         checkBox.checked = true;
-        modelName = document.getElementById("stock-model-name").value;
         if (!(modelName in stockInfoResult)) {
           stockInfoResult[modelName] = new Array();
         }
         stockInfoOjbect.id = checkBox.value;
         stockInfoOjbect.serial = rowData[1].innerText;
-        stockInfoOjbect.product = rowData[2].innerText;
-        stockInfoOjbect.location = rowData[3].innerText;
+        stockInfoOjbect.location = rowData[2].innerText;
+        stockInfoOjbect.receiveDate = rowData[3].innerText;
         stockInfoResult[modelName].push(stockInfoOjbect);
         selectedStockIds.push(stockInfoOjbect.id);
       } else {
@@ -378,8 +363,7 @@ const checkSelectedStocks = () => {
       for (let i = 0; i < selectedStocks.length; i++) {
         const li = document.createElement("li");
         const deleteBadge = document.createElement("span");
-        const stockInfo =
-          selectedStocks[i].serial + "  " + selectedStocks[i].product;
+        const stockInfo = selectedStocks[i].serial + "  ";
         deleteBadge.setAttribute("onclick", "deleteStockOfList(event)");
         deleteBadge.classList.add("badge");
         deleteBadge.classList.add("badge-danger");
@@ -447,8 +431,6 @@ const deleteStocks = () => {
         for (let i = 0; i < deniedLists.length; i++) {
           const li = document.createElement("li");
           const stockInfo =
-            deniedLists[i].product +
-            "  " +
             deniedLists[i].product_model +
             "  " +
             deniedLists[i].serial +
@@ -532,7 +514,7 @@ const multiStocksApply = () => {
   }
 
   if (locationValue == "") {
-    alert("❗ 납품 장소를 작성해주세요.");
+    alert("❗ 납품처를 작성해주세요.");
     return false;
   }
 
@@ -757,8 +739,7 @@ const makeSelectedStocksList = (selectedStockKeys, accordion) => {
     for (let i = 0; i < selectedStocks.length; i++) {
       const li = document.createElement("li");
       const deleteBadge = document.createElement("span");
-      const stockInfo =
-        selectedStocks[i].serial + "  " + selectedStocks[i].product;
+      const stockInfo = selectedStocks[i].serial + "  ";
       deleteBadge.setAttribute("onclick", "deleteStockOfList(event)");
       deleteBadge.classList.add("badge");
       deleteBadge.classList.add("badge-danger");
@@ -775,18 +756,31 @@ const makeSelectedStocksList = (selectedStockKeys, accordion) => {
 };
 
 const pageCheckTheBox = (event) => {
+  const clickedElementId = event.target.id;
   let entries = Number(document.querySelector(".custom-select").value);
   let rows = document.querySelectorAll(".rows");
-  const clickedElementId = event.target.id;
   let startIdx = 0;
-  let endIdx = entries - 1;
+  let endIdx = entries;
+  let checkBox;
+  let checkBoxStatus;
 
   switch (clickedElementId) {
+    case "pageCheckBox":
+      checkBox = event.target;
+      checkBoxStatus = checkBox.checked;
+      if (checkBoxStatus == true) {
+        addStocks(rows, startIdx, endIdx);
+      } else {
+        removeStocks(rows, startIdx, endIdx);
+      }
+      break;
+
     case "th-checkBox":
-      let checkBox = event.target.children[0];
-      let checkBoxStatus = checkBox.checked;
+      checkBox = event.target.children[0];
+      checkBoxStatus = checkBox.checked;
       if (checkBoxStatus == true) {
         checkBox.checked = false;
+        removeStocks(rows, startIdx, endIdx);
       } else {
         checkBox.checked = true;
         addStocks(rows, startIdx, endIdx);
@@ -800,7 +794,7 @@ const addStocks = (rows, startIdx, endIdx) => {
 
   if (rows.length < endIdx) endIdx = rows.length;
 
-  for (startIdx; startIdx <= endIdx; startIdx++) {
+  for (startIdx; startIdx < endIdx; startIdx++) {
     let checkBox = rows[startIdx].children[0].children[0];
     let rowData = rows[startIdx].children;
     let serial = rowData[1].innerText;
@@ -810,13 +804,13 @@ const addStocks = (rows, startIdx, endIdx) => {
     if (!(modelName in stockInfoResult))
       stockInfoResult[modelName] = new Array();
 
-    const dupCheckOfArray = stockInfoResult[modelName].findIndex(function (
+    const existCheckOfArray = stockInfoResult[modelName].findIndex(function (
       item
     ) {
       return item.serial === serial;
     });
 
-    if (dupCheckOfArray == -1) {
+    if (existCheckOfArray == -1) {
       stockInfoOjbect.id = checkBox.value;
       stockInfoOjbect.serial = rowData[1].innerText;
       stockInfoOjbect.product = rowData[2].innerText;
@@ -830,23 +824,50 @@ const addStocks = (rows, startIdx, endIdx) => {
   });
 };
 
-const removeStocks = (checkBox, rowData, modelName) => {
-  stockInfoOjbect = new Object();
+const removeStocks = (rows, startIdx, endIdx) => {
+  let modelName = document.getElementById("stock-model-name").value;
 
-  checkBox.checked = false;
-  const serial = rowData[1].innerText;
-  const deleteStockObject = stockInfoResult[modelName].findIndex(function (
-    item
-  ) {
-    return item.serial === serial;
-  });
-  if (deleteStockObject > -1)
-    stockInfoResult[modelName].splice(deleteStockObject, 1);
-  if (stockInfoResult[modelName].length < 1) delete stockInfoResult[modelName];
-  const selectReleaseStock = selectedStockIds.findIndex(function (item) {
-    return item === checkBox.value;
-  });
-  if (selectReleaseStock > -1) {
-    selectedStockIds.splice(selectReleaseStock, 1);
+  if (rows.length < endIdx) endIdx = rows.length;
+
+  for (startIdx; startIdx < endIdx; startIdx++) {
+    let checkBox = rows[startIdx].children[0].children[0];
+    let rowData = rows[startIdx].children;
+    let serial = rowData[1].innerText;
+    stockInfoOjbect = new Object();
+    checkBox.checked = false;
+    const deleteStockObject = stockInfoResult[modelName].findIndex(function (
+      item
+    ) {
+      return item.serial === serial;
+    });
+    if (deleteStockObject > -1)
+      stockInfoResult[modelName].splice(deleteStockObject, 1);
+    if (stockInfoResult[modelName].length < 1)
+      delete stockInfoResult[modelName];
+    const selectReleaseStock = selectedStockIds.findIndex(function (item) {
+      return item === checkBox.value;
+    });
+    if (selectReleaseStock > -1) {
+      selectedStockIds.splice(selectReleaseStock, 1);
+    }
   }
+};
+
+const checkSelectCheckBox = (rows, pageIdx) => {
+  let entries = Number(document.querySelector(".custom-select").value);
+  let startIdx = entries * (pageIdx - 1);
+  let endIdx = entries * pageIdx - 1;
+  let pageCheckBox = document.getElementById("pageCheckBox");
+
+  if (endIdx > rows.length) endIdx = rows.length - 1;
+
+  checkBoxStatus = new Array();
+
+  for (startIdx; startIdx <= endIdx; startIdx++) {
+    let checkBox = rows[startIdx].children[0].children[0];
+    checkBoxStatus.push(checkBox.checked);
+  }
+
+  if (checkBoxStatus.includes(false)) pageCheckBox.checked = false;
+  else pageCheckBox.checked = true;
 };
