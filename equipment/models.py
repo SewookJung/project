@@ -45,8 +45,6 @@ class Stock(models.Model):
 
     mnfacture = models.ForeignKey(
         to=Mnfacture, null=True, on_delete=models.SET_NULL)
-    product = models.ForeignKey(
-        to=Product, null=True, on_delete=models.SET_NULL)
     product_model = models.ForeignKey(
         to=ProductModel, null=True, on_delete=models.SET_NULL)
     serial = models.CharField(max_length=50, default="")
