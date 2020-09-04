@@ -28,7 +28,6 @@
   display: flex;
   justify-content: space-between;
   width: 100%;
-  padding-right: 15px;
 }
 
 .stock-status-lists #stock-status {
