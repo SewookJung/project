@@ -14,6 +14,7 @@ const getListsProductModel = (param) => {
       const h6 = document.createElement("h6");
 
       const stocksData = data.stocks;
+      console.log(stocksData);
       const mnfactureName = Object.keys(stocksData[0])[0];
       const stockList = Object.values(stocksData[0][mnfactureName]);
 
