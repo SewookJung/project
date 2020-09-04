@@ -80,3 +80,11 @@
 .media-body li:nth-child(3) ul li:nth-child(2) {
   margin-bottom: 2px;
 }
+
+.qq-uploader {
+  width: 700px;
+}
+
+.qq-upload-list {
+  overflow-y: hidden;
+}
