@@ -1,0 +1,146 @@
+@import url("https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap");
+
+.badge {
+  margin-left: 3px;
+  font-size: 12px;
+}
+
+.header {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  padding: 0px;
+  border-bottom: 0px;
+  margin-bottom: 0px;
+}
+
+.equipment__contents .select-client {
+  margin-right: 10px;
+}
+
+.contents__header .header__client-name {
+  font-family: "Noto Sans KR", sans-serif;
+  color: #2d3436;
+  font-weight: 700;
+  font-size: 22px;
+  display: inline-block;
+  cursor: pointer;
+  width: auto;
+}
+
+.equipment__lists .equipment__list-header {
+  display: inline-block;
+  width: auto;
+  cursor: pointer;
+}
+
+.card-body .mnfacture__header {
+  display: inline-block;
+  width: auto;
+}
+
+.contents__content .card {
+  margin-bottom: 10px;
+}
+
+.card-body .mnfacture__header-title {
+  font-family: "Noto Sans KR", sans-serif;
+  color: #a29bfe;
+  font-weight: 700;
+  font-size: 20px;
+  display: inline-block;
+  cursor: pointer;
+  width: 100%;
+}
+
+.mnfacture__header-title .badge {
+  background-color: #a29bfe;
+}
+
+.card-body .equipments {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  width: 100%;
+}
+
+.equipments .equipment__lists {
+  margin-top: 15px;
+}
+
+.equipments .equipment__lists:last-child {
+  margin-right: 0px;
+}
+
+.header .productModel-title {
+  font-family: "Noto Sans KR", sans-serif;
+  font-size: 16px;
+}
+
+.equipment__lists .equipment__list-header {
+  margin-bottom: 7px;
+  font-family: "Noto Sans KR", sans-serif;
+  color: #636e72;
+  font-weight: 700;
+  font-size: 18px;
+}
+
+.equipment__lists .badge {
+  background-color: #636e72;
+}
+
+@media (min-width: 320px) and (max-width: 480px) {
+  .equipment__contents .select-client {
+    margin-bottom: 10px;
+  }
+  .equipments .equipment__lists {
+    width: 100%;
+  }
+}
+
+@media (min-width: 500px) {
+  .equipment__contents .select-client {
+    margin-bottom: 10px;
+  }
+  .equipments .equipment__lists {
+    width: 100%;
+  }
+}
+
+@media (min-width: 768px) {
+  .card-body .equipments {
+    justify-content: space-between;
+  }
+
+  .equipment__contents .contents__select {
+    display: flex;
+  }
+
+  .equipments .equipment__lists {
+    width: 49%;
+  }
+}
+
+@media (min-width: 992px) {
+  .card-body .equipments {
+    justify-content: space-between;
+  }
+
+  .equipment__contents .contents__select {
+    display: flex;
+  }
+
+  .equipments .equipment__lists {
+    width: 49%;
+  }
+}
+
+@media (min-width: 1200px) {
+  .equipment__contents .contents__select {
+    display: flex;
+  }
+
+  .equipments .equipment__lists {
+    width: 33%;
+  }
+}
