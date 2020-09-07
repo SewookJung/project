@@ -3,7 +3,7 @@ from django.contrib.postgres.fields import JSONField
 
 
 class Dept(models.Model):
-    name = models.CharField(max_length=20, default='',)
+    name = models.CharField(max_length=20, default='', )
     updept_id = models.IntegerField(default=0)
     depth = models.SmallIntegerField(default=1)
     created_at = models.DateTimeField(auto_now_add=True, editable=False)
@@ -12,7 +12,7 @@ class Dept(models.Model):
 class Client(models.Model):
     name = models.CharField(max_length=40, default='',)
     similar_word = JSONField(default=dict, blank=True,
-                              null=True, editable=False)
+                             null=True, editable=False)
     created_at = models.DateTimeField(auto_now_add=True, editable=False)
 
     def __str__(self):
@@ -20,6 +20,9 @@ class Client(models.Model):
 
     class Meta:
         ordering = ['name']
+
+    def natural_key(self):
+        return (self.name)
 
 
 class Product(models.Model):
@@ -47,10 +50,16 @@ class ProductModel(models.Model):
     class Meta:
         ordering = ['name']
 
+    def natural_key(self):
+        return (self.name)
+
 
 class Mnfacture(models.Model):
     manafacture = models.CharField(max_length=40, default='',)
     created_at = models.DateTimeField(auto_now_add=True, editable=False)
+
+    def natural_key(self):
+        return (self.manafacture)
 
     def __str__(self):
         return self.manafacture
