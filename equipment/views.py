@@ -10,6 +10,7 @@ from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.conf import settings
 from django.db.models import Count
+from django.core import serializers
 
 from wsgiref.util import FileWrapper
 from openpyxl import load_workbook
@@ -28,8 +29,9 @@ from utils.functions import (
 
 @login_required
 def equipment_main(request):
+    equipment_form = EquipmentForm()
     equipments = Equipment.objects.all()
-    return render(request, 'equipment/equipment_main.html', {'equipments': equipments, 'permission': REPORT_PERMISSION_DEFAULT})
+    return render(request, 'equipment/equipment_main.html', {'equipments': equipments, 'equipment_form': equipment_form,  'permission': REPORT_PERMISSION_DEFAULT})
 
 
 @login_required
@@ -78,6 +80,53 @@ def equipment_form_apply(request):
             return make_response(status=400, content=json.dumps({'success': False, 'msg': "납품 등록에 실패 하였습니다.\n다시 시도해주시기 바랍니다."}))
     else:
         return make_response(status=400, content=json.dumps({'success': False, 'msg': "제품등록 페이지에 다시 접속해주시기 바랍니다.", 'error': 'upload_error'}))
+
+
+@login_required
+def equipment_detail(request, equipment_id):
+    if request.method == "GET":
+        equipment_form = EquipmentForm()
+        products = Product.objects.values('id',
+                                          'name', 'makers', 'level').order_by('makers', 'level')
+        equipment = Equipment.objects.get(id=equipment_id)
+        try:
+            stock = Stock.objects.get(
+                serial=equipment.serial, status=STOCK_STATUS_SOLD)
+        except:
+            return render(request, 'equipment/equipment_detail.html', {"equipment": equipment, "products": products, "equipment_form": equipment_form, 'login_id': request.session['id'], 'permission': REPORT_PERMISSION_DEFAULT, })
+    return render(request, 'equipment/equipment_detail.html', {"equipment": equipment, "products": products, "equipment_form": equipment_form, 'login_id': request.session['id'], 'permission': REPORT_PERMISSION_DEFAULT, 'stock': stock})
+
+
+@login_required
+def equipment_client_detail(request, client_id):
+    if request.method == "GET":
+        equipments = Equipment.objects.filter(client_id=client_id)
+
+        serialize_equipments = serializers.serialize(
+            'json', equipments, use_natural_foreign_keys=True)
+
+        client = str(equipments[0].client)
+        count = equipments.count()
+        return render(request, "equipment/equipment_client_detail.html", {'equipments': equipments, 'client': client, 'count': count, 'permission': REPORT_PERMISSION_DEFAULT, })
+
+
+@login_required
+def equipment_mnfacture_detail(request, client_id, mnfacture):
+    if request.method == "GET":
+        try:
+            equipments = Equipment.objects.filter(
+                client_id=client_id, mnfacture__manafacture=mnfacture)
+            client = equipments[0].client
+            count = equipments.count()
+            return render(request, "equipment/equipment_mnfacture_detail.html", {'equipments': equipments, 'client': client, 'count': count, 'mnfacture': mnfacture, 'permission': REPORT_PERMISSION_DEFAULT})
+        except:
+            return render(request, "equipment/equipment_mnfacture_detail.html", {'permission': REPORT_PERMISSION_DEFAULT})
+
+
+@login_required
+def equipment_model_detail(request, client_id, mnfacture, model):
+    print(client_id, mnfacture, model)
+    return render(request, "equipment/equipment_model_detail.html", {'permission': REPORT_PERMISSION_DEFAULT})
 
 
 @login_required
@@ -158,21 +207,6 @@ def equipment_detail_apply(request, equipment_id):
             return make_response(status=400, content=json.dumps({'success': False, 'msg': "제품수정에 실패하였습니다. \n다시 시도하시기 바랍니다.", 'error': 'upload_error'}))
     else:
         return make_response(status=400, content=json.dumps({'success': False, 'msg': "제품수정에 실패하였습니다. \n다시 시도하시기 바랍니다.", 'error': 'upload_error'}))
-
-
-@login_required
-def equipment_detail(request, equipment_id):
-    if request.method == "GET":
-        equipment_form = EquipmentForm()
-        products = Product.objects.values('id',
-                                          'name', 'makers', 'level').order_by('makers', 'level')
-        equipment = Equipment.objects.get(id=equipment_id)
-        try:
-            stock = Stock.objects.get(
-                serial=equipment.serial, status=STOCK_STATUS_SOLD)
-        except:
-            return render(request, 'equipment/equipment_detail.html', {"equipment": equipment, "products": products, "equipment_form": equipment_form, 'login_id': request.session['id'], 'permission': REPORT_PERMISSION_DEFAULT, })
-    return render(request, 'equipment/equipment_detail.html', {"equipment": equipment, "products": products, "equipment_form": equipment_form, 'login_id': request.session['id'], 'permission': REPORT_PERMISSION_DEFAULT, 'stock': stock})
 
 
 @login_required
@@ -349,6 +383,64 @@ def equipment_upload_cancel(request):
             return make_response(status=400, content=json.dumps({'success': False, 'error': "장비현황 등록을 취소하는데 실패하였습니다. \n 파일을 다시 업로드 해주시길 바랍니다."}))
     else:
         return make_response(status=400, content=json.dumps({'success': False, 'error': "장비현황 등록을 취소하는데 실패하였습니다. \n 파일을 다시 업로드 해주시길 바랍니다."}))
+
+
+@login_required
+def equipment_all_list(request, client_id):
+    if request.method == 'GET':
+        equipments = Equipment.objects.filter(
+            client=client_id).order_by('mnfacture', 'serial')
+
+        if equipments.count() == 0:
+            return make_response(status=400, content=json.dumps({'success': False, 'error': "❌ 선택하신 고객사의 납품 현황이 존재하지 않습니다.\n      고객사를 다시 선택해주시기 바랍니다."}))
+        else:
+            equipment_lists = {}
+            for equipment in equipments:
+                client = str(equipment.client)
+                mnfacture = str(equipment.mnfacture)
+                product_model = str(equipment.product_model)
+                install_date = str(equipment.install_date)
+                serial = str(equipment.serial)
+                location = str(equipment.location)
+
+                client_list = list(equipment_lists.keys())
+                if not client in client_list:
+                    equipment_lists[client] = {}
+
+                mnfacture_list = list(equipment_lists[client].keys())
+                if not mnfacture in mnfacture_list:
+                    equipment_lists[client][mnfacture] = {}
+
+                product_model_list = list(
+                    equipment_lists[client][mnfacture].keys())
+                if not product_model in product_model_list:
+                    equipment_lists[client][mnfacture][product_model] = [{
+                        'serial': serial, 'location': location, 'install_date': install_date}]
+                else:
+                    equipment_lists[client][mnfacture][product_model].append({
+                        'serial': serial, 'location': location, 'install_date': install_date})
+            return make_response(status=200, content=json.dumps({'success': True, 'equipment_lists': equipment_lists}))
+
+            # return make_response(status=200,content=json.dumps({'success': False, 'msg': "⚠ 선택하신 고객사의 납품 정보를 가지고 오는데 실패했습니다.\n      고객사를 다시 선택해주시기 바랍니다."}))
+
+
+@login_required
+def equipment_client_mnfacture_list(request, client_id):
+    if request.method == 'GET':
+        equipments = Equipment.objects.filter(client=client_id)
+        mnfactures = []
+
+        for equipment in equipments:
+            mnfacture_id = equipment.mnfacture_id
+            mnfacture_name = str(equipment.mnfacture)
+            data = {'mnfacture_id': mnfacture_id,
+                    'mnfacture_name': mnfacture_name}
+            if not data in mnfactures:
+                mnfactures.append(data)
+
+        return make_response(status=200, content=json.dumps({'success': True, 'mnfactures': mnfactures}))
+
+        # return make_response(status=200, content=json.dumps({'success': False, 'msg': "⚠ 선택하신 고객사의 납품 정보를 가지고 오는데 실패했습니다.\n      고객사를 다시 선택해주시기 바랍니다."}))
 
 
 @login_required
@@ -905,7 +997,8 @@ def equipment_stock_permission_check(request):
                 mnfacture = str(stock.mnfacture)
                 product_model = str(stock.product_model)
                 creator = str(stock.creator)
-                permission_denied_stock = {"mnfacture": mnfacture, "product_model": product_model, "serial": stock.serial, "creator": creator}
+                permission_denied_stock = {
+                    "mnfacture": mnfacture, "product_model": product_model, "serial": stock.serial, "creator": creator}
                 permission_denied_lists.append(permission_denied_stock)
         return make_response(status=400, content=json.dumps({'success': False, 'error': "permission-error", "denied_lists": permission_denied_lists}))
 
