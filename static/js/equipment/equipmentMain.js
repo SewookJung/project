@@ -1,5 +1,6 @@
 const csrfToken = document.getElementsByName("csrfmiddlewaretoken")[0].value;
 const clientSelectBox = document.getElementById("client_id");
+const mnfactureSelectBox = document.getElementById("mnfacture");
 const equipmentHeader = document.querySelector(".contents__header");
 const equipmentContent = document.querySelector(".contents__content");
 
@@ -17,6 +18,7 @@ const getListClientEquipments = (clientId) => {
     error: function (request, status, error) {
       const errorMsg = JSON.parse(request.responseText).error;
       alert(errorMsg);
+      blockMnfactureSelectBox();
     },
   });
 };
@@ -36,7 +38,7 @@ const getListMnfactures = (clientId) => {
         const mnfactureId = mnfactures[i]["mnfacture_id"];
         const mnfactureName = mnfactures[i]["mnfacture_name"];
         $("#mnfacture").append(
-          `<option value="${mnfactureId}">${mnfactureName}</option>;`
+          `<option value="${mnfactureId}">${mnfactureName}</option>`
         );
       }
       $("#mnfacture").selectpicker("refresh");
@@ -73,8 +75,6 @@ const drawEquipment = (equipments) => {
     for (let f = 0; f < productModel.length; f++) {
       let modelHeaderDiv = document.createElement("div");
       let modelCountBadge = document.createElement("span");
-      let modelSerachDiv = document.createElement("div");
-      let searchBar = document.createElement("input");
       let modelContentDiv = document.createElement("div");
       let ul = document.createElement("ul");
 
@@ -115,7 +115,7 @@ const drawEquipment = (equipments) => {
 
       modelHeaderDiv.setAttribute(
         "onclick",
-        'mnfactureDetailPage("' + mnfacture + '")'
+        'modelDetailPage("' + mnfacture + '","' + model + '")'
       );
       mnfactureCount += count;
     }
@@ -144,28 +144,54 @@ const drawEquipment = (equipments) => {
   clientNameDiv.innerText = clientName;
   totalCountBadge.innerText = totalCount;
   clientNameDiv.append(totalCountBadge);
-  clientNameDiv.setAttribute("onclick", "onclick=goToAllEquipment()");
+  clientNameDiv.setAttribute("onclick", "onclick=equipmentAllPage()");
   totalCountBadge.classList.add("badge", "badge-dark");
 };
 
-const goToAllEquipment = () => {
+const equipmentAllPage = () => {
   const clientId = document.getElementById("client_id").value;
   window.location = `/equipment/client/${clientId}/detail/`;
 };
 
 const mnfactureDetailPage = (mnfacture) => {
   const clientId = document.getElementById("client_id").value;
+  const mnfacutreSelector = document.getElementById("mnfacture");
+  console.log(mnfacutreSelector);
+  console.dir(mnfacutreSelector);
   window.location = `/equipment/client/${clientId}/${mnfacture}/detail/`;
 };
 
-const modelDetailPage = (model) => {
+const modelDetailPage = (mnfacture, model) => {
+  console.log(mnfacture, model);
   const clientId = document.getElementById("client_id").value;
-  window.location = `/equipment/client/${clientId}/${model}/detail/`;
+  window.location = `/equipment/client/${clientId}/${mnfacture}/${model}/detail/`;
+};
+
+const clearContents = () => {
+  const contentsHeader = document.querySelector(".header__client-name");
+  const contentsContent = document.querySelector(".contents__content");
+  contentsHeader.innerText = "";
+  contentsContent.innerText = "";
+};
+
+const blockMnfactureSelectBox = () => {
+  $("#mnfacture").find("option").remove();
+  $("#mnfacture").prop("disabled", true);
+  $("#mnfacture").selectpicker({ title: "고객사를 선택하세요" });
+  $("#mnfacture").selectpicker("refresh");
+  clearContents();
 };
 
 clientSelectBox.addEventListener("change", (event) => {
   const clientId = event.target.value;
-  if (!clientId == "") getListClientEquipments(clientId);
+  if (clientId == "") blockMnfactureSelectBox();
+  else getListClientEquipments(clientId);
+});
+
+mnfactureSelectBox.addEventListener("change", () => {
+  const selector = document.getElementById("mnfacture");
+  const mnfacture = selector[selector.selectedIndex].innerText;
+  mnfactureDetailPage(mnfacture);
 });
 
 const init = () => {
