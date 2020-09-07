@@ -89,7 +89,7 @@
   background-color: #636e72;
 }
 
-@media (min-width: 320px) and (max-width: 480px) {
+@media (min-width: 320px) and (max-width: 500px) {
   .equipment__contents .select-client {
     margin-bottom: 10px;
   }
