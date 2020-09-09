@@ -93,7 +93,7 @@ def client_add_apply(request):
         new_client = Client(name=new_client_name,
                             similar_word=SIMILAR_WORD_DEFAULT)
         new_client.save()
-        return make_response(status=200, content=json.dumps({'success': True, 'msg': "고객사 신규 등록에 성공하였습니다.", 'test': 'test'}))
+        return make_response(status=200, content=json.dumps({'success': True, 'msg': "고객사 신규 등록에 성공하였습니다."}))
     except:
         return make_response(status=400, content=json.dumps({'success': False, 'msg': "고객사 신규 등록에 실패하였습니다.\n다시 시도해주세요."}))
 
@@ -115,4 +115,4 @@ def get_model_id(request, model):
         mnfacture_id = Product.objects.get(pk=model.product_id.id).mnfacture.id
         return make_response(status=200, content=json.dumps({'success': True, 'model_id': model_id, 'mnfacture_id': mnfacture_id}))
     except:
-        return make_response(status=200, content=json.dumps({'success': True, 'msg': "고객사 신규 등록에 성공하였습니다."}))
+        return make_response(status=400, content=json.dumps({'success': False, 'msg': "모델명 상세페이지로 이동에 실패 하였습니다."}))
