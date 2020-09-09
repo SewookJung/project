@@ -45,7 +45,7 @@
 
 .card-body .mnfacture__header-title {
   font-family: "Noto Sans KR", sans-serif;
-  color: #a29bfe;
+  color: #0984e3;
   font-weight: 700;
   font-size: 20px;
   display: inline-block;
@@ -54,7 +54,7 @@
 }
 
 .mnfacture__header-title .badge {
-  background-color: #a29bfe;
+  background-color: #0984e3;
 }
 
 .card-body .equipments {
@@ -89,12 +89,25 @@
   background-color: #636e72;
 }
 
-@media (min-width: 320px) and (max-width: 500px) {
+@media (min-width: 200px) {
   .equipment__contents .select-client {
     margin-bottom: 10px;
   }
   .equipments .equipment__lists {
     width: 100%;
+  }
+}
+
+@media (min-width: 400px) and (max-width: 500px) {
+  .equipment__contents .select-client {
+    margin-bottom: 10px;
+  }
+  .equipments .equipment__lists {
+    width: 49%;
+  }
+
+  .card-body .equipments {
+    justify-content: space-between;
   }
 }
 
@@ -103,35 +116,28 @@
     margin-bottom: 10px;
   }
   .equipments .equipment__lists {
-    width: 100%;
+    width: 49%;
   }
 }
 
 @media (min-width: 768px) {
-  .card-body .equipments {
-    justify-content: space-between;
-  }
-
   .equipment__contents .contents__select {
     display: flex;
   }
-
   .equipments .equipment__lists {
-    width: 49%;
+    width: 33%;
   }
 }
 
 @media (min-width: 992px) {
-  .card-body .equipments {
-    justify-content: space-between;
-  }
-
   .equipment__contents .contents__select {
     display: flex;
   }
-
   .equipments .equipment__lists {
-    width: 49%;
+    width: 28%;
+  }
+  .equipments .equipment__lists:last-child {
+    width: auto;
   }
 }
 
@@ -139,8 +145,10 @@
   .equipment__contents .contents__select {
     display: flex;
   }
-
   .equipments .equipment__lists {
-    width: 33%;
+    width: 29%;
+  }
+  .equipments .equipment__lists:last-child {
+    width: auto;
   }
 }
