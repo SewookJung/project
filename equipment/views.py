@@ -19,7 +19,7 @@ from common.models import Client, Product, ProductModel, Mnfacture
 from .models import EquipmentAttachment, Equipment, Stock, StockAttachment
 from .forms import EquipmentForm
 from utils.constant import REPORT_PERMISSION_DEFAULT, SAMPLE_FILE_ID, STOCK_SAMPLE_FILE_ID
-from utils.constant import STOCK_STATUS_KEEP, STOCK_STATUS_SOLD, STOCK_STATUS_RETURN, STOCK_STATUS_DISPOSAL
+from utils.constant import STATUS_KEEP, STATUS_SOLD, STATUS_RETURN, STATUS_DISPOSAL
 
 
 from utils.functions import (
@@ -91,7 +91,7 @@ def equipment_detail(request, equipment_id):
         equipment = Equipment.objects.get(id=equipment_id)
         try:
             stock = Stock.objects.get(
-                serial=equipment.serial, status=STOCK_STATUS_SOLD)
+                serial=equipment.serial, status=STATUS_SOLD)
         except:
             return render(request, 'equipment/equipment_detail.html', {"equipment": equipment, "products": products, "equipment_form": equipment_form, 'login_id': request.session['id'], 'permission': REPORT_PERMISSION_DEFAULT, })
     return render(request, 'equipment/equipment_detail.html', {"equipment": equipment, "products": products, "equipment_form": equipment_form, 'login_id': request.session['id'], 'permission': REPORT_PERMISSION_DEFAULT, 'stock': stock})
@@ -101,22 +101,19 @@ def equipment_detail(request, equipment_id):
 def equipment_client_detail(request, client_id):
     if request.method == "GET":
         equipments = Equipment.objects.filter(client_id=client_id)
-
-        serialize_equipments = serializers.serialize(
-            'json', equipments, use_natural_foreign_keys=True)
-
         client = str(equipments[0].client)
         count = equipments.count()
         return render(request, "equipment/equipment_client_detail.html", {'equipments': equipments, 'client': client, 'count': count, 'permission': REPORT_PERMISSION_DEFAULT, })
 
 
 @login_required
-def equipment_mnfacture_detail(request, client_id, mnfacture):
+def equipment_mnfacture_detail(request, client_id, mnfacture_id):
     if request.method == "GET":
         try:
             equipments = Equipment.objects.filter(
-                client_id=client_id, mnfacture__manafacture=mnfacture)
+                client_id=client_id, mnfacture_id=mnfacture_id)
             client = equipments[0].client
+            mnfacture = equipments[0].mnfacture
             count = equipments.count()
             return render(request, "equipment/equipment_mnfacture_detail.html", {'equipments': equipments, 'client': client, 'count': count, 'mnfacture': mnfacture, 'permission': REPORT_PERMISSION_DEFAULT})
         except:
@@ -124,9 +121,15 @@ def equipment_mnfacture_detail(request, client_id, mnfacture):
 
 
 @login_required
-def equipment_model_detail(request, client_id, mnfacture, model):
-    print(client_id, mnfacture, model)
-    return render(request, "equipment/equipment_model_detail.html", {'permission': REPORT_PERMISSION_DEFAULT})
+def equipment_model_detail(request, client_id, mnfacture_id, model_id):
+    if request.method == "GET":
+        equipments = Equipment.objects.filter(
+            client_id=client_id, mnfacture_id=mnfacture_id, product_model_id=model_id)
+        client = equipments[0].client
+        mnfacture = equipments[0].mnfacture
+        product_model = equipments[0].product_model
+        count = equipments.count()
+        return render(request, "equipment/equipment_model_detail.html", {'equipments': equipments, 'client': client, 'count': count, 'mnfacture': mnfacture, 'product_model': product_model, 'permission': REPORT_PERMISSION_DEFAULT})
 
 
 @login_required
@@ -141,10 +144,9 @@ def equipment_detail_apply(request, equipment_id):
         location = request.POST['location']
         install_date = request.POST['install-date']
         comments = request.POST['comments']
-        creator = request.session['id']
 
         try:
-            stock = Stock.objects.get(serial=serial, status=STOCK_STATUS_KEEP)
+            stock = Stock.objects.get(serial=serial, status=STATUS_KEEP)
             raise
         except Stock.DoesNotExist:
             pass
@@ -297,7 +299,7 @@ def equipment_upload_check(request):
 
                 try:
                     stock = Stock.objects.get(
-                        serial=serial, status=STOCK_STATUS_KEEP)
+                        serial=serial, status=STATUS_KEEP)
                     raise
                 except Stock.DoesNotExist:
                     pass
@@ -389,7 +391,7 @@ def equipment_upload_cancel(request):
 def equipment_all_list(request, client_id):
     if request.method == 'GET':
         equipments = Equipment.objects.filter(
-            client=client_id).order_by('mnfacture', 'serial')
+            client=client_id).order_by('mnfacture')
 
         if equipments.count() == 0:
             return make_response(status=400, content=json.dumps({'success': False, 'error': "❌ 선택하신 고객사의 납품 현황이 존재하지 않습니다.\n      고객사를 다시 선택해주시기 바랍니다."}))
@@ -399,13 +401,11 @@ def equipment_all_list(request, client_id):
                 client = str(equipment.client)
                 mnfacture = str(equipment.mnfacture)
                 product_model = str(equipment.product_model)
-                install_date = str(equipment.install_date)
-                serial = str(equipment.serial)
-                location = str(equipment.location)
 
                 client_list = list(equipment_lists.keys())
                 if not client in client_list:
                     equipment_lists[client] = {}
+                    equipment_lists['totalCount'] = equipments.count()
 
                 mnfacture_list = list(equipment_lists[client].keys())
                 if not mnfacture in mnfacture_list:
@@ -414,14 +414,11 @@ def equipment_all_list(request, client_id):
                 product_model_list = list(
                     equipment_lists[client][mnfacture].keys())
                 if not product_model in product_model_list:
-                    equipment_lists[client][mnfacture][product_model] = [{
-                        'serial': serial, 'location': location, 'install_date': install_date}]
+                    equipment_lists[client][mnfacture][product_model] = {
+                        'count': 1}
                 else:
-                    equipment_lists[client][mnfacture][product_model].append({
-                        'serial': serial, 'location': location, 'install_date': install_date})
+                    equipment_lists[client][mnfacture][product_model]['count'] += 1
             return make_response(status=200, content=json.dumps({'success': True, 'equipment_lists': equipment_lists}))
-
-            # return make_response(status=200,content=json.dumps({'success': False, 'msg': "⚠ 선택하신 고객사의 납품 정보를 가지고 오는데 실패했습니다.\n      고객사를 다시 선택해주시기 바랍니다."}))
 
 
 @login_required
@@ -440,7 +437,37 @@ def equipment_client_mnfacture_list(request, client_id):
 
         return make_response(status=200, content=json.dumps({'success': True, 'mnfactures': mnfactures}))
 
-        # return make_response(status=200, content=json.dumps({'success': False, 'msg': "⚠ 선택하신 고객사의 납품 정보를 가지고 오는데 실패했습니다.\n      고객사를 다시 선택해주시기 바랍니다."}))
+
+@login_required
+def equipment_selected_list(request, client_id, mnfacture_id):
+    equipments = Equipment.objects.filter(
+        client=client_id, mnfacture=mnfacture_id).order_by('mnfacture')
+    client_equipments_total_count = Equipment.objects.filter(
+        client=client_id).count()
+    equipment_lists = {}
+    for equipment in equipments:
+        client = str(equipment.client)
+        mnfacture = str(equipment.mnfacture)
+        product_model = str(equipment.product_model)
+
+        client_list = list(equipment_lists.keys())
+        if not client in client_list:
+            equipment_lists[client] = {}
+            equipment_lists['totalCount'] = client_equipments_total_count
+
+        mnfacture_list = list(equipment_lists[client].keys())
+        if not mnfacture in mnfacture_list:
+            equipment_lists[client][mnfacture] = {}
+
+        product_model_list = list(
+            equipment_lists[client][mnfacture].keys())
+        if not product_model in product_model_list:
+            equipment_lists[client][mnfacture][product_model] = {
+                'count': 1}
+        else:
+            equipment_lists[client][mnfacture][product_model]['count'] += 1
+
+    return make_response(status=200, content=json.dumps({'success': True, 'equipment_lists': equipment_lists}))
 
 
 @login_required
@@ -491,7 +518,8 @@ def equipment_stock_get_list(request):
     try:
         mnfacture_id = request.POST['mnfactureId']
 
-        stock_objects = Stock.objects.filter(mnfacture_id=mnfacture_id)
+        stock_objects = Stock.objects.filter(
+            mnfacture_id=mnfacture_id).order_by("product_model")
         mn_objects = Mnfacture.objects.all()
         product_model_objects = ProductModel.objects.all()
         stocks = []
@@ -508,20 +536,20 @@ def equipment_stock_get_list(request):
             product_model_name = str(
                 product_model_objects.get(id=product_model_id))
             stock_keep_count = stock_objects.filter(
-                product_model_id=product_model_id, status=STOCK_STATUS_KEEP).count()
+                product_model_id=product_model_id, status=STATUS_KEEP).count()
             stock_sold_count = stock_objects.filter(
-                product_model_id=product_model_id, status=STOCK_STATUS_SOLD).count()
+                product_model_id=product_model_id, status=STATUS_SOLD).count()
             stock_disposal_count = stock_objects.filter(
-                product_model_id=product_model_id, status=STOCK_STATUS_DISPOSAL).count()
+                product_model_id=product_model_id, status=STATUS_DISPOSAL).count()
             stock_return_count = stock_objects.filter(
-                product_model_id=product_model_id, status=STOCK_STATUS_RETURN).count()
+                product_model_id=product_model_id, status=STATUS_RETURN).count()
             stock_object = {product_model_name: {
                 'id': product_model_id, 'keep': stock_keep_count, 'sold': stock_sold_count, 'disposal': stock_disposal_count, 'return': stock_return_count, 'total': stock_keep_count + stock_sold_count}}
             mnfacture_object[mnfacture_name].append(stock_object)
         return make_response(status=200, content=json.dumps({'success': True, 'stocks': stocks}))
 
     except:
-        return make_response(status=400, content=json.dumps({'success': False, 'msg': "파일이 존재하지 않아 다운로드 할 수 없습니다.\n관리자에게 문의 바랍니다."}))
+        return make_response(status=400, content=json.dumps({'success': False, 'msg': "재고현황을 가지고 있는데 실패 하였습니다.\n관리자에게 문의 바랍니다."}))
 
 
 @login_required
@@ -570,7 +598,7 @@ def equipment_stock_form_apply(request):
                 raise
             except Stock.DoesNotExist:
                 new_stock = Stock(mnfacture_id=mnfacture, product_model_id=product_model, serial=serial,
-                                  location=location, status=STOCK_STATUS_KEEP, receive_date=receive_date, creator_id=request.session['id'], comments=comments)
+                                  location=location, status=STATUS_KEEP, receive_date=receive_date, creator_id=request.session['id'], comments=comments)
                 new_stock.save()
                 return make_response(status=200, content=json.dumps({'success': True, 'msg': "재고 등록이 완료 되었습니다."}))
             except:
@@ -596,7 +624,7 @@ def equipment_stock_multi_apply(request):
         try:
             for stock_id in stock_ids:
                 stock = stocks.get(id=stock_id)
-                stock.status = STOCK_STATUS_SOLD
+                stock.status = STATUS_SOLD
                 stock.save()
 
                 equipment = Equipment(client_id=client_id, product_model_id=stock.product_model.id, serial=stock.serial, mnfacture_id=stock.mnfacture.id,
@@ -613,23 +641,23 @@ def equipment_stock_detail(request, model_id, model_status):
     stocks = stock_objects.filter(
         product_model_id=model_id, status=model_status)
     stock_return_count = stock_objects.filter(
-        product_model_id=model_id, status=STOCK_STATUS_RETURN).count()
+        product_model_id=model_id, status=STATUS_RETURN).count()
     stock_sold_count = stock_objects.filter(
-        product_model_id=model_id, status=STOCK_STATUS_SOLD).count()
+        product_model_id=model_id, status=STATUS_SOLD).count()
     stock_keep_count = stock_objects.filter(
-        product_model_id=model_id, status=STOCK_STATUS_KEEP).count()
+        product_model_id=model_id, status=STATUS_KEEP).count()
     stock_disposal_count = stock_objects.filter(
-        product_model_id=model_id, status=STOCK_STATUS_DISPOSAL).count()
+        product_model_id=model_id, status=STATUS_DISPOSAL).count()
     stock_model_name = stocks[0].product_model
     stock_mnfacture_name = stocks[0].mnfacture
     stock_product_model = stocks[0].product_model_id
     total_count = stocks.count()
     equipment_form = EquipmentForm()
 
-    if model_status == STOCK_STATUS_KEEP:
+    if model_status == STATUS_KEEP:
         return render(request, 'equipment/equipment_stock_keep.html', {'stocks': stocks, 'stock_model_name': stock_model_name, 'stock_mnfacture_name': stock_mnfacture_name, 'equipment_form': equipment_form, 'permission': REPORT_PERMISSION_DEFAULT, 'stock_return_count': stock_return_count, "stock_sold_count": stock_sold_count, "stock_disposal_count": stock_disposal_count, 'stock_product_model': stock_product_model, 'total_count': total_count})
 
-    if model_status == STOCK_STATUS_SOLD:
+    if model_status == STATUS_SOLD:
         equipments = Equipment.objects.all()
         stock_infos = stocks.values('serial', 'receive_date')
 
@@ -640,10 +668,10 @@ def equipment_stock_detail(request, model_id, model_status):
             solds.append(equipment_data)
         return render(request, 'equipment/equipment_stock_sold.html', {'solds': solds, 'stock_model_name': stock_model_name, 'stock_mnfacture_name': stock_mnfacture_name, 'equipment_form': equipment_form, 'permission': REPORT_PERMISSION_DEFAULT, 'stock_keep_count': stock_keep_count, "stock_return_count": stock_return_count, "stock_disposal_count": stock_disposal_count, 'stock_product_model': stock_product_model, 'total_count': total_count})
 
-    if model_status == STOCK_STATUS_RETURN:
+    if model_status == STATUS_RETURN:
         return render(request, 'equipment/equipment_stock_return.html', {'returns': stocks, 'stock_model_name': stock_model_name, 'stock_mnfacture_name': stock_mnfacture_name, 'equipment_form': equipment_form, 'permission': REPORT_PERMISSION_DEFAULT, 'stock_keep_count': stock_keep_count, "stock_sold_count": stock_sold_count, "stock_disposal_count": stock_disposal_count, 'stock_product_model': stock_product_model,  'total_count': total_count})
 
-    if model_status == STOCK_STATUS_DISPOSAL:
+    if model_status == STATUS_DISPOSAL:
         return render(request, 'equipment/equipment_stock_disposal.html', {'disposals': stocks, 'stock_model_name': stock_model_name, 'stock_mnfacture_name': stock_mnfacture_name, 'equipment_form': equipment_form, 'permission': REPORT_PERMISSION_DEFAULT, 'stock_keep_count': stock_keep_count, "stock_return_count": stock_return_count, "stock_sold_count": stock_sold_count, 'stock_product_model': stock_product_model,  'total_count': total_count})
 
 
@@ -775,7 +803,7 @@ def equipment_stock_return_apply(request):
             return_comments = request.POST['returnComments']
 
             stock = Stock.objects.get(id=stock_id)
-            stock.status = STOCK_STATUS_RETURN
+            stock.status = STATUS_RETURN
             stock.return_date = return_date
             stock.comments = return_comments
             stock.save()
@@ -795,7 +823,7 @@ def equipment_stock_disposal_apply(request):
             disposal_comments = request.POST['disposalComments']
 
             stock = Stock.objects.get(id=stock_id)
-            stock.status = STOCK_STATUS_DISPOSAL
+            stock.status = STATUS_DISPOSAL
             stock.disposal_date = disposal_date
             stock.comments = disposal_comments
             stock.save()
@@ -855,7 +883,7 @@ def equipment_stock_upload_check(request):
 
                 try:
                     stock = Stock.objects.get(
-                        serial=serial, status=STOCK_STATUS_KEEP)
+                        serial=serial, status=STATUS_KEEP)
                     raise
                 except Stock.DoesNotExist:
                     try:
@@ -929,7 +957,7 @@ def equipment_stock_upload_complete(request):
             comments = item[5]
 
         stock = Stock(mnfacture_id=mnfacture['id'], product_model_id=product_model['id'], serial=serial,
-                      location=location, status=STOCK_STATUS_KEEP, receive_date=receive_date, creator_id=request.session['id'], comments=comments)
+                      location=location, status=STATUS_KEEP, receive_date=receive_date, creator_id=request.session['id'], comments=comments)
         stock.save()
     return redirect("equipment_stock")
 
@@ -970,12 +998,6 @@ def equipment_stock_sample_download(request):
             response['Content-Disposition'] = 'attachment; filename*=UTF-8\'\'%s' % urllib.parse.quote(
                 attach_info.attach_name.encode('utf-8'))
     return response
-
-
-@login_required
-def equipment_test(request):
-    equipment = EquipmentForm()
-    return render(request, 'equipment/equipment_test.html', {'equipment': equipment})
 
 
 @login_required
@@ -1025,7 +1047,7 @@ def equipment_stock_multi_return(request):
             return_comments = request.POST['returnComments']
             for stock_id in stock_ids:
                 stock = stocks.get(id=stock_id)
-                stock.status = STOCK_STATUS_RETURN
+                stock.status = STATUS_RETURN
                 stock.return_date = return_date
                 stock.comments = return_comments
                 stock.save()
@@ -1044,10 +1066,16 @@ def equipment_stock_multi_disposal(request):
             disposal_comments = request.POST['disposalComments']
             for stock_id in stock_ids:
                 stock = stocks.get(id=stock_id)
-                stock.status = STOCK_STATUS_DISPOSAL
+                stock.status = STATUS_DISPOSAL
                 stock.disposal_date = disposal_date
                 stock.comments = disposal_comments
                 stock.save()
             return make_response(status=200, content=json.dumps({'success': True, 'msg': "✔ 해당 재고가 정상적으로 폐기 처리 되었습니다."}))
         except:
             return make_response(status=400, content=json.dumps({'success': False, 'msg': "❌ 해당 재고를 폐기 처리하는데 실패하였습니다.\n      다시 시도해주세요"}))
+
+
+@login_required
+def equipment_test(request):
+    equipment = EquipmentForm()
+    return render(request, 'equipment/equipment_test.html', {'equipment': equipment})
