@@ -31,7 +31,8 @@ STOCK_SAMPLE_FILE_ID = 2
 SIMILAR_WORD_DEFAULT = {"similar": []}
 
 # Stock
-STOCK_STATUS_KEEP = "keep"
-STOCK_STATUS_SOLD = "sold"
-STOCK_STATUS_DISPOSAL = "disposal"
-STOCK_STATUS_RETURN = "return"
+STATUS_KEEP = "keep"
+STATUS_SOLD = "sold"
+STATUS_DISPOSAL = "disposal"
+STATUS_RETURN = "return"
+STATUS_OPERATING = "operating"
