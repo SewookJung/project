@@ -25,9 +25,25 @@ class Client(models.Model):
         return (self.name)
 
 
+class Mnfacture(models.Model):
+    manafacture = models.CharField(max_length=40, default='',)
+    created_at = models.DateTimeField(auto_now_add=True, editable=False)
+
+    def natural_key(self):
+        return (self.manafacture)
+
+    def __str__(self):
+        return self.manafacture
+
+    class Meta:
+        ordering = ['manafacture']
+
+
 class Product(models.Model):
     name = models.CharField(max_length=40, default='',)
     makers = models.CharField(max_length=40, default='')
+    mnfacture = models.ForeignKey(
+        Mnfacture, on_delete=models.SET_NULL, null=True)
     created_at = models.DateTimeField(auto_now_add=True, editable=False)
     level = models.IntegerField(default=0)
 
@@ -52,17 +68,3 @@ class ProductModel(models.Model):
 
     def natural_key(self):
         return (self.name)
-
-
-class Mnfacture(models.Model):
-    manafacture = models.CharField(max_length=40, default='',)
-    created_at = models.DateTimeField(auto_now_add=True, editable=False)
-
-    def natural_key(self):
-        return (self.manafacture)
-
-    def __str__(self):
-        return self.manafacture
-
-    class Meta:
-        ordering = ['manafacture']
