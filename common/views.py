@@ -5,7 +5,7 @@ from django.shortcuts import render, HttpResponse
 from django.contrib.auth.decorators import login_required
 
 from member.models import Member
-from .models import Client
+from .models import Client, Mnfacture, ProductModel, Product
 from utils.constant import REPORT_PERMISSION_DEFAULT, SIMILAR_WORD_DEFAULT
 from utils.functions import make_response
 
@@ -96,3 +96,23 @@ def client_add_apply(request):
         return make_response(status=200, content=json.dumps({'success': True, 'msg': "고객사 신규 등록에 성공하였습니다."}))
     except:
         return make_response(status=400, content=json.dumps({'success': False, 'msg': "고객사 신규 등록에 실패하였습니다.\n다시 시도해주세요."}))
+
+
+@login_required
+def get_mnfacture_id(request, mnfacture):
+    try:
+        mnfacture_id = Mnfacture.objects.get(manafacture=mnfacture).id
+        return make_response(status=200, content=json.dumps({'success': True, 'mnfacture_id': mnfacture_id}))
+    except:
+        return make_response(status=400, content=json.dumps({'success': False, 'msg': "제조사 정보를 정확히 가지고 오지 못하였습니다.\n다시 시도해주시기 바랍니다."}))
+
+
+@login_required
+def get_model_id(request, model):
+    try:
+        model = ProductModel.objects.get(name=model)
+        model_id = model.id
+        mnfacture_id = Product.objects.get(pk=model.product_id.id).mnfacture.id
+        return make_response(status=200, content=json.dumps({'success': True, 'model_id': model_id, 'mnfacture_id': mnfacture_id}))
+    except:
+        return make_response(status=200, content=json.dumps({'success': True, 'msg': "고객사 신규 등록에 성공하였습니다."}))
