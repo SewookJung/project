@@ -3,6 +3,7 @@ const clientSelectBox = document.getElementById("client_id");
 const mnfactureSelectBox = document.getElementById("mnfacture");
 const equipmentHeader = document.querySelector(".contents__header");
 const equipmentContent = document.querySelector(".contents__content");
+let totalCount;
 
 const getListClientEquipments = (clientId) => {
   $.ajax({
@@ -34,6 +35,7 @@ const getListMnfactures = (clientId) => {
       $("#mnfacture").find("option").remove();
       $("#mnfacture").prop("disabled", false);
       $("#mnfacture").selectpicker({ title: "제조사 선택" });
+      $("#mnfacture").append('<option value="ALL">전체보기</option>');
       for (let i = 0; i < mnfactures.length; i++) {
         const mnfactureId = mnfactures[i]["mnfacture_id"];
         const mnfactureName = mnfactures[i]["mnfacture_name"];
@@ -42,6 +44,27 @@ const getListMnfactures = (clientId) => {
         );
       }
       $("#mnfacture").selectpicker("refresh");
+    },
+    error: function (request, status, error) {
+      const errorMsg = JSON.parse(request.responseText).error;
+      alert(errorMsg);
+    },
+  });
+};
+
+const getEquipmentsByMnfacture = (clientId, mnfactureId) => {
+  let url;
+  if (mnfactureId == "ALL") url = `/equipment/${clientId}/all/list/`;
+  else url = `/equipment/${clientId}/${mnfactureId}/list/`;
+
+  $.ajax({
+    url: url,
+    type: "GET",
+    dataType: "json",
+    headers: { "X-CSRFToken": csrfToken },
+    success: function (data) {
+      const equipments = data.equipment_lists;
+      drawEquipment(equipments);
     },
     error: function (request, status, error) {
       const errorMsg = JSON.parse(request.responseText).error;
@@ -60,7 +83,7 @@ const drawEquipment = (equipments) => {
   const clientNameDiv = document.querySelector(".header__client-name");
   const mnfactures = Object.keys(equipments[clientName]);
   let totalCountBadge = document.createElement("span");
-  let totalCount = 0;
+  totalCount = equipments.totalCount;
 
   for (let i = 0; i < mnfactures.length; i++) {
     let card = document.createElement("div");
@@ -76,31 +99,11 @@ const drawEquipment = (equipments) => {
       let modelHeaderDiv = document.createElement("div");
       let modelCountBadge = document.createElement("span");
       let modelContentDiv = document.createElement("div");
-      let ul = document.createElement("ul");
 
       const model = Object.keys(equipments[clientName][mnfactures[i]])[f];
       const count =
-        equipments[clientName][mnfactures[i]][productModel[f]].length;
-      const equipmentLists =
-        equipments[clientName][mnfactures[i]][productModel[f]];
+        equipments[clientName][mnfactures[i]][productModel[f]]["count"];
 
-      for (let s = 0; s < equipmentLists.length; s++) {
-        let li = document.createElement("li");
-        const serial =
-          equipments[clientName][mnfactures[i]][productModel[f]][s]["serial"];
-        const installDate =
-          equipments[clientName][mnfactures[i]][productModel[f]][s][
-            "install_date"
-          ];
-        const location =
-          equipments[clientName][mnfactures[i]][productModel[f]][s]["location"];
-
-        li.innerText = `${serial} / ${location} / ${installDate}`;
-        li.classList.add("list-group-item");
-        ul.append(li);
-      }
-
-      ul.classList.add("list-group");
       equipListDiv.classList.add("equipments");
       modelContentDiv.classList.add("equipment__lists");
       modelHeaderDiv.classList.add("header", "equipment__list-header");
@@ -110,12 +113,11 @@ const drawEquipment = (equipments) => {
       modelHeaderDiv.innerText = model;
       modelHeaderDiv.append(modelCountBadge);
       modelContentDiv.append(modelHeaderDiv);
-      modelContentDiv.append(ul);
       equipListDiv.append(modelContentDiv);
 
       modelHeaderDiv.setAttribute(
         "onclick",
-        'modelDetailPage("' + mnfacture + '","' + model + '")'
+        'modelDetailPage("' + model + '")'
       );
       mnfactureCount += count;
     }
@@ -137,8 +139,6 @@ const drawEquipment = (equipments) => {
     mnfactureNameDiv.classList.add("mnfacture__header-title");
     mnfactureCountBadge.classList.add("badge", "badge-dark");
     equipmentContent.append(card);
-
-    totalCount += mnfactureCount;
   }
 
   clientNameDiv.innerText = clientName;
@@ -155,16 +155,40 @@ const equipmentAllPage = () => {
 
 const mnfactureDetailPage = (mnfacture) => {
   const clientId = document.getElementById("client_id").value;
-  const mnfacutreSelector = document.getElementById("mnfacture");
-  console.log(mnfacutreSelector);
-  console.dir(mnfacutreSelector);
-  window.location = `/equipment/client/${clientId}/${mnfacture}/detail/`;
+
+  $.ajax({
+    url: `/common/get/mnfacture/${mnfacture}/id/`,
+    type: "GET",
+    dataType: "json",
+    headers: { "X-CSRFToken": csrfToken },
+    success: function (data) {
+      const mnfactureId = data.mnfacture_id;
+      window.location = `/equipment/client/${clientId}/${mnfactureId}/detail/`;
+    },
+    error: function (request, status, error) {
+      const errorMsg = JSON.parse(request.responseText).msg;
+      alert(errorMsg);
+    },
+  });
 };
 
-const modelDetailPage = (mnfacture, model) => {
-  console.log(mnfacture, model);
+const modelDetailPage = (model) => {
   const clientId = document.getElementById("client_id").value;
-  window.location = `/equipment/client/${clientId}/${mnfacture}/${model}/detail/`;
+  $.ajax({
+    url: `/common/get/model/${model}/id/`,
+    type: "GET",
+    dataType: "json",
+    headers: { "X-CSRFToken": csrfToken },
+    success: function (data) {
+      const mnfactureId = data.mnfacture_id;
+      const modelId = data.model_id;
+      window.location = `/equipment/client/${clientId}/${mnfactureId}/${modelId}/detail/`;
+    },
+    error: function (request, status, error) {
+      const errorMsg = JSON.parse(request.responseText).msg;
+      alert(errorMsg);
+    },
+  });
 };
 
 const clearContents = () => {
@@ -189,9 +213,9 @@ clientSelectBox.addEventListener("change", (event) => {
 });
 
 mnfactureSelectBox.addEventListener("change", () => {
-  const selector = document.getElementById("mnfacture");
-  const mnfacture = selector[selector.selectedIndex].innerText;
-  mnfactureDetailPage(mnfacture);
+  const clientId = document.getElementById("client_id").value;
+  const mnfactureId = document.getElementById("mnfacture").value;
+  getEquipmentsByMnfacture(clientId, mnfactureId);
 });
 
 const init = () => {
