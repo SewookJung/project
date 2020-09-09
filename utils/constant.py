@@ -25,7 +25,7 @@ REPORT_DEFAULT_SELECT = 2
 
 # Sample file id
 SAMPLE_FILE_ID = 6
-STOCK_SAMPLE_FILE_ID = 2
+STOCK_SAMPLE_FILE_ID = 5
 
 # Similar word
 SIMILAR_WORD_DEFAULT = {"similar": []}
