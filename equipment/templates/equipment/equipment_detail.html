@@ -75,6 +75,13 @@
                                 data-provide="datepicker" placeholder="&#xf073;"
                                 value="{{ equipment.install_date | date:"Y-m-d"}}">
                         </div>
+                        <div class="form-group ">
+                            <label>유지보수 만료 일자</label>
+                            <input type="text" name="install-date" id="equipment-install-date"
+                                class="form-control calendar__start hasDatepicker" autocomplete="off"
+                                data-provide="datepicker" placeholder="&#xf073;"
+                                value="{{ equipment.maintenance_date | date:"Y-m-d"}}">
+                        </div>
                         <div class="form-group">
                             <label>기 타</label>
                             <textarea class="form-control col-sm-12" rows="5" id="comments"
