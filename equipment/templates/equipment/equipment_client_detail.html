@@ -11,8 +11,13 @@
         </div>
         <div class="card-body">
             {% csrf_token %}
-            <div class="form-group">
-                <table class="table table-striped table-bordered table-hover assets_table " id="myTable1">
+            <div class="form-group contents">
+                <div class="form-group contents-header">
+                    <span>고객사</span>
+                    <div class="mnfacture" id="mnfacture"></div>
+                </div>
+
+                <table class="table table-striped table-bordered table-hover display" id="equipmentAllTable">
                     <thead>
                         <tr>
                             <th>시리얼</th>
@@ -23,26 +28,30 @@
                             <th>기 타</th>
                         </tr>
                     </thead>
-                    {% for equipment in equipments %}
-                    <tr>
-                        <td>
-                            <a href="{% url 'equipment_detail' equipment_id=equipment.id %}">
-                                {{ equipment.serial }}
-                            </a>
-                        </td>
-                        <td>{{ equipment.mnfacture }}</td>
-                        <td>{{ equipment.product_model }}</td>
-                        <td>{{ equipment.location }}</td>
-                        <td>{{ equipment.install_date }}</td>
-                        <td>
-                            {% if equipment.comments == "" %}
-                            -
-                            {% else %}
-                            {{ equipment.comments }}
-                            {% endif %}
-                        </td>
-                    </tr>
-                    {% endfor %}
+                    <tbody>
+                        {% for equipment in equipments %}
+                        <tr>
+                            <td>
+                                <a href="{% url 'equipment_detail' equipment_id=equipment.id %}">
+                                    {{ equipment.serial }}
+                                </a>
+                            </td>
+                            <td>{{ equipment.mnfacture }}</td>
+                            <td>{{ equipment.product_model }}</td>
+                            <td>{{ equipment.location }}</td>
+                            <td>{{ equipment.install_date }}</td>
+                            <td>
+                                {% if equipment.comments == "" %}
+                                -
+                                {% else %}
+                                {{ equipment.comments }}
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+
+
                 </table>
             </div>
         </div>
