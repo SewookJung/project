@@ -80,4 +80,36 @@ $(document).ready(function () {
     },
     order: [[1, "dec"]],
   });
+
+  $("#equipmentAllTable").DataTable({
+    language: {
+      paginate: {
+        previous: "‹",
+        next: "›",
+      },
+    },
+    initComplete: function () {
+      this.api()
+        .columns(1)
+        .every(function () {
+          var column = this;
+          var select = $(
+            '<select class="selectpicker" title="고객사 선택" data-live-search=true><option value="">전체</option></select>'
+          )
+            .appendTo($("#mnfacture").empty())
+            .on("change", function () {
+              var val = $.fn.dataTable.util.escapeRegex($(this).val());
+              column.search(val ? "^" + val + "$" : "", true, false).draw();
+            });
+
+          column
+            .data()
+            .unique()
+            .sort()
+            .each(function (d, j) {
+              select.append('<option value="' + d + '">' + d + "</option>");
+            });
+        });
+    },
+  });
 });
