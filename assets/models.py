@@ -3,7 +3,7 @@
 from django.db import models
 from member.models import Member
 
-from utils.constant import STATUS_RENTAL
+from utils.constant import ASSET_STATUS_RENTAL
 
 
 class Asset(models.Model):
@@ -32,7 +32,7 @@ class Asset(models.Model):
     @property
     def renter(self):
         renter = ''
-        if self.is_state == STATUS_RENTAL:
+        if self.is_state == ASSET_STATUS_RENTAL:
             rent = Assetrent.objects.filter(asset_id=self.id).order_by(
                 '-id').values_list('member_name')
             renter = rent[0][0]
@@ -41,7 +41,7 @@ class Asset(models.Model):
     @property
     def rent_id(self):
         rent_id = ''
-        if self.is_state == STATUS_RENTAL:
+        if self.is_state == ASSET_STATUS_RENTAL:
             rent = Assetrent.objects.filter(
                 asset_id=self.id).order_by('-id').values_list('id')
             rent_id = rent[0][0]
@@ -50,7 +50,7 @@ class Asset(models.Model):
     @property
     def rent_comment(self):
         rent_comment = ''
-        if self.is_state == STATUS_RENTAL:
+        if self.is_state == ASSET_STATUS_RENTAL:
             rent = Assetrent.objects.filter(asset_id=self.id).order_by(
                 '-id').values_list('comments')
             rent_comment = rent[0][0]

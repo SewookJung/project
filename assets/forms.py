@@ -1,7 +1,7 @@
 from django import forms
 
 from .models import Asset, Assetrent
-from utils.constant import STATUS_PERSONAL, STATUS_TEST, STATUS_RENTAL, STATUS_DISPOSAL, STATUS_KEEP
+from utils.constant import ASSET_STATUS_PERSONAL, ASSET_STATUS_TEST, ASSET_STATUS_RENTAL, ASSET_STATUS_DISPOSAL, ASSET_STATUS_KEEP
 
 
 class AssetForm(forms.ModelForm):
@@ -24,11 +24,11 @@ class AssetForm(forms.ModelForm):
             'serial': forms.TextInput(attrs={'class': 'form-control', 'type': 'text', 'placeholder': 'ex) N0CV1905MB0083116 '}),
             'is_state': forms.Select(attrs={'class': 'selectpicker', 'title': '자산상태', 'id': 'asset_is-state'},
                                      choices=[
-                (STATUS_PERSONAL, "개인사용"),
-                (STATUS_TEST, "테스트"),
-                (STATUS_RENTAL, "대여중"),
-                (STATUS_DISPOSAL, "폐기"),
-                (STATUS_KEEP, "보관"),
+                (ASSET_STATUS_PERSONAL, "개인사용"),
+                (ASSET_STATUS_TEST, "테스트"),
+                (ASSET_STATUS_RENTAL, "대여중"),
+                (ASSET_STATUS_DISPOSAL, "폐기"),
+                (ASSET_STATUS_KEEP, "보관"),
             ]),
         }
 
