@@ -6,7 +6,6 @@
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-  justify-content: space-between;
   padding: 0px;
   width: 100%;
 }
@@ -157,10 +156,23 @@
   .body__stock-info .card {
     width: 48%;
   }
+
+  .form-group .body__stock-info {
+    justify-content: space-between;
+  }
 }
 
 @media (min-width: 992px) {
   .body__stock-info .card {
-    width: 33%;
+    width: 32%;
+  }
+
+  .form-group .body__stock-info {
+    justify-content: start;
+  }
+
+  .body__stock-info .card:nth-child(3n + 1),
+  .body__stock-info .card:nth-child(3n + 2) {
+    margin-right: 10px;
   }
 }
