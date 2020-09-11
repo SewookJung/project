@@ -97,6 +97,20 @@
           </div>
         </li>
 
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
+            aria-haspopup="true" aria-expanded="false">
+            리포트
+          </a>
+          <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <a class="dropdown-item" href="{% url 'report_project' %}">프로젝트</a>
+            <a class="dropdown-item" href="{% url 'report_maintenance' %}">유지보수</a>
+            <a class="dropdown-item" href="{% url 'report_support' %}">지 원</a>
+            <a class="dropdown-item" href="{% url 'report_edu' %}">교 육</a>
+            <a class="dropdown-item" href="{% url 'report_etc' %}">기 타</a>
+          </div>
+        </li>
+
         {% if request.session.member_dept in permission %}
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
