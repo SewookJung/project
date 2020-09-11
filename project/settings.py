@@ -38,13 +38,14 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'assets',
+    'common',
     'document',
+    'equipment',
     'login',
     'member',
-    'common',
+    'report',
     'sites',
-    'equipment',
-    'weekly'
+    'weekly',
 ]
 
 MIDDLEWARE = [
@@ -86,7 +87,7 @@ DATABASES = {
         'NAME': 'project',
         'USER': 'admin',
         'PASSWORD': 'Glow1320!',
-        'HOST': 'localhost',
+        'HOST': '172.26.1.51',
     }
 }
 
