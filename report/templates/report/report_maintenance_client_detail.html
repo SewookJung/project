@@ -1,0 +1,94 @@
+{% extends 'base.html' %} {% block content %} {% load static %}
+
+<div class="container">
+    <div class="card">
+        <div class="card-header">
+            <i class="fa fa-briefcase"></i>
+            <h5 class="card-title">&nbsp;LG화학 20년 9월 유지보수 상세내역</h5>
+        </div>
+        <div class="card-body">
+            <div class="form-group col-12">
+                <div class="form-group">
+                    <span>진행 상태</span>
+                    <input type="text" class="form-control" autocomplete="off" value="완료" disabled>
+                </div>
+                <div class="form-group">
+                    <span>담당자</span>
+                    <input type="text" class="form-control" autocomplete="off" value="임덕명, 이민혁" disabled>
+                </div>
+                <div class="form-group">
+                    <span>관련제품</span>
+                    <input type="text" class="form-control" autocomplete="off" value="Genians NAC" disabled>
+                </div>
+                <div class="form-group">
+                    <span>시작일</span>
+                    <input type="text" class="form-control" autocomplete="off" value="2020-08-07" disabled>
+                </div>
+                <div class="form-group">
+                    <span>완료일</span>
+                    <input type="text" class="form-control" autocomplete="off" value="" disabled>
+                </div>
+                <div class="form-group">
+                    <span>소요시간</span>
+                    <input type="text" class="form-control" autocomplete="off" value="1시간" disabled>
+                </div>
+                <div class="form-group">
+                    <span>지원 내용</span>
+                    <input type="text" class="form-control" autocomplete="off" value="정기점검" disabled>
+                </div>
+                <div class="form-group">
+                    <span>지원 형태</span>
+                    <input type="text" class="form-control" autocomplete="off" value="방문" disabled>
+                </div>
+                <div class="form-group">
+                    <span>관련 장비</span>
+                    <button type="button" class="btn btn-outline-primary">추가</button>
+                    <ul class="list-group">
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            C10
+                            <span class="badge badge-primary badge-pill">14</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            S10
+                            <span class="badge badge-primary badge-pill">2</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            S20
+                            <span class="badge badge-primary badge-pill">1</span>
+                        </li>
+                    </ul>
+                </div>
+                <div class="form-group">
+                    <span>내용 및 특이사항</span>
+                    <button type="button" class="btn btn-outline-primary">변경</button>
+                    <textarea class="form-control col-sm-12" rows="5" disabled>
+- 2020년 9월 정기점검 진행
+                    </textarea>
+                </div>
+                <div class="form-group">
+                    <span>첨부 파일</span>
+                    <button type="button" class="btn btn-outline-primary">추가</button>
+                    <ul class="list-group">
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            [LG화학] 20년 9월 정기점검.ppt
+                            <span class="badge badge-primary badge-pill">다운로드</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %} {% block title %} LG화학 20년 9월 유지보수 상세내역 {% endblock %}
+{% block css %}
+<link rel="stylesheet" href="{% static 'css/selectpicker/bootstrap-select.css' %}">
+<link rel="stylesheet" href="https://cdn.datatables.net/1.10.20/css/dataTables.bootstrap4.min.css">
+{% endblock %}
+
+{% block js %}
+<script src="{% static 'js/selectpicker/bootstrap-select.js' %}"></script>
+<script src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.20/js/dataTables.bootstrap4.min.js"></script>
+<script src="{% static 'js/datatable/dataTable.js' %}"></script>
+{% endblock %}

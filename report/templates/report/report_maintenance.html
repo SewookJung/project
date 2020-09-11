@@ -1,0 +1,71 @@
+{% extends 'base.html' %} {% block content %} {% load static %}
+
+<div class="container">
+    <div class="card">
+        <div class="card-header">
+            <i class="fa fa-pencil-square-o"></i>
+            <h5 class="card-title">&nbsp;유지보수 현황</h5>
+        </div>
+        <div class="card-body">
+            {% csrf_token %}
+
+            <div class="form-group col-12">
+                <table class="table table-striped table-bordered table-hover" id="myTable1">
+                    <thead>
+                        <tr>
+                            <th>고객사</th>
+                            <th>제품</th>
+                            <th>기본정보</th>
+                            <th>유지보수 완료일</th>
+                            <th>정기점검</th>
+                            <th>유/무상</th>
+                            <th>최근</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <a href="{% url 'report_maintenance_client' %}">
+                                    LG화학
+                                </a>
+                            </td>
+                            <td>NAC</td>
+                            <td></td>
+                            <td>2020-08-30</td>
+                            <td>진행 중</td>
+                            <td>유상</td>
+                            <td>2020-01-01</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <a href="{% url 'report_maintenance_client' %}">
+                                    LG화학
+                                </a>
+                            </td>
+                            <td>WAN</td>
+                            <td></td>
+                            <td>2020-08-30</td>
+                            <td>진행 중</td>
+                            <td>유상</td>
+                            <td>2020-01-01</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %} {% block title %} 유지보수 현황 {% endblock %}
+{% block css %}
+<link rel="stylesheet" href="{% static 'css/selectpicker/bootstrap-select.css' %}">
+<link rel="stylesheet" href="https://cdn.datatables.net/1.10.20/css/dataTables.bootstrap4.min.css">
+{% endblock %}
+
+{% block js %}
+<script src="{% static 'js/selectpicker/bootstrap-select.js' %}"></script>
+<script src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.20/js/dataTables.bootstrap4.min.js"></script>
+<script src="{% static 'js/datatable/dataTable.js' %}"></script>
+{% endblock %}

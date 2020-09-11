@@ -1,0 +1,51 @@
+{% extends 'base.html' %} {% block content %} {% load static %}
+
+<div class="container">
+    <div class="card">
+        <div class="card-header">
+            <i class="fa fa-wpforms"></i>
+            <h5 class="card-title">&nbsp;사무실 서버룸 정리 작업</h5>
+        </div>
+        <div class="card-body">
+            <div class="form-group col-12">
+                <div class="form-group">
+                    <span>고객사</span>
+                    <input type="text" class="form-control" autocomplete="off" value="없음" disabled>
+                </div>
+                <div class="form-group">
+                    <span>담당자</span>
+                    <input type="text" class="form-control" autocomplete="off" value="정세욱" disabled>
+                </div>
+                <div class="form-group">
+                    <span>관련 제품</span>
+                    <input type="text" class="form-control" autocomplete="off" value="없음" disabled>
+                </div>
+                <div class="form-group">
+                    <span>소요 시간</span>
+                    <input type="text" class="form-control" autocomplete="off" value="8시간" disabled>
+                </div>
+
+                <div class="form-group">
+                    <span>내용</span>
+                    <button type="button" class="btn btn-outline-primary">변경</button>
+                    <textarea class="form-control col-sm-12" rows="5" disabled>
+- 사무실 서버룸 정리 작업
+                    </textarea>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %} {% block title %} 사무실 서버룸 정리 작업 {% endblock %}
+{% block css %}
+<link rel="stylesheet" href="{% static 'css/selectpicker/bootstrap-select.css' %}">
+<link rel="stylesheet" href="https://cdn.datatables.net/1.10.20/css/dataTables.bootstrap4.min.css">
+{% endblock %}
+
+{% block js %}
+<script src="{% static 'js/selectpicker/bootstrap-select.js' %}"></script>
+<script src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.20/js/dataTables.bootstrap4.min.js"></script>
+<script src="{% static 'js/datatable/dataTable.js' %}"></script>
+{% endblock %}
