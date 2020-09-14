@@ -778,7 +778,6 @@ def equipment_stock_delivery_apply(request):
         client = request.POST['client']
         stock_id = request.POST['stockId']
         location = request.POST['location']
-        manager = request.POST['manager']
         delivery_date = request.POST['deliveryDate']
 
         try:
@@ -786,8 +785,7 @@ def equipment_stock_delivery_apply(request):
             stock.status = "sold"
             stock.save()
 
-            equipment = Equipment(client_id=client, product_id=stock.product.id, product_model_id=stock.product_model.id, serial=stock.serial, mnfacture_id=stock.mnfacture.id,
-                                  manager=manager, location=location, install_date=delivery_date, comments="", creator_id=request.session['id'])
+            equipment = Equipment(client_id=client, product_model_id=stock.product_model.id, serial=stock.serial, mnfacture_id=stock.mnfacture.id, location=location, install_date=delivery_date, comments="", creator_id=request.session['id'])
             equipment.save()
             return make_response(status=200, content=json.dumps({'success': True, 'msg': "납품이 완료 되었습니다."}))
         except:
