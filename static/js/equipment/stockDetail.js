@@ -99,12 +99,10 @@ const stockDisposalApply = (
 const valueCheck = () => {
   const client = document.getElementById("client_id");
   const deliveryDate = document.getElementById("equipment-install-date");
-  const manager = document.getElementById("manager");
   const location = document.getElementById("location");
   const stockIdValue = document.getElementById("stock_id").value;
   const clientVlaue = client.options[client.selectedIndex].value;
   const deliveryDateValue = deliveryDate.value;
-  const managerValue = manager.value;
   const locationValue = location.value;
 
   if (clientVlaue == "") {
@@ -117,11 +115,6 @@ const valueCheck = () => {
     return false;
   }
 
-  if (managerValue == "") {
-    alert("❗ 납품 장비 담당자를 작성해주세요.");
-    return false;
-  }
-
   if (locationValue == "") {
     alert("❗ 납품 장소를 작성해주세요.");
     return false;
@@ -130,7 +123,6 @@ const valueCheck = () => {
   param = {};
   param.client = clientVlaue;
   param.deliveryDate = deliveryDateValue;
-  param.manager = managerValue;
   param.location = locationValue;
   param.stockId = stockIdValue;
 
