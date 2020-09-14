@@ -1,8 +1,6 @@
 import datetime
 import uuid
 
-
-
 from django.db import models
 from django.dispatch import receiver
 
@@ -45,7 +43,51 @@ class Equipment(models.Model):
     comments = models.CharField(max_length=200, default='')
     created_at = models.DateTimeField(auto_now_add=True, editable=False)
 
+    def __str__(self):
+        return self.serial
 
+    def expire_maintenance_check(self):
+        now = datetime.date.today()
+        maintenance_date = self.maintenance_date
+        remainder_date = now - maintenance_date
+        remainder_date_days = remainder_date.days
+
+        data = {}
+
+        if 0 < remainder_date_days:
+            data['days'] = abs(remainder_date_days)
+            data['expire'] = 'true'
+
+        elif 0 > remainder_date_days:
+            data['days'] = abs(remainder_date_days)
+            data['expire'] = 'false'
+
+        else:
+            datetime_time_max = datetime.time.max
+            today_time_max = datetime.datetime.combine(now, datetime_time_max)
+            now = datetime.datetime.now()
+            remainder_date_hours = str(today_time_max - now)[0:1]
+
+            data['hours'] = remainder_date_hours
+            data['expire'] = 'false'
+
+        return data
+
+
+class EquipmentHistory(models.Model):
+    STATUS_CHOICE = (
+        (STATUS_OPERATING, STATUS_OPERATING),
+        (STATUS_DISPOSAL, STATUS_DISPOSAL),
+        (STATUS_RETURN, STATUS_RETURN)
+    )
+
+    equipment = models.ForeignKey(
+        Equipment, on_delete=models.SET_NULL, null=True)
+    member = models.ForeignKey(Member, on_delete=models.SET_NULL, null=True)
+    status = models.CharField(
+        max_length=10, choices=STATUS_CHOICE, default=STATUS_OPERATING)
+    comments = models.CharField(max_length=200, default='')
+    created_at = models.DateTimeField(auto_now_add=True, editable=False)
 
 
 class Stock(models.Model):
@@ -53,7 +95,7 @@ class Stock(models.Model):
         (STATUS_KEEP, STATUS_KEEP),
         (STATUS_SOLD, STATUS_SOLD),
         (STATUS_DISPOSAL, STATUS_DISPOSAL),
-        (STATUS_RETURN, STATUS_RETURN)
+        (STATUS_RETURN, STATUS_RETURN),
     )
 
     mnfacture = models.ForeignKey(
