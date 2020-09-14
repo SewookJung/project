@@ -25,6 +25,7 @@
                             <th>모델명</th>
                             <th>납품처</th>
                             <th>납품 일자</th>
+                            <th>유지보수</th>
                             <th>기 타</th>
                         </tr>
                     </thead>
@@ -41,18 +42,72 @@
                             <td>{{ equipment.location }}</td>
                             <td>{{ equipment.install_date }}</td>
                             <td>
-                                {% if equipment.comments == "" %}
-                                -
-                                {% else %}
-                                {{ equipment.comments }}
+                                {% if equipment.expire_maintenance_check.expire == "true" %}
+                                <span class="badge badge-danger">
+                                    {% for key, value in equipment.expire_maintenance_check.items %}
+                                    {% if forloop.first == True %}
+                                    {{value}}일 초과
+                                    {% endif %}
+                                    {% endfor %}
+
+                                </span>
+                                {% elif equipment.expire_maintenance_check.expire == "false" %}
+                                <span class="badge badge-warning">
+                                    {% for key, value in equipment.expire_maintenance_check.items %}
+                                    {% if forloop.first == True %}
+                                    {% if key == "days"%}
+                                    {{value}}일 남음
+                                    {% else %}
+                                    {{value}}시간 남음
+                                    {% endif %}
+                                    {% endif %}
+                                    {% endfor %}
+                                </span>
                                 {% endif %}
+
+                            </td>
+                            <td>
+                                <button type="button" class="btn btn-outline-primary" data-toggle="modal"
+                                    data-target="#applyStatus">
+                                    상태변경</button>
                             </td>
                         </tr>
                         {% endfor %}
                     </tbody>
-
-
                 </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="applyStatus" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content" id="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">장비 상태변경</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form class="modal-body" method="POST" id="modal-body">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <span>구 분</span>
+                        <select class="selectpicker" title="구분 선택" id="support-kind" data-actions-box="true">
+                            <option value="operating">운영 중</option>
+                            <option value="rma">RMA</option>
+                            <option value="disposal">폐기</option>
+                            <option value="return">반납</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>기 타</label>
+                        <textarea class="form-control col-sm-12" rows="5"></textarea>
+                    </div>
+                </form>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-danger" data-dismiss="modal">닫기</button>
+                    <button type="button" class="btn btn-outline-primary">신청</button>
+                </div>
             </div>
         </div>
     </div>
