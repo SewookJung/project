@@ -66,9 +66,9 @@ class Equipment(models.Model):
             datetime_time_max = datetime.time.max
             today_time_max = datetime.datetime.combine(now, datetime_time_max)
             now = datetime.datetime.now()
-            remainder_date_hours = str(today_time_max - now)[0:1]
+            remainder_date_hours = str(today_time_max - now).split(':')
 
-            data['hours'] = remainder_date_hours
+            data['hours'] = remainder_date_hours[0]
             data['expire'] = 'false'
 
         return data
