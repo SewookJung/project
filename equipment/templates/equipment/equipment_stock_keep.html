@@ -71,6 +71,7 @@
                                     <th>시리얼</th>
                                     <th>재고 위치</th>
                                     <th>입고 일자</th>
+                                    <th>기타</th>
                                     <th>신청</th>
                                 </tr>
                             </thead>
@@ -87,6 +88,11 @@
                                 </td>
                                 <td>{{ stock.location }}</td>
                                 <td>{{ stock.receive_date }}</td>
+                                {% if stock.comments|length == 0 %}
+                                <td>-</td>
+                                {% else %}
+                                <td>{{ stock.comments }}</td>
+                                {% endif %}
                                 <td>
                                     <button type="button" class="btn btn-success" data-toggle="modal"
                                         data-target="#exampleModal"
