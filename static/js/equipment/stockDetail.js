@@ -100,10 +100,12 @@ const valueCheck = () => {
   const client = document.getElementById("client_id");
   const deliveryDate = document.getElementById("equipment-install-date");
   const location = document.getElementById("location");
+  const maintenanceDate = document.getElementById("equipment-maintenance-date");
   const stockIdValue = document.getElementById("stock_id").value;
   const clientVlaue = client.options[client.selectedIndex].value;
   const deliveryDateValue = deliveryDate.value;
   const locationValue = location.value;
+  const maintenanceDateValue = maintenanceDate.value;
 
   if (clientVlaue == "") {
     alert("❗ 납품 고객사를 선택해주세요.");
@@ -112,6 +114,11 @@ const valueCheck = () => {
 
   if (deliveryDateValue == "") {
     alert("❗ 납품 날짜를 선택해주세요.");
+    return false;
+  }
+
+  if (maintenanceDateValue == "") {
+    alert("❗ 유지보수 만료 일자를 선택해주세요.");
     return false;
   }
 
@@ -125,6 +132,7 @@ const valueCheck = () => {
   param.deliveryDate = deliveryDateValue;
   param.location = locationValue;
   param.stockId = stockIdValue;
+  param.maintenanceDate = maintenanceDateValue;
 
   $.ajax({
     url: "/equipment/stock/delivery/apply/",
@@ -482,11 +490,9 @@ const multiStocksApply = () => {
   const client = document.getElementById("client_id");
   const deliveryDate = document.getElementById("equipment-install-date");
   const maintenanceDate = document.getElementById("equipment-maintenance-date");
-  const manager = document.getElementById("manager");
   const location = document.getElementById("location");
   const clientVlaue = client.options[client.selectedIndex].value;
   const deliveryDateValue = deliveryDate.value;
-  const managerValue = manager.value;
   const locationValue = location.value;
   const maintenanceValue = maintenanceDate.value;
 
@@ -520,7 +526,6 @@ const multiStocksApply = () => {
   param = {};
   param.client = clientVlaue;
   param.deliveryDate = deliveryDateValue;
-  param.manager = managerValue;
   param.location = locationValue;
   param.stockIds = selectedStockIds;
   param.maintenanceDate = maintenanceValue;
