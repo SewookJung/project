@@ -474,7 +474,19 @@ def equipment_selected_list(request, client_id, mnfacture_id):
 def equipment_delete(request, equipment_id):
     if request.method == 'GET':
         try:
-            Equipment.objects.get(id=equipment_id).delete()
+            equipment = Equipment.objects.get(id=equipment_id)
+            equipment.delete()
+
+            try:
+                serial = equipment.serial
+                stock = Stock.objects.get(serial=serial)
+                stock.status = STATUS_KEEP
+                stock.save()
+                return make_response(status=200, content=json.dumps({'success': True, 'msg': "해당 제품정보를 삭제하였습니다."}))
+
+            except:
+                return make_response(status=200, content=json.dumps({'success': True, 'msg': "해당 제품정보를 삭제하였습니다."}))
+
             return make_response(status=200, content=json.dumps({'success': True, 'msg': "해당 제품정보를 삭제하였습니다."}))
         except:
             return make_response(status=400, content=json.dumps({'success': True, 'msg': "해당 제품정보를 삭제하는데 실패 하였습니다."}))
@@ -617,7 +629,6 @@ def equipment_stock_multi_apply(request):
         client_id = request.POST['client']
         stock_ids = request.POST.getlist('stockIds[]')
         location = request.POST['location']
-        manager = request.POST['manager']
         delivery_date = request.POST['deliveryDate']
         maintenance_date = request.POST['maintenanceDate']
 
@@ -628,7 +639,7 @@ def equipment_stock_multi_apply(request):
                 stock.save()
 
                 equipment = Equipment(client_id=client_id, product_model_id=stock.product_model.id, serial=stock.serial, mnfacture_id=stock.mnfacture.id,
-                                      manager=manager, location=location, install_date=delivery_date, maintenance_date=maintenance_date, comments="", creator_id=request.session['id'])
+                                      location=location, install_date=delivery_date, maintenance_date=maintenance_date, comments="", creator_id=request.session['id'])
                 equipment.save()
             return make_response(status=200, content=json.dumps({'success': True, 'msg': "납품이 완료 되었습니다."}))
         except:
@@ -779,13 +790,14 @@ def equipment_stock_delivery_apply(request):
         stock_id = request.POST['stockId']
         location = request.POST['location']
         delivery_date = request.POST['deliveryDate']
-
+        maintenance_date = request.POST['maintenanceDate']
         try:
             stock = stocks.get(id=stock_id)
             stock.status = "sold"
             stock.save()
 
-            equipment = Equipment(client_id=client, product_model_id=stock.product_model.id, serial=stock.serial, mnfacture_id=stock.mnfacture.id, location=location, install_date=delivery_date, comments="", creator_id=request.session['id'])
+            equipment = Equipment(client_id=client, product_model_id=stock.product_model.id, serial=stock.serial, maintenance_date=maintenance_date,
+                                  mnfacture_id=stock.mnfacture.id, location=location, install_date=delivery_date, comments="", creator_id=request.session['id'])
             equipment.save()
             return make_response(status=200, content=json.dumps({'success': True, 'msg': "납품이 완료 되었습니다."}))
         except:
