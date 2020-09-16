@@ -30,9 +30,10 @@ STOCK_SAMPLE_FILE_ID = 5
 # Similar word
 SIMILAR_WORD_DEFAULT = {"similar": []}
 
-# Stock
+# Stock and Equipment status
 STATUS_KEEP = "keep"
 STATUS_SOLD = "sold"
 STATUS_DISPOSAL = "disposal"
 STATUS_RETURN = "return"
 STATUS_OPERATING = "operating"
+STATUS_RMA = "rma"
