@@ -16,10 +16,10 @@ from wsgiref.util import FileWrapper
 from openpyxl import load_workbook
 
 from common.models import Client, Product, ProductModel, Mnfacture
-from .models import EquipmentAttachment, Equipment, Stock, StockAttachment
+from .models import EquipmentAttachment, Equipment, Stock, StockAttachment, EquipmentHistory
 from .forms import EquipmentForm
 from utils.constant import REPORT_PERMISSION_DEFAULT, SAMPLE_FILE_ID, STOCK_SAMPLE_FILE_ID
-from utils.constant import STATUS_KEEP, STATUS_SOLD, STATUS_RETURN, STATUS_DISPOSAL
+from utils.constant import STATUS_KEEP, STATUS_SOLD, STATUS_RETURN, STATUS_DISPOSAL, STATUS_RMA, STATUS_OPERATING
 
 
 from utils.functions import (
@@ -30,8 +30,7 @@ from utils.functions import (
 @login_required
 def equipment_main(request):
     equipment_form = EquipmentForm()
-    equipments = Equipment.objects.all()
-    return render(request, 'equipment/equipment_main.html', {'equipments': equipments, 'equipment_form': equipment_form,  'permission': REPORT_PERMISSION_DEFAULT})
+    return render(request, 'equipment/equipment_main.html', {'equipment_form': equipment_form,  'permission': REPORT_PERMISSION_DEFAULT})
 
 
 @login_required
@@ -100,10 +99,15 @@ def equipment_detail(request, equipment_id):
 @login_required
 def equipment_client_detail(request, client_id):
     if request.method == "GET":
-        equipments = Equipment.objects.filter(client_id=client_id)
+        q = Q()
+        q.add(Q(client_id=client_id), q.OR)
+        q.add(Q(status=STATUS_OPERATING) | Q(status=STATUS_RMA), q.AND)
+
+        equipments = Equipment.objects.filter(q)
         client = str(equipments[0].client)
         count = equipments.count()
-        return render(request, "equipment/equipment_client_detail.html", {'equipments': equipments, 'client': client, 'count': count, 'permission': REPORT_PERMISSION_DEFAULT, })
+        equipment_form = EquipmentForm()
+        return render(request, "equipment/equipment_client_detail.html", {'equipments': equipments, 'client': client, 'count': count, 'equipment_form': equipment_form, 'permission': REPORT_PERMISSION_DEFAULT, })
 
 
 @login_required
@@ -214,6 +218,67 @@ def equipment_detail_apply(request, equipment_id):
 @login_required
 def equipment_upload(request):
     return render(request, 'equipment/equipment_upload.html', {'permission': REPORT_PERMISSION_DEFAULT})
+
+
+@login_required
+def equipment_status_change(request):
+    status = request.POST['status']
+    if not status == STATUS_RMA:
+        serial = request.POST['equipmentSerial']
+        status = request.POST['status']
+        comments = request.POST['comments']
+
+        try:
+            equipment = Equipment.objects.get(serial=serial)
+            equipment.status = status
+            equipment.comments = comments
+            equipment.save()
+
+            equipment_history = EquipmentHistory(
+                equipment_id=equipment.id, member_id=request.session['id'], status=status, comments=comments)
+            equipment_history.save()
+
+            return make_response(status=200, content=json.dumps({'success': True, 'msg': "✔ 장비 상태변경에 성공하였습니다."}))
+        except:
+            return make_response(status=400, content=json.dumps({'success': True, 'msg': "❌ 장비 상태변경에 실패하였습니다. 다시 시도해주시기 바랍니다."}))
+
+    else:
+        serial = request.POST['equipmentSerial']
+        change_serial = request.POST['changeSerial'].replace(
+            " ", "").strip().upper()
+        status = request.POST['status']
+        mnfacture = request.POST['mnfacture']
+        product_model = request.POST['productModel']
+        comments = request.POST['comments']
+
+        try:
+            stock = Stock.objects.get(serial=change_serial, status=STATUS_KEEP)
+            raise
+        except Stock.DoesNotExist:
+            pass
+        except:
+            return make_response(status=400, content=json.dumps({'success': False, 'msg': "입력한 시리얼 번호는 이미 재고에 등록 되어 있습니다. \n시리얼 번호 확인 후 다시 시도하시기 바랍니다.", 'error': 'serial_error'}))
+
+        try:
+            equipment = Equipment.objects.get(serial=change_serial)
+            raise
+        except Equipment.DoesNotExist:
+            equipment = Equipment.objects.get(serial=serial)
+            equipment.status = status
+            equipment.save()
+
+            new_equipment = Equipment(client_id=equipment.client.id, product=equipment.product, product_model_id=product_model, serial=change_serial, mnfacture_id=mnfacture,
+                                      location=equipment.location, install_date=equipment.install_date, maintenance_date=equipment.maintenance_date, comments=comments, creator_id=request.session['id'])
+            new_equipment.save()
+
+            equipment_history = EquipmentHistory(
+                equipment_id=equipment.id, member_id=request.session['id'], status=status, comments=comments)
+            equipment_history.save()
+
+            return make_response(status=200, content=json.dumps({'success': True, 'msg': "✔ 장비 상태변경에 성공하였습니다."}))
+
+        except:
+            return make_response(status=400, content=json.dumps({'success': False, 'msg': "입력한 시리얼 번호는 이미 납품된 장비입니다. \n시리얼 번호 확인 후 다시 시도하시기 바랍니다.", 'error': 'serial_error'}))
 
 
 @login_required

@@ -14,6 +14,8 @@ urlpatterns = [
     re_path(r'^form/$', views.equipment_form, name="equipment_form"),
     re_path(r'^form/apply/$', views.equipment_form_apply,
             name="equipment_form_apply"),
+    re_path(r'^status/change/$', views.equipment_status_change,
+            name="equipment_status_change"),
     re_path(r'^(?P<client_id>\d+)/all/list/$', views.equipment_all_list,
             name="equipment_all_list"),
     re_path(r'^(?P<client_id>\d+)/mnfacture/list/$', views.equipment_client_mnfacture_list,
