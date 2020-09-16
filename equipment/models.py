@@ -6,7 +6,7 @@ from django.dispatch import receiver
 
 from member.models import Member
 from common.models import Client, Product, ProductModel, Mnfacture
-from utils.constant import STATUS_KEEP, STATUS_SOLD, STATUS_DISPOSAL, STATUS_RETURN, STATUS_OPERATING
+from utils.constant import STATUS_KEEP, STATUS_SOLD, STATUS_DISPOSAL, STATUS_RETURN, STATUS_OPERATING, STATUS_RMA
 
 
 def _equipmentattachment_upload_path(instance, filename):
@@ -18,6 +18,7 @@ def _equipmentattachment_upload_path(instance, filename):
 class Equipment(models.Model):
     STATUS_CHOICE = (
         (STATUS_OPERATING, STATUS_OPERATING),
+        (STATUS_RMA, STATUS_RMA),
         (STATUS_DISPOSAL, STATUS_DISPOSAL),
         (STATUS_RETURN, STATUS_RETURN)
     )
@@ -76,7 +77,7 @@ class Equipment(models.Model):
 
 class EquipmentHistory(models.Model):
     STATUS_CHOICE = (
-        (STATUS_OPERATING, STATUS_OPERATING),
+        (STATUS_RMA, STATUS_RMA),
         (STATUS_DISPOSAL, STATUS_DISPOSAL),
         (STATUS_RETURN, STATUS_RETURN)
     )
@@ -84,8 +85,7 @@ class EquipmentHistory(models.Model):
     equipment = models.ForeignKey(
         Equipment, on_delete=models.SET_NULL, null=True)
     member = models.ForeignKey(Member, on_delete=models.SET_NULL, null=True)
-    status = models.CharField(
-        max_length=10, choices=STATUS_CHOICE, default=STATUS_OPERATING)
+    status = models.CharField(max_length=10, choices=STATUS_CHOICE)
     comments = models.CharField(max_length=200, default='')
     created_at = models.DateTimeField(auto_now_add=True, editable=False)
 
