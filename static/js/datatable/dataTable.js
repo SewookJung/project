@@ -94,9 +94,9 @@ $(document).ready(function () {
         .every(function () {
           var column = this;
           var select = $(
-            '<select class="selectpicker" title="고객사 선택" data-live-search=true><option value="">전체</option></select>'
+            '<select class="selectpicker" title="제조사 선택" data-live-search=true><option value="">전체</option></select>'
           )
-            .appendTo($("#mnfacture").empty())
+            .appendTo($("#select-mnfacture").empty())
             .on("change", function () {
               var val = $.fn.dataTable.util.escapeRegex($(this).val());
               column.search(val ? "^" + val + "$" : "", true, false).draw();
