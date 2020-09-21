@@ -65,6 +65,7 @@ class ProductModel(models.Model):
 
     class Meta:
         ordering = ['name']
+        unique_together = (('name'),)
 
     def natural_key(self):
         return (self.name)
