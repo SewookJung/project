@@ -12,6 +12,8 @@ urlpatterns = [
             name="client_add_apply"),
     re_path(r'^get/mnfacture/(?P<mnfacture>[-\w]+)/id/$',
             views.get_mnfacture_id, name="get_mnfacture_id"),
+    re_path(r'^get/model/(?P<mnfacture_id>\d+)/lists/$', views.get_product_model_lists,
+            name="get_product_model_lists"),
     re_path(r'^get/model/(?P<model>[-\w]+)/id/$', views.get_model_id,
             name="get_model_id"),
 ]
