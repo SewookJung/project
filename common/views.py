@@ -116,3 +116,19 @@ def get_model_id(request, model):
         return make_response(status=200, content=json.dumps({'success': True, 'model_id': model_id, 'mnfacture_id': mnfacture_id}))
     except:
         return make_response(status=400, content=json.dumps({'success': False, 'msg': "모델명 상세페이지로 이동에 실패 하였습니다."}))
+
+
+@login_required
+def get_product_model_lists(request, mnfacture_id):
+    products = Product.objects.filter(mnfacture_id=mnfacture_id).order_by('id')
+    product_models = []
+
+    for product in products:
+        product_model_lists = ProductModel.objects.filter(
+            product_id=product.id).values("id", "name")
+        ordered_product_models = product_model_lists.order_by("name")
+
+        for ordered_product_model in ordered_product_models:
+            product_models.append(ordered_product_model)
+
+    return make_response(status=200, content=json.dumps({'success': True, 'product_models': product_models}))
