@@ -69,6 +69,8 @@ urlpatterns = [
             views.equipment_stock_edit, name="equipment_stock_edit"),
     re_path(r'^stock/(?P<model_id>\d+)/(?P<model_status>\w+)/$',
             views.equipment_stock_detail, name="equipment_stock_detail"),
+    re_path(r'^stock/(?P<mnfacture_id>\d+)/all/detail/$',
+            views.equipment_stock_mnfacture_detail, name="equipment_stock_mnfacture_detail"),
     re_path(r'^stock/(?P<stock_id>\d+)/detail/edit/apply/$',
             views.equipment_stock_detail_apply, name="equipment_stock_detail_apply"),
     re_path(r'^stock/upload/$', views.equipment_stock_upload,
