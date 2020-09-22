@@ -174,6 +174,7 @@ const mnfactureDetailPage = (mnfacture) => {
 
 const modelDetailPage = (model) => {
   const clientId = document.getElementById("client_id").value;
+
   $.ajax({
     url: `/common/get/model/${model}/id/`,
     type: "GET",
