@@ -112,4 +112,87 @@ $(document).ready(function () {
         });
     },
   });
+
+  $("#stockAllTable").DataTable({
+    language: {
+      paginate: {
+        previous: "‹",
+        next: "›",
+      },
+    },
+    order: [[4, "desc"]],
+    columnDefs: [
+      {
+        targets: [4],
+        visible: false,
+      },
+    ],
+    initComplete: function () {
+      this.api()
+        .columns(1)
+        .every(function () {
+          var column = this;
+          var select = $(
+            '<select class="selectpicker" title="모델명" data-live-search=true><option value="">전체</option></select>'
+          )
+            .appendTo($("#stock-product-model").empty())
+            .on("change", function () {
+              var val = $.fn.dataTable.util.escapeRegex($(this).val());
+              column.search(val ? "^" + val + "$" : "", true, false).draw();
+            });
+
+          column
+            .data()
+            .unique()
+            .sort()
+            .each(function (d, j) {
+              select.append('<option value="' + d + '">' + d + "</option>");
+            });
+        });
+
+      this.api()
+        .columns(4)
+        .every(function () {
+          var column = this;
+          var select = $(
+            '<select class="selectpicker" title="입고 일자" data-live-search=true><option value="">전체</option></select>'
+          )
+            .appendTo($("#stock-receive-date").empty())
+            .on("change", function () {
+              var val = $.fn.dataTable.util.escapeRegex($(this).val());
+              column.search(val ? "^" + val + "$" : "", true, false).draw();
+            });
+
+          column
+            .data()
+            .unique()
+            .sort()
+            .each(function (d, j) {
+              select.append('<option value="' + d + '">' + d + "</option>");
+            });
+        });
+
+      this.api()
+        .columns(5)
+        .every(function () {
+          var column = this;
+          var select = $(
+            '<select class="selectpicker" title="상태" data-live-search=true><option value="">전체</option></select>'
+          )
+            .appendTo($("#stock-status").empty())
+            .on("change", function () {
+              var val = $.fn.dataTable.util.escapeRegex($(this).val());
+              column.search(val ? "^" + val + "$" : "", true, false).draw();
+            });
+
+          column
+            .data()
+            .unique()
+            .sort()
+            .each(function (d, j) {
+              select.append('<option value="' + d + '">' + d + "</option>");
+            });
+        });
+    },
+  });
 });
