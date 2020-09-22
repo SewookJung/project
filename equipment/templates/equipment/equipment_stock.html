@@ -10,11 +10,17 @@
             {% csrf_token %}
             <div class="form-row stock__body body">
                 <div class="form-group col-md-12">
-                    <div class="form-group body__mnfacture">
+                    <div class="form-group body__header">
                         제조사 선택
                         {{equipment_form.mnfacture}}
                     </div>
-                    <div class="form-group col-md-12 body__stock-info" id="body__stock-info">
+                    <div class="form-group body__contents" id="body__contents">
+                        <div class="form-group contetns__header">
+                            <div class="form-group header-title"></div>
+                            <div class="form-group header-button"></div>
+                        </div>
+                        <div class="form-group col-md-12 body__stock-info" id="body__stock-info">
+                        </div>
                     </div>
                 </div>
             </div>
