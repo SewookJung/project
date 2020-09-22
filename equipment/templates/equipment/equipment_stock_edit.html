@@ -24,25 +24,6 @@
                             {{ equipment_form.mnfacture }}
                         </div>
                         <div class="form-group">
-                            <label>제품명</label>
-                            <select class="selectpicker" title="제품 선택" id="product_id" name="product_id"
-                                data-live-search="true">
-                                {% with current_makers='' %}
-                                {% for product in products %}
-                                {% if product.level == 0 %}
-                                {% assign_value product.makers as current_makers %}
-                                <optgroup label="{{product.makers}}">
-                                    {% endif %}
-                                    <option value="{{product.id}}" data-tokens="{{product.makers}}">{{product.name}}
-                                    </option>
-                                    {% if current_makers != product.makers %}
-                                </optgroup>
-                                {% endif %}
-                                {% endfor %}
-                                {% endwith %}
-                            </select>
-                        </div>
-                        <div class="form-group">
                             <label>모델명</label>
                             {{ equipment_form.product_model }}
                         </div>
@@ -104,5 +85,6 @@
 <script src="{% static 'js/datepicker/bootstrap-datepicker.kr.js' %}"></script>
 <script src="{% static 'js/datepicker/datepicker.js' %}"></script>
 <script src="{% static 'js/equipment/stockEdit.js' %}"></script>
+<script src="{% static 'js/equipment/productModelLists.js' %}"></script>
 <script src="{% static 'js/sites/jquery.form.js' %}"></script>
 {% endblock %}
