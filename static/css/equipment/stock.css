@@ -14,6 +14,24 @@
   width: 33%;
 }
 
+.body__contents .contetns__header {
+  margin-bottom: 0px;
+}
+
+.contetns__header .header-title {
+  font-size: 25px;
+  font-weight: 700;
+  margin-bottom: 0px;
+}
+
+.contetns__header .header-button {
+  display: inline-block;
+  font-size: 15px;
+  color: #636e72;
+  font-weight: 700;
+  cursor: pointer;
+}
+
 .stock-lists .stock-model {
   width: 100%;
   display: flex;
