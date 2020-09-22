@@ -1,0 +1,82 @@
+{% extends 'base.html' %} {% block content %} {% load static %}
+
+<div class="container">
+    <div class="card stock">
+        <div class="card-header">
+            <i class="fa fa-external-link"></i>
+            <h5 class="card-title stock-title">
+                &nbsp;{{mnfacture}} 재고 현황&nbsp;
+                <span class="badge badge-primary">{{count}}</span>
+            </h5>
+        </div>
+        <div class="card-body body">
+            <div class="form-group">
+                <div class="form-group body__header">
+                    <div class="body__header-section">
+                        <span>모델명</span>
+                        <div class="stock-product-model" id="stock-product-model"></div>
+                    </div>
+                    <div class="body__header-section">
+                        <span>입고 날짜</span>
+                        <div class="stock-receive-date" id="stock-receive-date"></div>
+                    </div>
+                    <div class="body__header-section">
+                        <span>상태</span>
+                        <div class="stock-status" id="stock-status"></div>
+                    </div>
+                </div>
+
+                <table class="table table-striped table-bordered table-hover display" id="stockAllTable"
+                    style="width: 100%;">
+                    <thead>
+                        <tr>
+                            <th>시리얼</th>
+                            <th>모델명</th>
+                            <th>입고처</th>
+                            <th>입고 일자</th>
+                            <th>입고 일자(년,월)</th>
+                            <th>상태</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for stock in stocks %}
+                        <tr>
+                            <td>{{ stock.serial }}</td>
+                            <td>{{ stock.product_model }}</td>
+                            <td>{{ stock.location }}</td>
+                            <td>{{ stock.receive_date }}</td>
+                            <td>{{ stock.receive_date|date:"Y년 m월" }}</td>
+                            <td>
+                                {% if stock.status == "keep" %}
+                                보관
+                                {% elif stock.status == "sold" %}
+                                납품
+                                {% elif stock.status == "disposal" %}
+                                폐기
+                                {% else %}
+                                반납
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %} {% block title %} {{mnfacture}} 재고 현황 {% endblock %}
+{% block css %}
+<link rel="stylesheet" href="{% static 'css/selectpicker/bootstrap-select.css' %}">
+<link rel="stylesheet" href="https://cdn.datatables.net/1.10.20/css/dataTables.bootstrap4.min.css">
+<link rel="stylesheet" href="{% static 'css/equipment/stockAll.css' %}">
+{% endblock %}
+
+{% block js %}
+<script src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.20/js/dataTables.bootstrap4.min.js"></script>
+<script src="{% static 'js/datatable/dataTable.js' %}"></script>
+<script src="{% static 'js/selectpicker/bootstrap-select.js' %}"></script>
+{% endblock %}
