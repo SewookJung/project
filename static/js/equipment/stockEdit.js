@@ -1,4 +1,4 @@
-function checkLoginId() {
+const checkLoginId = () => {
   const inputElements = document.querySelectorAll("input");
   const textareaElement = document.querySelector("textarea");
   const loginId = document.getElementById("login_id").value;
@@ -12,9 +12,9 @@ function checkLoginId() {
       item.disabled = true;
     });
   }
-}
+};
 
-function settingValues() {
+const settingValues = () => {
   const clientId = $("#stock-client-id").val();
   $("select[name=client]").val(clientId);
   const productId = $("#stock-product-id").val();
@@ -24,9 +24,9 @@ function settingValues() {
   const mnfactureId = $("#stock-mnfacture-id").val();
   $("select[name=mnfacture]").val(mnfactureId);
   $(".selectpicker").selectpicker("refresh");
-}
+};
 
-function deleteStock() {
+const deleteStock = () => {
   if (confirm("해당 재고를 삭제하시겠습니까?")) {
     const stockId = $("#stock_id").val();
     $.ajax({
@@ -44,7 +44,7 @@ function deleteStock() {
       },
     });
   } else return;
-}
+};
 
 function stockEditCancel() {
   if (confirm("재고 정보 수정을 취소하시겠습니까?")) {
