@@ -114,8 +114,12 @@ def equipment_client_detail(request, client_id):
 def equipment_mnfacture_detail(request, client_id, mnfacture_id):
     if request.method == "GET":
         try:
-            equipments = Equipment.objects.filter(
-                client_id=client_id, mnfacture_id=mnfacture_id)
+            q = Q()
+            q.add(Q(client_id=client_id), q.OR)
+            q.add(Q(mnfacture_id=mnfacture_id), q.AND)
+            q.add(Q(status=STATUS_OPERATING) | Q(status=STATUS_RMA), q.AND)
+
+            equipments = Equipment.objects.filter(q)
             client = equipments[0].client
             mnfacture = equipments[0].mnfacture
             count = equipments.count()
@@ -127,8 +131,14 @@ def equipment_mnfacture_detail(request, client_id, mnfacture_id):
 @login_required
 def equipment_model_detail(request, client_id, mnfacture_id, model_id):
     if request.method == "GET":
-        equipments = Equipment.objects.filter(
-            client_id=client_id, mnfacture_id=mnfacture_id, product_model_id=model_id)
+        q = Q()
+        q.add(Q(client_id=client_id), q.OR)
+        q.add(Q(mnfacture_id=mnfacture_id), q.AND)
+        q.add(Q(product_model_id=model_id), q.AND)
+        q.add(Q(status=STATUS_OPERATING) | Q(status=STATUS_RMA), q.AND)
+
+        equipments = Equipment.objects.filter(q)
+
         client = equipments[0].client
         mnfacture = equipments[0].mnfacture
         product_model = equipments[0].product_model
@@ -455,8 +465,11 @@ def equipment_upload_cancel(request):
 @login_required
 def equipment_all_list(request, client_id):
     if request.method == 'GET':
-        equipments = Equipment.objects.filter(
-            client=client_id).order_by('mnfacture')
+        q = Q()
+        q.add(Q(client_id=client_id), q.OR)
+        q.add(Q(status=STATUS_OPERATING) | Q(status=STATUS_RMA), q.AND)
+
+        equipments = Equipment.objects.filter(q).order_by('mnfacture')
 
         if equipments.count() == 0:
             return make_response(status=400, content=json.dumps({'success': False, 'error': "❌ 선택하신 고객사의 납품 현황이 존재하지 않습니다.\n      고객사를 다시 선택해주시기 바랍니다."}))
@@ -712,6 +725,14 @@ def equipment_stock_multi_apply(request):
 
 
 @login_required
+def equipment_stock_mnfacture_detail(request, mnfacture_id):
+    stocks = Stock.objects.filter(mnfacture_id=mnfacture_id)
+    count = stocks.count()
+    mnfacture = stocks[0].mnfacture
+    return render(request, 'equipment/equipment_stock_all.html', {'stocks': stocks, 'count': count, 'mnfacture': mnfacture})
+
+
+@login_required
 def equipment_stock_detail(request, model_id, model_status):
     stock_objects = Stock.objects.all()
     stocks = stock_objects.filter(
@@ -764,7 +785,6 @@ def equipment_stock_edit(request, stock_id):
 @login_required
 def equipment_stock_detail_apply(request, stock_id):
     if request.method == "POST":
-        product = request.POST['product_id']
         mnfacture = request.POST['mnfacture']
         product_model = request.POST['product_model']
         serial = request.POST['serial'].replace(" ", "").strip().upper()
@@ -783,7 +803,6 @@ def equipment_stock_detail_apply(request, stock_id):
         try:
             stock = Stock.objects.get(id=stock_id)
             if serial == stock.serial:
-                stock.product_id = product
                 stock.mnfacture_id = mnfacture
                 stock.product_model_id = product_model
                 stock.serial = serial
@@ -799,7 +818,6 @@ def equipment_stock_detail_apply(request, stock_id):
                         serial=serial)
 
                     if exists_check_stock.id == stock_id:
-                        exists_check_stock.product_id = product
                         exists_check_stock.mnfactureauclf_id = mnfacture
                         exists_check_stock.product_model_id = product_model
                         exists_check_stock.serial = serial
@@ -811,7 +829,6 @@ def equipment_stock_detail_apply(request, stock_id):
                         raise
 
                 except Stock.DoesNotExist:
-                    stock.product_id = product
                     stock.mnfactureauclf_id = mnfacture
                     stock.product_model_id = product_model
                     stock.serial = serial
