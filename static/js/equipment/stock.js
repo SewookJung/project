@@ -10,15 +10,19 @@ const getListsProductModel = (param) => {
     headers: { "X-CSRFToken": csrfToken },
     success: function (data) {
       const stockInfoDiv = document.getElementById("body__stock-info");
-      stockInfoDiv.innerHTML = "";
-      const h6 = document.createElement("h6");
-
+      const mnfactureTitleDiv = document.querySelector(".header-title");
+      const mnfactureAllStockDiv = document.querySelector(".header-button");
       const stocksData = data.stocks;
       const mnfactureName = Object.keys(stocksData[0])[0];
       const stockList = Object.values(stocksData[0][mnfactureName]);
 
-      h6.classList.add("text-muted");
-      h6.innerText = mnfactureName;
+      stockInfoDiv.innerHTML = "";
+      mnfactureTitleDiv.innerText = mnfactureName;
+      mnfactureAllStockDiv.innerText = "전체 보기";
+      mnfactureAllStockDiv.setAttribute(
+        "onclick",
+        `goToAllStockPage(${mnfactureBox.value})`
+      );
 
       for (let i = 0; i < stockList.length; i++) {
         const modelName = Object.keys(stockList[i])[0];
