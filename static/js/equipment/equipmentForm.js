@@ -1,3 +1,30 @@
+const mnfactureSelectBox = document.getElementById("mnfacture");
+
+mnfactureSelectBox.addEventListener("change", (event) => {
+  mnfactureId = event.target.value;
+
+  $.ajax({
+    url: `/common/get/model/${mnfactureId}/lists/`,
+    type: "GET",
+    dataType: "json",
+    success: function (data) {
+      const productModels = data.product_models;
+      $("#product-model").find("option").remove();
+      $("#product-model").selectpicker({ title: "모델명 선택" });
+      for (let i = 0; i < productModels.length; i++) {
+        const id = productModels[i]["id"];
+        const name = productModels[i]["name"];
+        $("#product-model").append(`<option value="${id}">${name}</option>`);
+      }
+      $("#product-model").selectpicker("refresh");
+    },
+    error: function (request, status, error) {
+      const errorMsg = JSON.parse(request.responseText).msg;
+      alert(errorMsg);
+    },
+  });
+});
+
 const settingMaintenance = (event) => {
   const maintenanceField = document.getElementById(
     "equipment-maintenance-date"
@@ -56,7 +83,6 @@ $(function () {
       const location = $("#location").val();
       const installDate = $("#equipment-install-date").val();
       const maintenanceDate = $("#equipment-maintenance-date").val();
-      console.log(maintenanceDate);
 
       if (client == "") {
         alert("고객사를 선택해주세요.");
