@@ -100,11 +100,12 @@
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
             aria-haspopup="true" aria-expanded="false">
-            리포트
+            기술지원 리포트
           </a>
           <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-            <a class="dropdown-item" href="{% url 'report_project' %}">프로젝트</a>
-            <a class="dropdown-item" href="{% url 'report_maintenance' %}">유지보수</a>
+            <a class="dropdown-item" href="{% url 'report_dashboard' %}">종합정보</a>
+            <a class="dropdown-item" href="{% url 'report_project_dashboard' %}">프로젝트</a>
+            <a class="dropdown-item" href="{% url 'report_maintenance_dashboard' %}">유지보수</a>
             <a class="dropdown-item" href="{% url 'report_support' %}">지 원</a>
             <a class="dropdown-item" href="{% url 'report_edu' %}">교 육</a>
             <a class="dropdown-item" href="{% url 'report_etc' %}">기 타</a>
@@ -136,9 +137,9 @@
       </ul>
       <ul class="navbar-nav navbar-right">
         <li class="nav-item profile">
-          <a href="#" class="text-reset text-decoration-none profile-link">
+          <span class="text-reset text-decoration-none profile-link">
             {{request.session.member_name}} / {{request.session.member_rank}} / {{request.session.member_dept}}
-          </a>
+          </span>
           <a href="{% url 'logout' %}">
             <button type="button" class="btn btn-outline-light ">
               로그아웃
