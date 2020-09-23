@@ -1,0 +1,52 @@
+{% extends 'base.html' %} {% block content %} {% load static %}
+
+<div class="container">
+    <div class="card">
+        <div class="card-header">
+            <i class="fa fa-briefcase"></i>
+            <h5 class="card-title">&nbsp;프로젝트 최근 활동 내역</h5>
+        </div>
+        <div class="card-body">
+            <ul>
+                <li>
+                    <h3>프로젝트 최근 활동</h3>
+                </li>
+                <ul>
+                    <li>
+                        <h4>Genians</h4>
+                    </li>
+                    <ul>
+                        <li>
+                            <h5>NAC</h5>
+                        </li>
+                        <ul>
+                            <li>
+                                <h6>LG화학 연구동 확장 사업&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <a href="{% url 'report_project'%}">
+                                        <small style="color:red">상세보기</small>
+                                    </a>
+                                </h6>
+                            </li>
+                            <ul>
+                                <li>- Center 업그레이드 작업 (2020.09.01 ~ 2020.09.02 / 소요시간 4시간) 임덕명, 정세욱</li>
+                            </ul>
+                        </ul>
+                    </ul>
+                    <li>
+                        <h4>Riverbed</h4>
+                    </li>
+                </ul>
+            </ul>
+
+        </div>
+    </div>
+</div>
+
+
+{% endblock %} {% block title %} Project DashBoard {% endblock %}
+{% block css %}
+<link rel="stylesheet" href="{% static 'css/report/reportProjectDashboard.css' %}" />
+{% endblock %}
+
+{% block js %}
+{% endblock %}

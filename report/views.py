@@ -20,13 +20,28 @@ def report_project(request):
 
 
 @login_required
-def report_project_detail(request):
-    return render(request, 'report/report_project_detail.html', {'permission': REPORT_PERMISSION_DEFAULT})
+def report_dashboard(request):
+    return render(request, 'report/report_dashboard.html', {'permission': REPORT_PERMISSION_DEFAULT})
+
+
+@login_required
+def report_project_dashboard(request):
+    return render(request, 'report/report_project_dashboard.html', {'permission': REPORT_PERMISSION_DEFAULT})
+
+
+@login_required
+def report_project_edit(request):
+    return render(request, 'report/report_project_edit.html', {'permission': REPORT_PERMISSION_DEFAULT})
 
 
 @login_required
 def report_maintenance(request):
     return render(request, 'report/report_maintenance.html', {'permission': REPORT_PERMISSION_DEFAULT})
+
+
+@login_required
+def report_maintenance_dashboard(request):
+    return render(request, 'report/report_maintenance_dashboard.html', {'permission': REPORT_PERMISSION_DEFAULT})
 
 
 @login_required

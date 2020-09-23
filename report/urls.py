@@ -3,10 +3,15 @@ from . import views
 
 urlpatterns = [
     re_path(r'^project/$', views.report_project, name="report_project"),
-    re_path(r'^project/detail$', views.report_project_detail,
-            name="report_project_detail"),
+    re_path(r'^dashboard/$', views.report_dashboard, name="report_dashboard"),
+    re_path(r'^project/edit/$', views.report_project_edit,
+            name="report_project_edit"),
+    re_path(r'^project/dashboard/$', views.report_project_dashboard,
+            name="report_project_dashboard"),
     re_path(r'^maintenance/$', views.report_maintenance,
             name="report_maintenance"),
+    re_path(r'^maintenance/dashboard/$', views.report_maintenance_dashboard,
+            name="report_maintenance_dashboard"),
     re_path(r'^maintenance/client/$', views.report_maintenance_client,
             name="report_maintenance_client"),
     re_path(r'^maintenance/client/detail/$', views.report_maintenance_client_detail,

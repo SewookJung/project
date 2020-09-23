@@ -34,8 +34,8 @@
                 </div>
                 <div class="form-group">
                     <span>내용 및 특이사항</span>
-                    <button type="button" class="btn btn-outline-primary">변경</button>
-                    <textarea class="form-control col-sm-12" rows="5" disabled>
+                    <button type="button" class="btn btn-outline-primary" id="comments-change-btn">변경</button>
+                    <textarea class="form-control col-sm-12" id="comments" rows="5" disabled>
 - 장소 : IFC에서 진행- 5.0
 - 업그레이드 테스트에 따른 변경 사항 체크
 - 고객사 담당자 변경 (A->B)
@@ -61,8 +61,8 @@
                 </div>
                 <div class="form-group">
                     <span>지원 내용</span>
-                    <button type="button" class="btn btn-outline-primary">추가</button>
-                    <textarea class="form-control col-sm-12" rows="5" disabled>
+                    <button type="button" class="btn btn-outline-primary" id="support-add-btn">추가</button>
+                    <textarea class="form-control col-sm-12" id="supports" rows="5" disabled>
 - 2020.08.24 준비
 - 2020.07.25 사전 미팅
                     </textarea>
@@ -85,6 +85,14 @@
                         </li>
                     </ul>
                 </div>
+                <div class="text-right submit-box">
+                    <button type="button" class="btn btn-outline-danger">
+                        취소
+                    </button>
+                    <button type="submit" class="btn btn-outline-primary" id="submit-btn">
+                        수정
+                    </button>
+                </div>
             </div>
         </div>
     </div>
@@ -100,5 +108,6 @@
 <script src="{% static 'js/selectpicker/bootstrap-select.js' %}"></script>
 <script src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
 <script src="https://cdn.datatables.net/1.10.20/js/dataTables.bootstrap4.min.js"></script>
+<script src="{% static 'js/project/projectEdit.js' %}"></script>
 <script src="{% static 'js/datatable/dataTable.js' %}"></script>
 {% endblock %}
