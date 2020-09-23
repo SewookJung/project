@@ -35,8 +35,8 @@
 
                 <div class="form-group">
                     <span>내용</span>
-                    <button type="button" class="btn btn-outline-primary">변경</button>
-                    <textarea class="form-control col-sm-12" rows="5" disabled>
+                    <button type="button" class="btn btn-outline-primary" id="comments-change-btn">변경</button>
+                    <textarea class="form-control col-sm-12" id="comments" rows="5" disabled>
 - 관리자 20명 NAC 교육 진행
 - 양일간 8시간 총 16시간 교육 진행
                     </textarea>
@@ -50,6 +50,14 @@
                             <span class="badge badge-primary badge-pill">다운로드</span>
                         </li>
                     </ul>
+                </div>
+                <div class="text-right submit-box">
+                    <button type="button" class="btn btn-outline-danger">
+                        취소
+                    </button>
+                    <button type="submit" class="btn btn-outline-primary" id="submit-btn">
+                        수정
+                    </button>
                 </div>
             </div>
         </div>
@@ -66,5 +74,6 @@
 <script src="{% static 'js/selectpicker/bootstrap-select.js' %}"></script>
 <script src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
 <script src="https://cdn.datatables.net/1.10.20/js/dataTables.bootstrap4.min.js"></script>
+<script src="{% static 'js/project/projectEdit.js' %}"></script>
 <script src="{% static 'js/datatable/dataTable.js' %}"></script>
 {% endblock %}
