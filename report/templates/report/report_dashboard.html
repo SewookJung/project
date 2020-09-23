@@ -1,0 +1,90 @@
+{% extends 'base.html' %} {% block content %} {% load static %}
+
+<div class="container">
+    <div class="card">
+        <div class="card-header">
+            <i class="fa fa-briefcase"></i>
+            <h5 class="card-title">&nbsp;프로젝트 현황 / 2020년 8월 31일 ~ 09월 04일</h5>
+        </div>
+        <div class="card-body">
+            <ul>
+                <li>
+                    <h3>Project</h3>
+                </li>
+                <ul>
+                    <li>
+                        <h4>Genians</h4>
+                    </li>
+                    <ul>
+                        <li>
+                            <h5>NAC</h5>
+                        </li>
+                        <ul>
+                            <li>
+                                <h6><a href="{% url 'report_project' %}">LG화학 연구동 확장사업</a>
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<small style="color:red">상세보기
+                                        |
+                                        보고수정 | 보고삭제</small>
+                                </h6>
+                            </li>
+                            <ul>
+                                <li>- Center 업그레이드 작업 (2020.09.01 ~ 2020.09.02 / 소요시간 4시간) 임덕명, 정세욱
+                                </li>
+                            </ul>
+                        </ul>
+                    </ul>
+                    <li>
+                        <h4>Riverbed</h4>
+                    </li>
+                </ul>
+            </ul>
+            <br>
+
+            <ul>
+                <li>
+                    <h3>유지보수</h3>
+                </li>
+                <ul>
+                    <li>
+                        <h4>Genians</h4>
+                    </li>
+                    <ul>
+                        <li>- OOO고객사 2020년 9월 NAC 정기점검 완료</li>
+                    </ul>
+                    <li>
+                        <h4>GPI</h4>
+                    </li>
+                    <li>
+                        <h4>Axgate</h4>
+                    </li>
+                </ul>
+            </ul>
+            <br>
+
+            <ul>
+                <li>
+                    <h3>POC등</h3>
+                </li>
+            </ul>
+            <ul>
+                <li>
+                    <h3>교육</h3>
+                </li>
+            </ul>
+            <ul>
+                <li>
+                    <h3>기타</h3>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %} {% block title %} Project DashBoard {% endblock %}
+{% block css %}
+<link rel="stylesheet" href="{% static 'css/report/reportProjectDashboard.css' %}" />
+{% endblock %}
+
+{% block js %}
+{% endblock %}
