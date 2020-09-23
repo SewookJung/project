@@ -50,8 +50,8 @@ def report_maintenance_client(request):
 
 
 @login_required
-def report_maintenance_client_detail(request):
-    return render(request, 'report/report_maintenance_client_detail.html', {'permission': REPORT_PERMISSION_DEFAULT})
+def report_maintenance_client_edit(request):
+    return render(request, 'report/report_maintenance_client_edit.html', {'permission': REPORT_PERMISSION_DEFAULT})
 
 
 @login_required
@@ -69,8 +69,8 @@ def report_support(request):
 
 
 @login_required
-def report_support_detail(request):
-    return render(request, 'report/report_support_detail.html', {'permission': REPORT_PERMISSION_DEFAULT})
+def report_support_edit(request):
+    return render(request, 'report/report_support_edit.html', {'permission': REPORT_PERMISSION_DEFAULT})
 
 
 @login_required
@@ -82,8 +82,8 @@ def report_edu(request):
 
 
 @login_required
-def report_edu_detail(request):
-    return render(request, 'report/report_edu_detail.html', {'permission': REPORT_PERMISSION_DEFAULT})
+def report_edu_edit(request):
+    return render(request, 'report/report_edu_edit.html', {'permission': REPORT_PERMISSION_DEFAULT})
 
 
 @login_required
@@ -95,5 +95,5 @@ def report_etc(request):
 
 
 @login_required
-def report_etc_detail(request):
-    return render(request, 'report/report_etc_detail.html', {'permission': REPORT_PERMISSION_DEFAULT})
+def report_etc_edit(request):
+    return render(request, 'report/report_etc_edit.html', {'permission': REPORT_PERMISSION_DEFAULT})
