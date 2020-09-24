@@ -1,0 +1,77 @@
+.card-body .contents.col-12 {
+  padding: 0px;
+}
+
+.contents .left-div {
+  width: 34%;
+}
+
+.contents .right-div {
+  width: 64%;
+}
+
+.form-group .badge {
+  font-size: 13px;
+  cursor: pointer;
+  margin-left: 5px;
+}
+
+@media (min-width: 320px) and (max-width: 500px) {
+  .contents .left-div {
+    width: 100%;
+  }
+  .contents .right-div {
+    width: 100%;
+  }
+}
+
+@media (min-width: 500px) {
+  .card-body .contents {
+    display: inline-block;
+  }
+  .contents .left-div {
+    width: 100%;
+  }
+  .contents .right-div {
+    width: 100%;
+  }
+}
+
+@media (min-width: 768px) {
+  .card-body .contents {
+    display: flex;
+    justify-content: space-between;
+  }
+  .contents .left-div {
+    width: 34%;
+  }
+  .contents .right-div {
+    width: 64%;
+  }
+}
+
+@media (min-width: 992px) {
+  .card-body .contents {
+    display: flex;
+    justify-content: space-between;
+  }
+  .contents .left-div {
+    width: 34%;
+  }
+  .contents .right-div {
+    width: 64%;
+  }
+}
+
+@media (min-width: 1200px) {
+  .card-body .contents {
+    display: flex;
+    justify-content: space-between;
+  }
+  .contents .left-div {
+    width: 34%;
+  }
+  .contents .right-div {
+    width: 64%;
+  }
+}

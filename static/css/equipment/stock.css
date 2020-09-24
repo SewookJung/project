@@ -1,9 +1,10 @@
 .body__stock-info .card {
-  margin-bottom: 20px;
+  margin-bottom: 30px;
 }
 
 .form-group .body__stock-info {
   display: flex;
+  justify-content: space-between;
   flex-direction: row;
   flex-wrap: wrap;
   padding: 0px;
@@ -11,15 +12,20 @@
 }
 
 .body__stock-info .card {
-  width: 33%;
+  width: 49%;
 }
 
 .body__contents .contetns__header {
   margin-bottom: 0px;
 }
 
+.body__contents .card-header {
+  font-size: 21px;
+  font-weight: 700;
+}
+
 .contetns__header .header-title {
-  font-size: 25px;
+  font-size: 28px;
   font-weight: 700;
   margin-bottom: 0px;
 }
@@ -33,10 +39,9 @@
 }
 
 .stock-lists .stock-model {
-  width: 100%;
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  font-size: 22px;
+  font-size: 25px;
   font-weight: 700;
   margin-bottom: 10px;
 }
@@ -174,23 +179,10 @@
   .body__stock-info .card {
     width: 48%;
   }
-
-  .form-group .body__stock-info {
-    justify-content: space-between;
-  }
 }
 
 @media (min-width: 992px) {
   .body__stock-info .card {
-    width: 32%;
-  }
-
-  .form-group .body__stock-info {
-    justify-content: start;
-  }
-
-  .body__stock-info .card:nth-child(3n + 1),
-  .body__stock-info .card:nth-child(3n + 2) {
-    margin-right: 10px;
+    width: 48%;
   }
 }
