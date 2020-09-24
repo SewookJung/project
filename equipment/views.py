@@ -729,7 +729,7 @@ def equipment_stock_mnfacture_detail(request, mnfacture_id):
     stocks = Stock.objects.filter(mnfacture_id=mnfacture_id)
     count = stocks.count()
     mnfacture = stocks[0].mnfacture
-    return render(request, 'equipment/equipment_stock_all.html', {'stocks': stocks, 'count': count, 'mnfacture': mnfacture})
+    return render(request, 'equipment/equipment_stock_all.html', {'stocks': stocks, 'count': count, 'mnfacture': mnfacture, 'permission': REPORT_PERMISSION_DEFAULT})
 
 
 @login_required
