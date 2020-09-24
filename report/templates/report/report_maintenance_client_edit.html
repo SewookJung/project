@@ -7,82 +7,118 @@
             <h5 class="card-title">&nbsp;LG화학 20년 9월 유지보수 상세내역</h5>
         </div>
         <div class="card-body">
-            <div class="form-group col-12">
-                <div class="form-group">
-                    <span>진행 상태</span>
-                    <input type="text" class="form-control" autocomplete="off" value="완료" disabled>
+            <div class="form-group col-12 contents">
+                <div class="left-div">
+                    <div class="form-group">
+                        <span>진행 상태</span>
+                        <input type="text" class="form-control" id="status" autocomplete="off" value="완료" disabled>
+                    </div>
+                    <div class="form-group">
+                        <span>담당자</span>
+                        <input type="text" class="form-control" id="manager" autocomplete="off" value="임덕명, 이민혁"
+                            disabled>
+                    </div>
+                    <div class="form-group">
+                        <span>관련제품</span>
+                        <input type="text" class="form-control" id="product" autocomplete="off" value="Genians NAC"
+                            disabled>
+                    </div>
+                    <div class="form-group">
+                        <span>시작일</span>
+                        <input type="text" class="form-control" id="start-date" autocomplete="off" value="2020-08-07"
+                            disabled>
+                    </div>
+                    <div class="form-group">
+                        <span>완료일</span>
+                        <input type="text" class="form-control" id="end-date" autocomplete="off" value="2020-08-07"
+                            disabled>
+                    </div>
+                    <div class="form-group">
+                        <span>소요시간</span>
+                        <input type="text" class="form-control" id="spent-time" autocomplete="off" value="1시간" disabled>
+                    </div>
+                    <div class="form-group">
+                        <span>지원 내용</span>
+                        <input type="text" class="form-control" id="support-contents" autocomplete="off" value="정기점검"
+                            disabled>
+                    </div>
+                    <div class="form-group">
+                        <span>지원 형태</span>
+                        <input type="text" class="form-control" id="support-status" autocomplete="off" value="방문"
+                            disabled>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <span>담당자</span>
-                    <input type="text" class="form-control" autocomplete="off" value="임덕명, 이민혁" disabled>
-                </div>
-                <div class="form-group">
-                    <span>관련제품</span>
-                    <input type="text" class="form-control" autocomplete="off" value="Genians NAC" disabled>
-                </div>
-                <div class="form-group">
-                    <span>시작일</span>
-                    <input type="text" class="form-control" autocomplete="off" value="2020-08-07" disabled>
-                </div>
-                <div class="form-group">
-                    <span>완료일</span>
-                    <input type="text" class="form-control" autocomplete="off" value="" disabled>
-                </div>
-                <div class="form-group">
-                    <span>소요시간</span>
-                    <input type="text" class="form-control" autocomplete="off" value="1시간" disabled>
-                </div>
-                <div class="form-group">
-                    <span>지원 내용</span>
-                    <input type="text" class="form-control" autocomplete="off" value="정기점검" disabled>
-                </div>
-                <div class="form-group">
-                    <span>지원 형태</span>
-                    <input type="text" class="form-control" autocomplete="off" value="방문" disabled>
-                </div>
-                <div class="form-group">
-                    <span>관련 장비</span>
-                    <button type="button" class="btn btn-outline-primary">추가</button>
-                    <ul class="list-group">
-                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                            C10
-                            <span class="badge badge-primary badge-pill">14</span>
-                        </li>
-                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                            S10
-                            <span class="badge badge-primary badge-pill">2</span>
-                        </li>
-                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                            S20
-                            <span class="badge badge-primary badge-pill">1</span>
-                        </li>
-                    </ul>
-                </div>
-                <div class="form-group">
-                    <span>내용 및 특이사항</span>
-                    <button type="button" class="btn btn-outline-primary" id="comments-change-btn">변경</button>
-                    <textarea class="form-control col-sm-12" id="comments" rows="5" disabled>
+                <div class="right-div">
+                    <div class="form-group">
+                        <span>특이사항</span>
+                        <span class="badge badge-primary" id="comments-change-btn">변경</span>
+                        <textarea class="form-control col-sm-12" id="comments" rows="5" disabled>
 - 2020년 9월 정기점검 진행
-                    </textarea>
+                        </textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <span>관련 장비</span>
+                        <span class="badge badge-primary">추가</span>
+                        <div id="accordion">
+                            <div class="card">
+                                <div class="card-header">
+                                    <a class="card-link" data-toggle="collapse" href="#C10" aria-expanded="true">
+                                        C10<span class="badge badge-pill badge-primary">4</span>
+                                    </a>
+                                </div>
+                                <div id="C10" class="collapse">
+                                    <div class="card-body">
+                                        <ul class="list-group">
+                                            <li class="list-group-item" id="618">CEN50AGL0080 / 2020-08-07 / LG화학 본사 서버실
+                                            <li class="list-group-item" id="618">CEN50AGL0081 / 2020-08-07 / LG화학 본사 서버실
+                                            <li class="list-group-item" id="618">CEN50AGL0082 / 2020-08-07 / LG화학 본사 서버실
+                                            <li class="list-group-item" id="618">CEN50AGL0083 / 2020-08-07 / LG화학 본사 서버실
+                                            <li class="list-group-item" id="618">CEN50AGL0084 / 2020-08-07 / LG화학 본사 서버실
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="card">
+                                <div class="card-header">
+                                    <a class="card-link" data-toggle="collapse" href="#S10" aria-expanded="true">
+                                        S10<span class="badge badge-pill badge-primary">10</span>
+                                    </a>
+                                </div>
+                                <div id="S10" class="collapse">
+                                    <div class="card-body">
+                                        <ul class="list-group">
+                                            <li class="list-group-item" id="618">CEN50AGL0080 / 2020-08-07 / LG화학 OO동
+                                            <li class="list-group-item" id="618">CEN50AGL0081 / 2020-08-07 / LG화학 OO동
+                                            <li class="list-group-item" id="618">CEN50AGL0082 / 2020-08-07 / LG화학 OO동
+                                            <li class="list-group-item" id="618">CEN50AGL0083 / 2020-08-07 / LG화학 OO동
+                                            <li class="list-group-item" id="618">CEN50AGL0084 / 2020-08-07 / LG화학 OO동
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <span>첨부 파일</span>
+                        <span class="badge badge-primary">추가</span>
+                        <ul class="list-group">
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                [LG화학] NAC 9월 정기점검.ppt
+                                <i class="fa fa-download"></i>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <span>첨부 파일</span>
-                    <button type="button" class="btn btn-outline-primary">추가</button>
-                    <ul class="list-group">
-                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                            [LG화학] 20년 9월 정기점검.ppt
-                            <span class="badge badge-primary badge-pill">다운로드</span>
-                        </li>
-                    </ul>
-                </div>
-                <div class="text-right submit-box">
-                    <button type="button" class="btn btn-outline-danger">
-                        취소
-                    </button>
-                    <button type="submit" class="btn btn-outline-primary" id="submit-btn">
-                        수정
-                    </button>
-                </div>
+            </div>
+            <div class="text-right submit-box">
+                <button type="button" class="btn btn-outline-danger">
+                    취소
+                </button>
+                <button type="submit" class="btn btn-outline-primary" id="submit-btn">
+                    수정
+                </button>
             </div>
         </div>
     </div>
@@ -92,6 +128,7 @@
 {% block css %}
 <link rel="stylesheet" href="{% static 'css/selectpicker/bootstrap-select.css' %}">
 <link rel="stylesheet" href="https://cdn.datatables.net/1.10.20/css/dataTables.bootstrap4.min.css">
+<link rel="stylesheet" href="{% static 'css/report/reportProjectEdit.css' %}">
 {% endblock %}
 
 {% block js %}

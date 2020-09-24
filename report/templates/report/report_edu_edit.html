@@ -6,59 +6,75 @@
             <i class="fa fa-briefcase"></i>
             <h5 class="card-title">&nbsp;LG 화학 NAC 5.0 관리자 교육</h5>
         </div>
-        <div class="card-body">
-            <div class="form-group col-12">
-                <div class="form-group">
-                    <span>고객사</span>
-                    <input type="text" class="form-control" autocomplete="off" value="LG화학" disabled>
-                </div>
-                <div class="form-group">
-                    <span>교육자</span>
-                    <input type="text" class="form-control" autocomplete="off" value="정세욱" disabled>
-                </div>
-                <div class="form-group">
-                    <span>관련제품</span>
-                    <input type="text" class="form-control" autocomplete="off" value="Genians NAC" disabled>
-                </div>
-                <div class="form-group">
-                    <span>시작일</span>
-                    <input type="text" class="form-control" autocomplete="off" value="2020-08-07" disabled>
-                </div>
-                <div class="form-group">
-                    <span>완료일</span>
-                    <input type="text" class="form-control" autocomplete="off" value="2020-08-08" disabled>
-                </div>
-                <div class="form-group">
-                    <span>소요시간</span>
-                    <input type="text" class="form-control" autocomplete="off" value="16시간" disabled>
-                </div>
 
-                <div class="form-group">
-                    <span>내용</span>
-                    <button type="button" class="btn btn-outline-primary" id="comments-change-btn">변경</button>
-                    <textarea class="form-control col-sm-12" id="comments" rows="5" disabled>
+        <div class="card-body">
+            <div class="form-group col-12 contents">
+                <div class="left-div">
+                    <div class="form-group">
+                        <span>프로젝트 상태</span>
+                        <input type="text" class="form-control" id="client" autocomplete="off" value="LG화학" disabled>
+                    </div>
+                    <div class="form-group">
+                        <span>담당자</span>
+                        <input type="text" class="form-control" id="manager" autocomplete="off" value="정세욱" disabled>
+                    </div>
+                    <div class="form-group">
+                        <span>관련제품</span>
+                        <input type="text" class="form-control" id="product" autocomplete="off" value="Genians NAC"
+                            disabled>
+                    </div>
+                    <div class="form-group">
+                        <span>시작일</span>
+                        <input type="text" class="form-control" id="start-date" autocomplete="off" value="2020-08-07"
+                            disabled>
+                    </div>
+                    <div class="form-group">
+                        <span>완료일</span>
+                        <input type="text" class="form-control" id="end-date" autocomplete="off" value="2020-08-08"
+                            disabled>
+                    </div>
+                    <div class="form-group">
+                        <span>소요시간</span>
+                        <input type="text" class="form-control" id="spent-time" autocomplete="off" value="16시간"
+                            disabled>
+                    </div>
+                </div>
+                <div class="right-div">
+                    <div class="form-group">
+                        <span>내용 및 특이사항</span>
+                        <span class="badge badge-primary" id="comments-change-btn">변경</span>
+                        <textarea class="form-control col-sm-12" id="comments" rows="5" disabled>
 - 관리자 20명 NAC 교육 진행
 - 양일간 8시간 총 16시간 교육 진행
-                    </textarea>
+                        </textarea>
+                    </div>
+                    <div class="form-group">
+                        <span>첨부 파일</span>
+                        <span class="badge badge-primary">추가</span>
+                        <ul class="list-group">
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                [LG화학/NAC 신규도입] 제안서.ppt
+                                <i class="fa fa-download"></i>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                [LG화학/NAC 신규도입] 제품소개서.ppt
+                                <i class="fa fa-download"></i>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                [LG화학/NAC 신규도입] 세금계산서.excel
+                                <i class="fa fa-download"></i>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <span>첨부 파일</span>
-                    <button type="button" class="btn btn-outline-primary">업로드</button>
-                    <ul class="list-group">
-                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                            [LG화학] NAC 교육 자료.ppt
-                            <span class="badge badge-primary badge-pill">다운로드</span>
-                        </li>
-                    </ul>
-                </div>
-                <div class="text-right submit-box">
-                    <button type="button" class="btn btn-outline-danger">
-                        취소
-                    </button>
-                    <button type="submit" class="btn btn-outline-primary" id="submit-btn">
-                        수정
-                    </button>
-                </div>
+            </div>
+            <div class="text-right submit-box">
+                <button type="button" class="btn btn-outline-danger">
+                    취소
+                </button>
+                <button type="submit" class="btn btn-outline-primary" id="submit-btn">
+                    수정
+                </button>
             </div>
         </div>
     </div>
@@ -68,6 +84,7 @@
 {% block css %}
 <link rel="stylesheet" href="{% static 'css/selectpicker/bootstrap-select.css' %}">
 <link rel="stylesheet" href="https://cdn.datatables.net/1.10.20/css/dataTables.bootstrap4.min.css">
+<link rel="stylesheet" href="{% static 'css/report/reportProjectEdit.css' %}">
 {% endblock %}
 
 {% block js %}
