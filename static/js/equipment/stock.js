@@ -112,14 +112,14 @@ const getListsProductModel = (param) => {
         stockStatusListsDiv.append(stockReturnDiv);
         stockStatusListsDiv.append(stockDisposalDiv);
 
+        cardDiv.append(stockModelNameDiv);
         cardDiv.append(cardBodyDiv);
-        cardBodyDiv.append(stockModelNameDiv);
         cardBodyDiv.append(stockStatusListsDiv);
         stockModelNameDiv.innerText = modelName;
 
         cardDiv.classList.add("card");
         cardBodyDiv.classList.add("card-body", "stock-lists");
-        stockModelNameDiv.classList.add("stock-model");
+        stockModelNameDiv.classList.add("card-header");
         stockStatusListsDiv.classList.add("stock-status-lists");
         stockInfoDiv.append(cardDiv);
       }
