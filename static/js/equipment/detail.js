@@ -24,6 +24,8 @@ function settingValues() {
   const mnfactureId = $("#equip-mnfacture-id").val();
   $("select[name=mnfacture]").val(mnfactureId);
   $(".selectpicker").selectpicker("refresh");
+
+  getProductModelLists(mnfactureId, modelId);
 }
 
 function deleteEquipment() {
