@@ -77,7 +77,7 @@
                         </div>
                         <div class="form-group ">
                             <label>유지보수 만료 일자</label>
-                            <input type="text" name="install-date" id="equipment-install-date"
+                            <input type="text" name="maintenance-date" id="maintenance-date"
                                 class="form-control calendar__start hasDatepicker" autocomplete="off"
                                 data-provide="datepicker" placeholder="&#xf073;"
                                 value="{{ equipment.maintenance_date | date:"Y-m-d"}}">
@@ -126,6 +126,7 @@
 </div>
 
 
+
 {% endblock %} {% block title %} {{ equipment.client }} 납품 세부정보 {% endblock %}
 {% block css %}
 <link rel=" stylesheet" href="{% static 'css/selectpicker/bootstrap-select.css' %}">
@@ -138,5 +139,6 @@
                             <script src="{% static 'js/datepicker/bootstrap-datepicker.kr.js' %}"></script>
                             <script src="{% static 'js/datepicker/datepicker.js' %}"></script>
                             <script src="{% static 'js/equipment/detail.js' %}"></script>
+                            <script src="{% static 'js/equipment/productModelLists.js' %}"></script>
                             <script src="{% static 'js/sites/jquery.form.js' %}"></script>
                             {% endblock %}
