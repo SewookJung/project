@@ -24,6 +24,7 @@ const settingValues = () => {
   const mnfactureId = $("#stock-mnfacture-id").val();
   $("select[name=mnfacture]").val(mnfactureId);
   $(".selectpicker").selectpicker("refresh");
+  getProductModelLists(mnfactureId, modelId);
 };
 
 const deleteStock = () => {
