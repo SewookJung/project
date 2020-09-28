@@ -18,11 +18,14 @@ const getListsProductModel = (param) => {
 
       stockInfoDiv.innerHTML = "";
       mnfactureTitleDiv.innerText = mnfactureName;
-      mnfactureAllStockDiv.innerText = "전체 보기";
-      mnfactureAllStockDiv.setAttribute(
-        "onclick",
-        `goToAllStockPage(${mnfactureBox.value})`
-      );
+
+      if (stockList.length != 0) {
+        mnfactureAllStockDiv.innerText = "전체 보기";
+        mnfactureAllStockDiv.setAttribute(
+          "onclick",
+          `goToAllStockPage(${mnfactureBox.value})`
+        );
+      } else mnfactureAllStockDiv.innerText = "";
 
       for (let i = 0; i < stockList.length; i++) {
         const modelName = Object.keys(stockList[i])[0];
