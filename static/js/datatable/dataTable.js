@@ -120,7 +120,7 @@ $(document).ready(function () {
         next: "›",
       },
     },
-    order: [[4, "desc"]],
+    order: [[3, "desc"]],
     columnDefs: [
       {
         targets: [4],
@@ -161,6 +161,8 @@ $(document).ready(function () {
             .on("change", function () {
               var val = $.fn.dataTable.util.escapeRegex($(this).val());
               column.search(val ? "^" + val + "$" : "", true, false).draw();
+              var stockTable = $("#stockAllTable").DataTable();
+              stockTable.column("3:visible").order("desc").draw();
             });
 
           column
