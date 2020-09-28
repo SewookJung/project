@@ -1,0 +1,10 @@
+.media i {
+  margin-right: 30px;
+  font-size: 28px;
+}
+
+.media-body ul {
+  list-style: inside;
+  list-style-type: circle;
+  margin-left: 10px;
+}
