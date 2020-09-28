@@ -44,7 +44,7 @@
                             <td>{{ stock.serial }}</td>
                             <td>{{ stock.product_model }}</td>
                             <td>{{ stock.location }}</td>
-                            <td>{{ stock.receive_date }}</td>
+                            <td>{{ stock.receive_date|date:"Y년 m월 d일"}}</td>
                             <td>{{ stock.receive_date|date:"Y년 m월" }}</td>
                             <td>
                                 {% if stock.status == "keep" %}
@@ -65,6 +65,8 @@
         </div>
     </div>
 </div>
+
+
 
 
 {% endblock %} {% block title %} {{mnfacture}} 재고 현황 {% endblock %}
