@@ -600,7 +600,13 @@ def equipment_sample_download(request):
 @login_required
 def equipment_stock(request):
     equipment_form = EquipmentForm()
-    return render(request, 'equipment/equipment_stock.html', {"equipment_form": equipment_form, 'permission': REPORT_PERMISSION_DEFAULT})
+    return render(request, 'equipment/equipment_stock_original.html', {"equipment_form": equipment_form, 'permission': REPORT_PERMISSION_DEFAULT})
+
+
+@login_required
+def equipment_stock_test(request):
+    equipment_form = EquipmentForm()
+    return render(request, 'equipment/equipment_stock_test.html', {"equipment_form": equipment_form, 'permission': REPORT_PERMISSION_DEFAULT})
 
 
 @login_required
@@ -636,6 +642,41 @@ def equipment_stock_get_list(request):
             stock_object = {product_model_name: {
                 'id': product_model_id, 'keep': stock_keep_count, 'sold': stock_sold_count, 'disposal': stock_disposal_count, 'return': stock_return_count, 'total': stock_keep_count + stock_sold_count}}
             mnfacture_object[mnfacture_name].append(stock_object)
+        return make_response(status=200, content=json.dumps({'success': True, 'stocks': stocks}))
+
+    except:
+        return make_response(status=400, content=json.dumps({'success': False, 'msg': "재고현황을 가지고 있는데 실패 하였습니다.\n관리자에게 문의 바랍니다."}))
+
+
+@login_required
+def equipment_stock_get_list_test(request):
+    try:
+        mnfacture_id = request.POST['mnfactureId']
+
+        stock_objects = Stock.objects.filter(
+            mnfacture_id=mnfacture_id).order_by("product_model")
+        product_model_objects = ProductModel.objects.all()
+
+        stocks = {'data': []}
+        product_model_id_list = stock_objects.values(
+            "product_model").distinct()
+
+        for product in product_model_id_list:
+            product_model_id = product['product_model']
+            product_model_name = str(
+                product_model_objects.get(id=product_model_id))
+                
+            stock_keep_count = stock_objects.filter(
+                product_model_id=product_model_id, status=STATUS_KEEP).count()
+            stock_sold_count = stock_objects.filter(
+                product_model_id=product_model_id, status=STATUS_SOLD).count()
+            stock_disposal_count = stock_objects.filter(
+                product_model_id=product_model_id, status=STATUS_DISPOSAL).count()
+            stock_return_count = stock_objects.filter(
+                product_model_id=product_model_id, status=STATUS_RETURN).count()
+            stock_object = {'name': product_model_name, 'id': product_model_id, 'keep': stock_keep_count, 'sold': stock_sold_count,
+                            'disposal': stock_disposal_count, 'return': stock_return_count, 'total': stock_keep_count + stock_sold_count}
+            stocks['data'].append(stock_object)
         return make_response(status=200, content=json.dumps({'success': True, 'stocks': stocks}))
 
     except:

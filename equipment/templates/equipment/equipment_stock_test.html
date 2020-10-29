@@ -1,0 +1,55 @@
+{% extends 'base.html' %} {% block content %} {% load static %}
+
+<div class="container">
+    <div class="card stock">
+        <div class="card-header stock__header">
+            <i class="fa fa-tasks"></i>
+            <h5 class="card-title stock__title">&nbsp;재고 현황 </h5>
+        </div>
+        <div class="card-body">
+            {% csrf_token %}
+            <div class="form-row stock__body body">
+                <div class="form-group col-md-12">
+                    <div class="form-group body__header">
+                        제조사 선택
+                        {{equipment_form.mnfacture}}
+                    </div>
+                    <table class="table table-striped table-bordered table-hover assets_table " id="stockTable">
+                        <thead>
+                            <tr>
+                                <th>모델명</th>
+                                <th>재고</th>
+                                <th>납품</th>
+                                <th>반납</th>
+                                <th>폐기</th>
+                                <th>누적</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+{% endblock %} {% block title %} 재고 현황 {% endblock %}
+{% block css %}
+<link rel="stylesheet" href="https://cdn.datatables.net/1.10.20/css/dataTables.bootstrap4.min.css">
+<link rel="stylesheet" href="{% static 'css/selectpicker/bootstrap-select.css' %}">
+<link rel="stylesheet" href="{% static 'css/datepicker/datepicker3.css' %}">
+<link rel="stylesheet" href="{% static 'css/equipment/stock.css' %}">
+{% endblock %}
+
+{% block js %}
+<script src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.20/js/dataTables.bootstrap4.min.js"></script>
+<script src="{% static 'js/selectpicker/bootstrap-select.js' %}"></script>
+<script src="{% static 'js/datepicker/bootstrap-datepicker.js' %}"></script>
+<script src="{% static 'js/datepicker/bootstrap-datepicker.kr.js' %}"></script>
+<script src="{% static 'js/datepicker/datepicker.js' %}"></script>
+<script src="{% static 'js/datatable/dataTable.js' %}"></script>
+<script src="{% static 'js/equipment/stock_test.js' %}"></script>
+<script src="{% static 'js/equipment/stockGotoDetail.js' %}"></script>
+{% endblock %}

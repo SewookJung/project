@@ -41,6 +41,8 @@ urlpatterns = [
             name="equipment_download_check"),
 
     re_path(r'^stock/$', views.equipment_stock, name="equipment_stock"),
+    re_path(r'^stock/test/$', views.equipment_stock_test,
+            name="equipment_stock_test"),
     re_path(r'^stock/form/$', views.equipment_stock_form,
             name="equipment_stock_form"),
     re_path(r'^stock/form/apply/$', views.equipment_stock_form_apply,
@@ -55,6 +57,8 @@ urlpatterns = [
             name="equipment_stock_multi_disposal"),
     re_path(r'^stock/get/list/$', views.equipment_stock_get_list,
             name="equipment_stock_get_list"),
+    re_path(r'^stock/get/list/test/$', views.equipment_stock_get_list_test,
+            name="equipment_stock_get_list_test"),
     re_path(r'^stock/permission/check/$', views.equipment_stock_permission_check,
             name="equipment_stock_permission_check"),
     re_path(r'^stock/delivery/apply/$', views.equipment_stock_delivery_apply,
