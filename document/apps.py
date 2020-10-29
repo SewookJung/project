@@ -1,5 +1,5 @@
 from django.apps import AppConfig
 
 
-class ProjectConfig(AppConfig):
-    name = 'project'
+class SitesConfig(AppConfig):
+    name = 'document'
