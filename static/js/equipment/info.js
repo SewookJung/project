@@ -146,7 +146,6 @@ function dupCheckOfClient() {
       });
       resultContent.append(similarComment);
       resultContent.appendChild(createUl);
-      console.log(checkDupInput.value);
     },
 
     error: function (request, status, error) {
@@ -162,10 +161,11 @@ function dupCheckOfClient() {
       clientSearchInput.value = "";
       clientSearchInput.focus();
       addClientAlert.style.display = "block";
+
+      createUl.classList.add("list-group");
       addClientAlert.classList = "";
       addClientAlert.classList.add("alert");
       addClientAlert.classList.add("alert-danger");
-
       addClientAlert.innerText = "";
       addClientAlert.innerText =
         '❌ 검색하신 "' + txtValue + '" 고객사가 이미 존재합니다.';
