@@ -1,0 +1,33 @@
+.card-body .body-header {
+  display: flex;
+  flex-wrap: wrap;
+  width: 100%;
+}
+
+.body-header .form-group {
+  display: flex;
+  align-items: center;
+  margin-right: 20px;
+}
+
+.form-group span {
+}
+
+.body-header .form-group:last-child {
+  margin-right: 0px;
+}
+
+@media (min-width: 320px) and (max-width: 500px) {
+}
+
+@media (min-width: 500px) {
+}
+
+@media (min-width: 768px) {
+}
+
+@media (min-width: 992px) {
+}
+
+@media (min-width: 1280px) {
+}

@@ -1,0 +1,47 @@
+.qq-uploader {
+  position: relative;
+  min-height: 200px;
+  max-height: 490px;
+  overflow-y: hidden;
+  width: 640px;
+  border-radius: 6px;
+  background-color: #fdfdfd;
+  border: 1px dashed #cccccc;
+  padding: 20px;
+}
+
+.transfer-double {
+  width: 640px;
+  height: 390px;
+}
+
+.card-body .upload-contents {
+  display: flex;
+}
+
+.upload-contents .left-contents {
+  width: 45%;
+}
+
+.left-contents .form-group {
+  margin-right: 10px;
+}
+
+.upload-contents .right-contents {
+  width: 55%;
+}
+
+@media (min-width: 320px) and (max-width: 500px) {
+}
+
+@media (min-width: 500px) {
+}
+
+@media (min-width: 768px) {
+}
+
+@media (min-width: 992px) {
+}
+
+@media (min-width: 1280px) {
+}
