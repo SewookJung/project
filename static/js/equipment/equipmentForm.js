@@ -77,7 +77,6 @@ $(function () {
     beforeSubmit: function () {
       const client = $("#client_id").val();
       const mnfacture = $("#mnfacture").val();
-      const product = $("#product_id").val();
       const productModel = $("#product-model").val();
       const serial = $("#serial").val();
       const location = $("#location").val();
@@ -91,10 +90,6 @@ $(function () {
       } else if (mnfacture == "") {
         alert("제조사를 선택해주세요.");
         $("#mnfacture").focus();
-        return false;
-      } else if (product == "") {
-        alert("제품명을 선택해주세요.");
-        $("#product").focus();
         return false;
       } else if (productModel == "") {
         alert("모델명을 선택해주세요.");
