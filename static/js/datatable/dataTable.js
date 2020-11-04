@@ -197,4 +197,13 @@ $(document).ready(function () {
         });
     },
   });
+
+  $("#documentBasicFormTable").DataTable({
+    language: {
+      paginate: {
+        previous: "‹",
+        next: "›",
+      },
+    },
+  });
 });
