@@ -168,11 +168,10 @@ clientSelectBox.addEventListener("change", (event) => {
         $(".selectpicker").selectpicker("refresh");
       },
       error: function (request, status, error) {
-        $(".selectpicker").prop("disabled", true);
-        $("#client").prop("disabled", false);
+        $("#project").find("option").remove();
+        $("#project").append('<option value="0">선택 안함</option>');
+        $(".selectpicker").prop("disabled", false);
         $(".selectpicker").selectpicker("refresh");
-        errorMsg = request.responseJSON.msg;
-        alert(errorMsg);
       },
     });
   } else {
