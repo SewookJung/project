@@ -4,6 +4,11 @@
   width: 100%;
 }
 
+.document-down {
+  color: #007bff;
+  cursor: pointer;
+}
+
 .body-header .form-group {
   display: flex;
   align-items: center;

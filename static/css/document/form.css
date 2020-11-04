@@ -1,0 +1,9 @@
+.card .card-header {
+  display: flex;
+  justify-content: space-between;
+}
+
+.card-header .header-lf {
+  display: flex;
+  align-items: center;
+}
