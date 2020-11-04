@@ -46,20 +46,29 @@ class Document(models.Model):
     update_at = models.DateTimeField(auto_now=True, editable=False)
     comments = models.TextField(blank=True)
 
-
-class DocumentAttachment(models.Model):
-    document = models.ForeignKey(
-        to=Document, on_delete=models.CASCADE, null=True)
+class DocumentBasicForm(models.Model):
+    title = models.CharField(max_length=100, default="")
     attach = models.FileField(
         upload_to=_documentattachment_upload_path, default="")
     attach_name = models.CharField(max_length=50, default="")
     content_size = models.CharField(max_length=50, default="")
     content_type = models.CharField(max_length=100, default="")
     check_code = models.CharField(max_length=128, default="")
-    is_state = models.SmallIntegerField(default=1)
     created_at = models.DateTimeField(auto_now_add=True, editable=False)
+    creator = models.ForeignKey(
+        to=Member, null=True, on_delete=models.SET_NULL)
+    update_at = models.DateTimeField(auto_now=True, editable=False)
+    description = models.CharField(max_length=100, blank=True)
+
 
 @receiver(models.signals.post_delete, sender=Document)
+def documentattachment_on_post_delete(sender, instance, *args, **kwargs):
+    if instance.attach:
+        instance.attach.delete(save=False)
+
+
+
+@receiver(models.signals.post_delete, sender=DocumentBasicForm)
 def documentattachment_on_post_delete(sender, instance, *args, **kwargs):
     if instance.attach:
         instance.attach.delete(save=False)
