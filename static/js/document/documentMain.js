@@ -1,9 +1,24 @@
 const csrfToken = document.getElementsByName("csrfmiddlewaretoken")[0].value;
 const clientSelectBox = document.getElementById("client");
 
+const documentDownload = (documentId) => {
+  $.ajax({
+    type: "GET",
+    url: `/document/${documentId}/permission/check/`,
+    dataType: "json",
+    headers: { "X-CSRFToken": csrfToken },
+    success: function (data) {
+      location.href = `/document/${documentId}/download/`;
+    },
+    error: function (request, status, error) {
+      const errorMsg = JSON.parse(request.responseText).msg;
+      alert(errorMsg);
+    },
+  });
+};
+
 const deleteDocument = (event) => {
   const documentId = event.target.value;
-
   if (confirm("해당 문서를 삭제 하시겠습니까?")) {
     $.ajax({
       type: "DELETE",
@@ -17,8 +32,8 @@ const deleteDocument = (event) => {
         documentTable.row(event.target.parentNode.parentNode).remove().draw();
       },
       error: function (request, status, error) {
-        alert("문서를 삭제하는데 실패하였습니다.\n다시 시도해주세요.");
-        location.href = location.href;
+        const errorMsg = JSON.parse(request.responseText).msg;
+        alert(errorMsg);
       },
     });
   } else return false;
@@ -55,7 +70,7 @@ const getClientAttachLists = (clientId) => {
           },
           {
             mData: function (data, type, dataToSet) {
-              const link = `<a href="/document/${data.id}/download/">${data.attach_name}</a>`;
+              const link = `<span class="document-down" onclick="documentDownload(${data.id})">${data.attach_name}</span>`;
               return link;
             },
           },
