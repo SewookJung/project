@@ -24,15 +24,3 @@ function init() {
     },
   });
 }
-
-function document_permission_apply() {
-  const csrfToken = document.getElementsByName("csrfmiddlewaretoken")[0].value;
-  const acceptPermissionMember = transfer.getSelectedItems();
-  const serializeData = JSON.stringify(acceptPermissionMember);
-  $.ajax({
-    type: "POST",
-    url: "/sites/document/permission/apply/",
-    headers: { "X-CSRFToken": csrfToken },
-    data: { acceptPermissionMember: serializeData },
-  });
-}
