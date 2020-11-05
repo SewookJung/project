@@ -110,6 +110,9 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+AUTHENTICATION_BACKENDS = (
+    'utils.auth_backend.PasswordlessAuthBackend',
+)
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.11/topics/i18n/
@@ -136,6 +139,8 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = '/mnt/public/project'
 
 LOGIN_URL = '/login/'
+
+AUTH_URL = "http://office.gwsystem.co.kr:8000/api/account/login/user/"
 
 SESSION_COOKIE_AGE = 3600
 SESSION_SAVE_EVERY_REQUEST = True
