@@ -88,16 +88,6 @@
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
             aria-haspopup="true" aria-expanded="false">
-            정보 조회
-          </a>
-          <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-            <a class="dropdown-item" href="{% url 'equipment_info' %}">정보 조회</a>
-          </div>
-        </li>
-
-        <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
-            aria-haspopup="true" aria-expanded="false">
             기술지원 리포트
           </a>
           <div class="dropdown-menu" aria-labelledby="navbarDropdown">
@@ -123,13 +113,14 @@
           </div>
         </li>
         {% endif %}
+
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
             aria-haspopup="true" aria-expanded="false">
-            개인
+            정보 조회
           </a>
           <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-            <a class="dropdown-item" href="{% url 'member_password' %}">비밀번호 변경</a>
+            <a class="dropdown-item" href="{% url 'equipment_info' %}">정보 조회</a>
           </div>
         </li>
       </ul>
@@ -138,7 +129,7 @@
           <span class="text-reset text-decoration-none profile-link">
             {{request.session.member_name}} / {{request.session.member_rank}} / {{request.session.member_dept}}
           </span>
-          <a href="{% url 'logout' %}">
+          <a href="{% url 'logout_process' %}">
             <button type="button" class="btn btn-outline-light ">
               로그아웃
             </button>
