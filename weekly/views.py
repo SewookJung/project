@@ -22,7 +22,9 @@ def weekly_main(request, **kwargs):
         return redirect('weekly_permission')
 
     else:
-        sales = Member.objects.filter(dept__regex=r"^사업")
+        sales = Member.objects.filter(
+            Q(dept__regex=r"^사업") | Q(dept="총괄본부") 
+            )
         date_now = datetime.now()
         if not kwargs:
             if request.session['member_dept'] in REPORT_PERMISSION_EXCEPT:
