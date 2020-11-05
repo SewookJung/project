@@ -9,7 +9,7 @@ from utils.constant import ASSET_STATUS_PERSONAL, ASSET_STATUS_TEST, ASSET_STATU
 
 
 @login_required
-def assets_main(request):
+def assets_main(request):  
     assets = Asset.objects.exclude(
         is_state=ASSET_STATUS_RENTAL) & Asset.objects.exclude(is_state=ASSET_STATUS_DISPOSAL) & Asset.objects.exclude(is_state=ASSET_STATUS_KEEP)
     return render(request, 'assets_main/assets_main.html', {'assets': assets, 'permission': REPORT_PERMISSION_DEFAULT})
